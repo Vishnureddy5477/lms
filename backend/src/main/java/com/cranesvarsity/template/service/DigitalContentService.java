@@ -9,6 +9,7 @@ import com.cranesvarsity.template.util.YouTubeLinkParser;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Backs the Digital Content page — successor of legacy view-content.jsp /
@@ -41,16 +42,37 @@ public class DigitalContentService {
     public DlModuleContent getModuleContent(int moduleId) {
         DigitalContentDao.Counts counts = digitalContentDao.findCounts(moduleId);
 
-        List<DlTopicNode> topics = digitalContentDao.findTopics(moduleId).stream()
+        // Four queries for the whole tree, however big it is.
+        //
+        // This used to walk the tree with a query per node: subtopics per topic,
+        // then videos per subtopic, so a module cost 2 + topics + subtopics round
+        // trips. The largest module (17 topics, 107 subtopics) needed 126, which
+        // at ~309ms to the database is close to 40 seconds.
+        List<DigitalContentDao.TopicRow> topicRows = digitalContentDao.findTopics(moduleId);
+
+        List<Integer> topicIds = topicRows.stream().map(DigitalContentDao.TopicRow::topicId).toList();
+        Map<Integer, List<DigitalContentDao.SubtopicRow>> subtopicsByTopic =
+                digitalContentDao.findSubtopicsByTopicIds(topicIds);
+
+        List<Integer> subtopicIds = subtopicsByTopic.values().stream()
+                .flatMap(List::stream)
+                .map(DigitalContentDao.SubtopicRow::subtopicId)
+                .toList();
+        Map<Integer, List<DigitalContentDao.VideoRow>> videosBySubtopic =
+                digitalContentDao.findVideosBySubtopicIds(subtopicIds);
+
+        List<DlTopicNode> topics = topicRows.stream()
                 .map(topic -> {
-                    List<DlSubtopicNode> subtopics = digitalContentDao.findSubtopics(topic.topicId()).stream()
-                            .map(subtopic -> {
-                                List<DlVideoNode> videos = digitalContentDao.findVideos(subtopic.subtopicId()).stream()
-                                        .map(video -> new DlVideoNode(video.id(), video.name(), video.link(), YouTubeLinkParser.extractVideoId(video.link())))
-                                        .toList();
-                                return new DlSubtopicNode(subtopic.subtopicId(), subtopic.subtopicName(), videos);
-                            })
-                            .toList();
+                    List<DlSubtopicNode> subtopics =
+                            subtopicsByTopic.getOrDefault(topic.topicId(), List.of()).stream()
+                                    .map(subtopic -> {
+                                        List<DlVideoNode> videos =
+                                                videosBySubtopic.getOrDefault(subtopic.subtopicId(), List.of()).stream()
+                                                        .map(video -> new DlVideoNode(video.id(), video.name(), video.link(), YouTubeLinkParser.extractVideoId(video.link())))
+                                                        .toList();
+                                        return new DlSubtopicNode(subtopic.subtopicId(), subtopic.subtopicName(), videos);
+                                    })
+                                    .toList();
                     return new DlTopicNode(topic.topicId(), topic.topicName(), subtopics);
                 })
                 .toList();
