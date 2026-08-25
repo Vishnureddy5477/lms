@@ -6,7 +6,9 @@ import com.cranesvarsity.template.dto.SkillTrackerMarksRow;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -37,6 +39,25 @@ public class ManageProjectMarksDao {
                 (rs, rowNum) -> new MarksPair(rs.getInt("total_marks"), rs.getInt("obtained_marks")),
                 regNo, moduleName);
         return rows.isEmpty() ? MarksPair.ZERO : rows.get(0);
+    }
+
+    /**
+     * Every module's project marks in ONE query, for the Report Card.
+     *
+     * Replaces calling {@link #getMarks} once per module inside a loop. See
+     * ManageTheoryMarksDao#getMarksByModule for why putIfAbsent reproduces the
+     * per-module {@code rows.get(0)} behaviour exactly.
+     */
+    public Map<String, MarksPair> getMarksByModule(String regNo) {
+        String sql = "SELECT project_module, total_marks, obtained_marks FROM manage_project_marks " +
+                "WHERE registration_no = ?";
+
+        Map<String, MarksPair> byModule = new HashMap<>();
+        jdbcTemplate.query(sql, rs -> {
+            byModule.putIfAbsent(rs.getString("project_module"),
+                    new MarksPair(rs.getInt("total_marks"), rs.getInt("obtained_marks")));
+        }, regNo);
+        return byModule;
     }
 
     public Optional<String> findExistingLink(String regNo, String batch, String projectModule, String projectType) {

@@ -6,7 +6,10 @@ import com.cranesvarsity.template.dto.SkillTrackerMcqRow;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Raw SQL against "exam_system.moduletestresult" — a different legacy schema
@@ -71,6 +74,41 @@ public class ModuleTestResultDao {
         int obtainedAverage = obtainedSum / rows.size();
 
         return new MarksPair(total, obtainedAverage);
+    }
+
+    /**
+     * Report-card MCQ marks for EVERY module in one query.
+     *
+     * Reproduces {@link #getReportCardMarks} exactly, module by module, rather
+     * than being called once per module inside a loop:
+     *   - "total" is whichever row is seen LAST while iterating (mark-card.jsp
+     *     overwrote it each pass rather than picking a max), which is why the
+     *     accumulator assigns it unconditionally instead of comparing.
+     *   - "obtained" is the INTEGER average across matching rows.
+     *   - rs.getInt() is used on both columns, matching the original's narrowing
+     *     of these FLOAT columns before the arithmetic.
+     *
+     * Row order is load-bearing here: 555 student/module pairs have duplicate
+     * rows with different totals, so "last row" must stay the last row the
+     * engine returns. Adding a WHERE filter removes rows without reordering
+     * them, so the broad query preserves it.
+     */
+    public Map<String, MarksPair> getReportCardMarksByModule(String regNo) {
+        String sql = "SELECT module, total, obtained FROM exam_system.moduletestresult " +
+                "WHERE reg = ? AND no_of_test IN (1,2)";
+
+        // module -> [lastTotal, sumOfObtained, rowCount]
+        Map<String, int[]> acc = new LinkedHashMap<>();
+        jdbcTemplate.query(sql, rs -> {
+            int[] a = acc.computeIfAbsent(rs.getString("module"), k -> new int[3]);
+            a[0] = rs.getInt("total");        // last row wins, as in the original
+            a[1] += rs.getInt("obtained");
+            a[2] += 1;
+        }, regNo);
+
+        Map<String, MarksPair> out = new HashMap<>();
+        acc.forEach((module, a) -> out.put(module, new MarksPair(a[0], a[1] / a[2])));
+        return out;
     }
 
     /** Every attempt, every module — for the Skill Tracker's MCQ Results tab. Copied faithfully from student-performance.jsp. */

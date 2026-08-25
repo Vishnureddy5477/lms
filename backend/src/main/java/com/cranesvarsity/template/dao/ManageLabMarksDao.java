@@ -5,7 +5,9 @@ import com.cranesvarsity.template.dto.SkillTrackerMarksRow;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** Raw SQL against "exam_system.manage_lab_marks" — copied from mark-card.jsp. */
 @Repository
@@ -24,6 +26,25 @@ public class ManageLabMarksDao {
                 (rs, rowNum) -> new MarksPair(rs.getInt("total_marks"), rs.getInt("obtained_marks")),
                 regNo, moduleName);
         return rows.isEmpty() ? MarksPair.ZERO : rows.get(0);
+    }
+
+    /**
+     * Every module's lab marks in ONE query, for the Report Card.
+     *
+     * Replaces calling {@link #getMarks} once per module inside a loop. See
+     * ManageTheoryMarksDao#getMarksByModule for why putIfAbsent reproduces the
+     * per-module {@code rows.get(0)} behaviour exactly.
+     */
+    public Map<String, MarksPair> getMarksByModule(String regNo) {
+        String sql = "SELECT lab_module, total_marks, obtained_marks FROM exam_system.manage_lab_marks " +
+                "WHERE registration_no = ?";
+
+        Map<String, MarksPair> byModule = new HashMap<>();
+        jdbcTemplate.query(sql, rs -> {
+            byModule.putIfAbsent(rs.getString("lab_module"),
+                    new MarksPair(rs.getInt("total_marks"), rs.getInt("obtained_marks")));
+        }, regNo);
+        return byModule;
     }
 
     /** Every module — for the Skill Tracker's Lab Results tab. Copied faithfully from student-performance.jsp. */
