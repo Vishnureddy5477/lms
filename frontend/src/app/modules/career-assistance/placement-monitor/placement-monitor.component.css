@@ -1,0 +1,60 @@
+/* Custom Typography & Colors */
+.text-navy {
+  color: #2b3674 !important;
+}
+
+.text-indigo {
+  color: #5c4eb4 !important;
+}
+
+.text-black {
+  color: #000000 !important;
+}
+
+.bg-light-card {
+  background-color: #f8fafc;
+  border-radius: 8px;
+}
+
+.fs-7 {
+  font-size: 0.875rem;
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+.info-grid {
+  font-size: 0.875rem;
+}
+
+/* JD Table Styling */
+.jd-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.jd-table th {
+  background-color: #f1f0fb;
+  color: #5c4eb4;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 12px 10px;
+  border-top: 1px solid #edf2f7;
+  border-bottom: 1px solid #edf2f7;
+  white-space: nowrap;
+}
+
+.jd-table td {
+  padding: 12px 10px;
+  font-size: 0.825rem;
+  color: #000000 !important;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Custom Alert Box for Empty State */
+.alert-cyan {
+  background-color: #bbf7d0; /* Soft Cyan/Light Teal matching design */
+  color: #000000 !important;
+}

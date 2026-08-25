@@ -1,0 +1,116 @@
+<div class="content-body">
+
+  <!-- Banner 1: Welcome & Payment Buttons -->
+  <div class="card welcome-card mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+      <div>
+        <h3 class="fw-bold mb-1" style="color: #2c323f;">Welcome, {{ courseInfo.studentName }}</h3>
+        <p class="mb-0 fw-bold" style="color: #00bcd4; font-size: 0.85rem;">
+          The Better Way To Start The Skill.
+        </p>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn text-white fw-bold px-3 py-2" style="background-color: #5d53c0; font-size: 0.85rem; border-radius: 6px;">
+          Update Payment Details
+        </button>
+        <button class="btn text-white fw-bold px-3 py-2" style="background-color: #5d53c0; font-size: 0.85rem; border-radius: 6px;">
+          Pay Course Fee
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner 2: Course Details Bar -->
+  <div class="card course-bar-card mb-4">
+    <div class="row align-items-center gy-3">
+      <div class="col-md-3 col-sm-6">
+        <span class="fw-bold text-dark me-1">Batch Number :</span>
+        <span class="fw-bold" style="color: #00bcd4;">{{ courseInfo.batchNumber }}</span>
+      </div>
+
+      <div class="col-md-4 col-sm-6">
+        <span class="fw-bold text-dark me-1">Course Name :</span>
+        <span class="fw-bold" style="color: #00bcd4;">{{ courseInfo.courseName }}</span>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <span class="fw-bold text-dark me-1">Course Start Date :</span>
+        <span class="fw-bold" style="color: #00bcd4;">{{ courseInfo.startDate }}</span>
+      </div>
+
+      <div class="col-md-2 col-sm-6 text-md-end">
+        <button class="btn text-white fw-bold px-3 py-2" style="background-color: #5d53c0; font-size: 0.85rem; border-radius: 6px;">
+          <i class="bi bi-eye me-1"></i> My Schedule
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: Job Description Details -->
+  <div class="section-container mb-4">
+    <h4 class="fw-bold mb-3" style="color: #2c323f; font-size: 1.1rem;">
+      Job Description Details
+    </h4>
+
+    <div class="row align-items-center g-3">
+      <!-- Total Opportunity -->
+      <div class="col-md-3 col-sm-6">
+        <div class="card p-3 shadow-sm border-0" style="border-bottom: 4px solid #5d53c0 !important; border-radius: 8px;">
+          <span class="fw-bold text-dark" style="font-size: 0.9rem;">Total Opportunity</span>
+          <span class="fw-bold fs-5 mt-2">{{ jobMetrics.totalOpportunity }}</span>
+        </div>
+      </div>
+
+      <!-- Total Applied -->
+      <div class="col-md-3 col-sm-6">
+        <div class="card p-3 shadow-sm border-0" style="border-bottom: 4px solid #4caf50 !important; border-radius: 8px;">
+          <span class="fw-bold text-dark" style="font-size: 0.9rem;">Total Applied</span>
+          <span class="fw-bold fs-5 mt-2">{{ jobMetrics.totalApplied }}</span>
+        </div>
+      </div>
+
+      <!-- Total Lost -->
+      <div class="col-md-3 col-sm-6">
+        <div class="card p-3 shadow-sm border-0" style="border-bottom: 4px solid #f44336 !important; border-radius: 8px;">
+          <span class="fw-bold text-dark" style="font-size: 0.9rem;">Total Lost</span>
+          <span class="fw-bold fs-5 mt-2">{{ jobMetrics.totalLost }}</span>
+        </div>
+      </div>
+
+      <!-- View JD Button -->
+      <div class="col-md-3 col-sm-6 text-md-end">
+        <button class="btn text-white fw-bold px-3 py-2" style="background-color: #5d53c0; font-size: 0.85rem; border-radius: 6px;">
+          <i class="bi bi-eye me-1"></i> View JD Details
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4: Attendance & MCQ Report -->
+  <div class="section-container mb-4">
+    <h4 class="fw-bold mb-3" style="color: #2c323f; font-size: 1.1rem;">
+      Attendance & MCQ Report
+    </h4>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="card p-3 shadow-sm border-0" style="border-radius: 8px; min-height: 250px;">
+          <h5 class="fw-bold" style="color: #4c43b2; font-size: 1rem;">
+            Module-Wise Attendance Overview
+          </h5>
+          <!-- Chart Component or Graphics will render here -->
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card p-3 shadow-sm border-0" style="border-radius: 8px; min-height: 250px;">
+          <h5 class="fw-bold" style="color: #4c43b2; font-size: 1rem;">
+            Module-Wise Attendance Overview
+          </h5>
+          <!-- MCQ Chart Component will render here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,221 @@
+/* The test engine owns the whole viewport — it is routed outside the dashboard
+   shell so there is no sidebar or header to compete with while a test is live. */
+
+.mcq-engine {
+  position: fixed;
+  inset: 0;
+  background: #eef2fb;
+  overflow: hidden;
+  z-index: 1040;
+}
+
+/* The dashboard theme forces EVERY card to full height so its dashboard grid
+   tiles line up (assets/dashboard/css/style.css: `.card { height: calc(100% - 30px) }`).
+   Inside the test engine that stretched the modals down the whole screen.
+   Cards here size to their content instead. */
+.mcq-engine .card {
+  height: auto !important;
+  margin-bottom: 0 !important;
+}
+
+/* …except the two grid panes, which should fill their row and scroll inside. */
+.mcq-body > .card {
+  height: 100% !important;
+}
+
+.mcq-centre {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.mcq-shell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Header ─────────────────────────────────────────────────── */
+
+.mcq-header {
+  background: linear-gradient(135deg, #4d44b5, #3f38a0);
+  color: #fff;
+  flex: 0 0 auto;
+}
+
+.mcq-timer {
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.mcq-timer.danger   { color: #ffd166; }
+.mcq-timer.critical { color: #ff6b6b; animation: mcq-pulse 1s infinite; }
+
+@keyframes mcq-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+/* ─── Body layout ────────────────────────────────────────────── */
+
+.mcq-body {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 1rem;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.mcq-question,
+.mcq-palette {
+  background: #fff;
+  overflow-y: auto;
+}
+
+@media (max-width: 991px) {
+  .mcq-body {
+    grid-template-columns: minmax(0, 1fr);
+    overflow-y: auto;
+  }
+  .mcq-palette { order: -1; }
+}
+
+/* Question text can carry a code snippet — keep author line breaks. */
+.mcq-prompt {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.mcq-code {
+  background: #1e1e2e;
+  color: #e4e4f0;
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 0;
+}
+
+/* ─── Options ────────────────────────────────────────────────── */
+
+.mcq-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.mcq-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e4e6ef;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  margin: 0;
+}
+
+.mcq-option:hover        { border-color: #b9b4e6; background: #fafaff; }
+.mcq-option.selected     { border-color: #4d44b5; background: #eeecfb; }
+.mcq-option input        { position: absolute; opacity: 0; pointer-events: none; }
+
+.mcq-option-marker {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #f0f0f5;
+  color: #555;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mcq-option.selected .mcq-option-marker { background: #4d44b5; color: #fff; }
+
+.mcq-option-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* ─── Palette ────────────────────────────────────────────────── */
+
+.mcq-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.4rem;
+}
+
+.mcq-palette-cell {
+  aspect-ratio: 1;
+  border: 2px solid #d6d6e0;
+  border-radius: 50%;
+  background: #f6f6fa;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #555;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.15s;
+}
+
+.mcq-palette-cell:hover    { transform: scale(1.12); border-color: #4d44b5; }
+.mcq-palette-cell.answered { background: #6ab05c; border-color: #4e8c43; color: #fff; }
+.mcq-palette-cell.current  { box-shadow: 0 0 0 3px rgba(77, 68, 181, 0.45); }
+
+/* ─── Overlays ───────────────────────────────────────────────── */
+
+.mcq-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 15, 35, 0.62);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 1060;
+}
+
+/* Strike dots — how many warnings are used, at a glance */
+.mcq-strikes {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.mcq-strike {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #e2e2ea;
+  border: 2px solid #d0d0dc;
+}
+
+.mcq-strike.used {
+  background: #dc3545;
+  border-color: #b02a37;
+}
+
+/* ─── Result banner ──────────────────────────────────────────── */
+
+.result-banner.pass { background: linear-gradient(135deg, #28a745, #20c997); }
+.result-banner.fail { background: linear-gradient(135deg, #e05260, #c0392b); }
+
+.stat-tile { background: #fbfbfd; }
+
+/* Discourage casual copying of question text. Not a security control —
+   correctness never reaches the browser in the first place. */
+.mcq-question,
+.mcq-options {
+  user-select: none;
+}

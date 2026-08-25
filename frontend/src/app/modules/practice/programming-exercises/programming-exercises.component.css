@@ -1,0 +1,50 @@
+/* Palette & Typography */
+.text-dark-purple {
+  color: #2E1065 !important;
+  font-size: 0.95rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.fs-7 {
+  font-size: 0.88rem;
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+/* Topic Card Outer Container */
+.topic-card {
+  border: 1px solid #E2E8F0 !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.topic-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(82, 67, 194, 0.1) !important;
+}
+
+/* Purple Top Header Banner */
+.bg-purple-header {
+  background-color: #5243C2 !important; /* Purple banner color */
+}
+
+/* Outline View Questions Button */
+.btn-outline-purple {
+  color: #5243C2 !important;
+  border: 1px solid #5243C2 !important;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-purple:hover {
+  background-color: #5243C2 !important;
+  color: #FFFFFF !important;
+}
+
+.btn-outline-purple:active {
+  transform: scale(0.96);
+}

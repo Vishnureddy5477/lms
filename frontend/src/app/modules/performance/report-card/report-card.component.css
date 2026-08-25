@@ -1,0 +1,64 @@
+.text-navy {
+  color: #2b3674 !important;
+}
+
+.fs-7 {
+  font-size: 0.825rem;
+}
+
+.fs-8 {
+  font-size: 0.75rem;
+}
+
+/* Info Box */
+.info-box {
+  background-color: #f8f9fa;
+  border: 1px solid #e2e8f0;
+}
+
+.info-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 0.85rem;
+}
+
+/* Marks Table */
+.mark-table {
+  font-size: 0.725rem;
+  border-color: #cbd5e1;
+}
+
+.mark-table th {
+  background-color: #f1f5f9;
+  color: #1e293b;
+  font-weight: 600;
+  padding: 6px 4px;
+}
+
+.mark-table td {
+  padding: 4px 4px;
+  color: #334155;
+}
+
+/* Grading Table */
+.grading-table {
+  font-size: 0.75rem;
+  border-color: #cbd5e1;
+}
+
+.grading-table th, .grading-table td {
+  padding: 6px 8px;
+}
+
+/* Signature Box */
+.signature-box {
+  width: 160px;
+}
+
+.signature-line {
+  border-bottom: 1px solid #cbd5e1;
+  height: 30px;
+}

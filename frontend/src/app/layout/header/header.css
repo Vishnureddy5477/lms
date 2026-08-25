@@ -1,0 +1,16 @@
+.dropdown-item {
+  transition: all 0.2s ease-in-out;
+}
+
+.dropdown-item:hover {
+  background-color: #f3f4f6;
+}
+
+.dropdown-item:hover span,
+.dropdown-item:hover i {
+  color: #4c4cc7 !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

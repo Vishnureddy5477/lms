@@ -1,0 +1,458 @@
+<div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+
+    <app-skeleton *ngIf="loading" variant="form" [rows]="6" ariaLabel="Loading enrollment form" />
+
+    <div *ngIf="!loading && alreadySubmitted" class="alert alert-success text-center mb-0">
+        {{ message || 'You have already submitted the enrollment form. Thank you.' }}
+    </div>
+
+    <ng-container *ngIf="!loading && !alreadySubmitted">
+
+    <!-- Header Banner -->
+    <div class="text-center mb-4">
+        <h4 class="fw-bold text-primary mb-1">Cranes Software International Limited, Varsity Division</h4>
+        <p class="text-muted small fst-italic mb-2">(TRAINING - UNIVERSITY PROGRAM - PRODUCTS & IP - DEVELOPMENT
+            SOLUTION)</p>
+        <div class="section-title-bar py-2 px-3 fw-bold text-white text-uppercase rounded-2">
+            ENROLLMENT FORM
+        </div>
+        <small class="text-muted fst-italic">(PLEASE FILL THE FORM WITH CORRECT INFORMATION)</small>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #enrollmentForm="ngForm">
+
+        <div class="alert alert-danger py-2 px-3 mb-3" *ngIf="message && isError">{{ message }}</div>
+
+        <!-- Top Metadata -->
+        <div class="row g-3 align-items-center mb-4 bg-light p-3 rounded-3 border">
+            <div class="col-md-4">
+                <label class="fw-semibold text-secondary small">Registration No:</label>
+                <input type="text" class="form-control form-control-sm bg-white" [value]="enrollmentData.registrationNo"
+                    readonly>
+            </div>
+            <div class="col-md-4">
+                <label class="fw-semibold text-secondary small">Batch No:</label>
+                <input type="text" class="form-control form-control-sm bg-white" [value]="enrollmentData.batchNo"
+                    readonly>
+            </div>
+            <div class="col-md-4">
+                <label class="fw-semibold text-secondary small">Course:</label>
+                <input type="text" class="form-control form-control-sm bg-white" [value]="enrollmentData.course"
+                    readonly>
+            </div>
+        </div>
+
+        <!-- Personal Info + Image Upload -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-8">
+                <div class="mb-2">
+                    <label class="form-label-custom">Student's Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-sm" [(ngModel)]="enrollmentData.studentName"
+                        name="studentName" required>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label-custom">Date Of Birth <span class="text-danger">*</span></label>
+                    <input type="date" class="form-control form-control-sm" [(ngModel)]="enrollmentData.dob" name="dob"
+                        required>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label-custom">Father's Name <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-sm" [(ngModel)]="enrollmentData.fatherName"
+                        name="fatherName" required>
+                </div>
+                <div class="row g-2 mb-2">
+                    <div class="col-md-4">
+                        <label class="form-label-custom">Residence (Land line/ Mobile)</label>
+                        <input type="text" class="form-control form-control-sm" placeholder="STD-CODE"
+                            [(ngModel)]="enrollmentData.residenceStd" name="residenceStd">
+                    </div>
+                    <div class="col-md-8 align-self-end">
+                        <input type="text" class="form-control form-control-sm" placeholder="Number"
+                            [(ngModel)]="enrollmentData.residenceNumber" name="residenceNumber">
+                    </div>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-6">
+                        <label class="form-label-custom">Mobile(Parent/Guardian) <span
+                                class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-sm" placeholder="Parent Mobile No"
+                            [(ngModel)]="enrollmentData.parentMobile" name="parentMobile" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label-custom">Email(Parent/Guardian)</label>
+                        <input type="email" class="form-control form-control-sm" placeholder="Parent/Guardian Email"
+                            [(ngModel)]="enrollmentData.parentEmail" name="parentEmail">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photo Upload Frame -->
+            <div class="col-md-4 d-flex flex-column align-items-center justify-content-center">
+                <div
+                    class="passport-photo-box border d-flex flex-column align-items-center justify-content-center text-muted mb-2 overflow-hidden rounded-3">
+                    @if (photoPreview) {
+                    <img [src]="photoPreview" class="img-fluid h-100 w-100 object-fit-cover" alt="Passport Preview">
+                    } @else {
+                    <span class="small text-center px-2">Upload Your Passport size image</span>
+                    }
+                </div>
+                <input type="file" class="form-control form-control-sm w-75" (change)="onFileSelected($event)"
+                    accept="image/*">
+            </div>
+        </div>
+
+        <!-- Contact Information Section -->
+        <div class="section-header-bar mb-3">CONTACT INFORMATION</div>
+
+        <div class="mb-3">
+            <label class="form-label-custom">Full Postal Address(Present) <span class="text-danger">*</span></label>
+            <textarea class="form-control form-control-sm" rows="2" [(ngModel)]="enrollmentData.presentAddress"
+                name="presentAddress" required></textarea>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label class="form-label-custom">State <span class="text-danger">*</span></label>
+                <select class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched" [(ngModel)]="enrollmentData.presentState"
+                    name="presentState" required>
+                    <!-- <option value="">Not Available</option> -->
+                    <option value="">Select State</option>
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                    <option value="Assam">Assam</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Chhattisgarh">Chhattisgarh</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                    <option value="Jharkhand">Jharkhand</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Manipur">Manipur</option>
+                    <option value="Meghalaya">Meghalaya</option>
+                    <option value="Mizoram">Mizoram</option>
+                    <option value="Nagaland">Nagaland</option>
+                    <option value="Odisha">Odisha</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Sikkim">Sikkim</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Telangana">Telangana</option>
+                    <option value="Tripura">Tripura</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="West Bengal">West Bengal</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label-custom">City <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm" placeholder="City"
+                    [(ngModel)]="enrollmentData.presentCity" name="presentCity" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label-custom">Pin <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm" placeholder="Pin"
+                    [(ngModel)]="enrollmentData.presentPin" name="presentPin" required>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label-custom">Full Postal Address(Permanent) <span class="text-danger">*</span></label>
+            <textarea class="form-control form-control-sm" rows="2" [(ngModel)]="enrollmentData.permanentAddress"
+                name="permanentAddress" required></textarea>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-md-4">
+                <label class="form-label-custom">State <span class="text-danger">*</span></label>
+                <select class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched" [(ngModel)]="enrollmentData.permanentState"
+                    name="permanentState" required>
+                    <!-- <option value="">Not Available</option> -->
+                    <option value="">Select State</option>
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                    <option value="Assam">Assam</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Chhattisgarh">Chhattisgarh</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                    <option value="Jharkhand">Jharkhand</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Manipur">Manipur</option>
+                    <option value="Meghalaya">Meghalaya</option>
+                    <option value="Mizoram">Mizoram</option>
+                    <option value="Nagaland">Nagaland</option>
+                    <option value="Odisha">Odisha</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Sikkim">Sikkim</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Telangana">Telangana</option>
+                    <option value="Tripura">Tripura</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="West Bengal">West Bengal</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label-custom">City <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm" placeholder="City"
+                    [(ngModel)]="enrollmentData.permanentCity" name="permanentCity" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label-custom">Pin <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm" placeholder="Pin"
+                    [(ngModel)]="enrollmentData.permanentPin" name="permanentPin" required>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label class="form-label-custom">Phone</label>
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" placeholder="STD-CODE" [(ngModel)]="enrollmentData.phoneStd"
+                        name="phoneStd">
+                    <input type="text" class="form-control" placeholder="Number"
+                        [(ngModel)]="enrollmentData.phoneNumber" name="phoneNumber">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-custom">Linked-In <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm" placeholder="linked-in account id"
+                    [(ngModel)]="enrollmentData.linkedIn" name="linkedIn" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-custom">Mobile(Student) <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm" placeholder="mobile no"
+                    [(ngModel)]="enrollmentData.studentMobile" name="studentMobile" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-custom">Email(Student) <span class="text-danger">*</span></label>
+                <input type="email" class="form-control form-control-sm" placeholder="Studentemail"
+                    [(ngModel)]="enrollmentData.studentEmail" name="studentEmail" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-custom">Email1 <span class="text-danger">*</span></label>
+                <input type="email" class="form-control form-control-sm" placeholder="Student email1"
+                    [(ngModel)]="enrollmentData.email1" name="email1" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-custom">Skype Id <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm" placeholder="Generate Skype Id and put here"
+                    [(ngModel)]="enrollmentData.skypeId" name="skypeId" required>
+            </div>
+        </div>
+
+        <!-- Educational Qualification Section -->
+        <div class="section-header-bar mb-2">EDUCATIONAL QUALIFICATION</div>
+        <div class="alert alert-primary py-2 small mb-3">
+            <strong>Note :</strong> Educational marks keep in percentage(60%) don't add symbol like %,age,cgp,gpa, if
+            you have cgp just calculate like cgpa*9.5 Example of 7.5 cgpa => 7.5x9.5=71.25
+        </div>
+
+        <div class="table-responsive mb-3">
+            <table class="table table-bordered align-middle table-sm small text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>Slno.</th>
+                        <th>Stage</th>
+                        <th>DegreeAwarded</th>
+                        <th>CollegeName</th>
+                        <th>University</th>
+                        <th>Stream</th>
+                        <th>PassoutYear</th>
+                        <th>%Obtained</th>
+                        <th>GapInEducation(Yes/No)</th>
+                        <th>YearsInGap</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of enrollmentData.educationList; track $index) {
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td class="fw-bold text-start">{{ item.stage }}</td>
+                        <td><input type="text" class="form-control form-control-sm" [(ngModel)]="item.degree"
+                                [name]="'degree' + $index"></td>
+                        <td><input type="text" class="form-control form-control-sm" placeholder="College"
+                                [(ngModel)]="item.college" [name]="'college' + $index"></td>
+                        <td><input type="text" class="form-control form-control-sm" placeholder="University"
+                                [(ngModel)]="item.university" [name]="'university' + $index"></td>
+                        <td><input type="text" class="form-control form-control-sm" [(ngModel)]="item.stream"
+                                [name]="'stream' + $index"></td>
+                        <td><input type="text" class="form-control form-control-sm" placeholder="Passout Year"
+                                [(ngModel)]="item.passoutYear" [name]="'year' + $index"></td>
+                        <td><input type="text" class="form-control form-control-sm" placeholder="0.0%"
+                                [(ngModel)]="item.percentage" [name]="'percentage' + $index"></td>
+                        <td>
+                            <select class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched" [(ngModel)]="item.gap"
+                                [name]="'gap' + $index">
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control form-control-sm" placeholder="Gaps in years"
+                                [(ngModel)]="item.gapYears" [name]="'gapYears' + $index"></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mb-4 row g-2 align-items-center">
+            <label class="col-auto form-label-custom mb-0">Additional Qualification</label>
+            <div class="col-md-6">
+                <input type="text" class="form-control form-control-sm" placeholder="Additional Qualification"
+                    [(ngModel)]="enrollmentData.additionalQualification" name="additionalQualification">
+            </div>
+        </div>
+
+        <!-- Present Employer Details -->
+        <div class="section-header-bar mb-3">PRESENT EMPLOYER'S DETAILS</div>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label-custom">Name of Organization</label>
+                <input type="text" class="form-control form-control-sm" placeholder="Organization's Name"
+                    [(ngModel)]="enrollmentData.employerName" name="employerName">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-custom">Designation</label>
+                <input type="text" class="form-control form-control-sm" placeholder="Designation"
+                    [(ngModel)]="enrollmentData.designation" name="designation">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-custom">Domain/Technology</label>
+                <input type="text" class="form-control form-control-sm" placeholder="Domain/Technology"
+                    [(ngModel)]="enrollmentData.domainTechnology" name="domainTechnology">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-custom">Area of work</label>
+                <input type="text" class="form-control form-control-sm" placeholder="Area of work"
+                    [(ngModel)]="enrollmentData.areaOfWork" name="areaOfWork">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label-custom">Technical Skills</label>
+                <input type="text" class="form-control form-control-sm" placeholder="Technical Skills"
+                    [(ngModel)]="enrollmentData.technicalSkills" name="technicalSkills">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label-custom">Work Experience(Current)</label>
+                <input type="text" class="form-control form-control-sm" placeholder="Work Experiance"
+                    [(ngModel)]="enrollmentData.currentExperience" name="currentExperience">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label-custom">Total Work Experience</label>
+                <input type="text" class="form-control form-control-sm" placeholder="Total work experiance"
+                    [(ngModel)]="enrollmentData.totalExperience" name="totalExperience">
+            </div>
+            <div class="col-12">
+                <label class="form-label-custom">Address</label>
+                <textarea class="form-control form-control-sm" rows="2" [(ngModel)]="enrollmentData.employerAddress"
+                    name="employerAddress"></textarea>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label-custom">Phone(working)</label>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="enrollmentData.workPhone"
+                    name="workPhone">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label-custom">Email</label>
+                <input type="email" class="form-control form-control-sm" [(ngModel)]="enrollmentData.workEmail"
+                    name="workEmail">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label-custom">WebpageURL</label>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="enrollmentData.webpageUrl"
+                    name="webpageUrl">
+            </div>
+        </div>
+
+        <!-- List of Previous Employment Details -->
+        <div class="section-header-bar mb-3">LIST OF PREVIOUS EMPLOYMENT DETAILS</div>
+        <div class="table-responsive mb-4">
+            <table class="table table-bordered align-middle table-sm small">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th>Slno</th>
+                        <th>Name Of Organization</th>
+                        <th>Designation</th>
+                        <th>Area of Work</th>
+                        <th>From</th>
+                        <th>To</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (emp of enrollmentData.previousEmployment; track $index) {
+                    <tr>
+                        <td class="text-center">{{ $index + 1 }}.</td>
+                        <td><input type="text" class="form-control form-control-sm" [(ngModel)]="emp.orgName"
+                                [name]="'prevOrg' + $index"></td>
+                        <td><input type="text" class="form-control form-control-sm" [(ngModel)]="emp.designation"
+                                [name]="'prevDesig' + $index"></td>
+                        <td><input type="text" class="form-control form-control-sm" [(ngModel)]="emp.areaOfWork"
+                                [name]="'prevArea' + $index"></td>
+                        <td><input type="date" class="form-control form-control-sm" [(ngModel)]="emp.from"
+                                [name]="'prevFrom' + $index"></td>
+                        <td><input type="date" class="form-control form-control-sm" [(ngModel)]="emp.to"
+                                [name]="'prevTo' + $index"></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Placement & Declaration -->
+        <div class="mb-3 d-flex align-items-center gap-2">
+            <label class="form-label-custom mb-0">Are You Interested For Placement? <span
+                    class="text-danger">*</span></label>
+            <select class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched"
+                [(ngModel)]="enrollmentData.interestedInPlacement" name="interestedInPlacement">
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <div class="fw-bold text-dark small mb-1">Declaration By Student</div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="declaration"
+                    [(ngModel)]="enrollmentData.declarationAccepted" name="declarationAccepted" required>
+                <label class="form-check-label small" for="declaration">
+                    * I hereby declare that all the above information/fact provided by me are true and correct to the
+                    best of my knowledge. I will not hold Cranes Varsity responsible for any of the information filled
+                    above are found to be untrue.
+                </label>
+            </div>
+            <div class="text-muted extra-small ms-4">
+                By clicking Register Button, you agree to our <a href="#" class="text-decoration-none">Terms and
+                    Conditions</a>, Data Policy and Cookie Policy. You may receive SMS notifications from us.
+            </div>
+        </div>
+
+        <!-- Register Button -->
+        <div class="d-flex justify-content-between align-items-center pt-2">
+            <button type="submit" class="btn btn-primary px-4 py-2 fw-bold"
+                [disabled]="!enrollmentForm.form.valid || submitting">
+                {{ submitting ? 'Submitting...' : 'Register' }}
+            </button>
+            <div class="d-flex align-items-center justify-content-end gap-2 my-3">
+                <label class="form-label-custom mb-0 fw-bold">Signature :</label>
+                <input type="text" class="form-control form-control-sm signature-input text-center"
+                    placeholder="Type full name to sign" [(ngModel)]="enrollmentData.studentName" name="signatureInput">
+            </div>
+        </div>
+
+    </form>
+
+    </ng-container>
+
+</div>

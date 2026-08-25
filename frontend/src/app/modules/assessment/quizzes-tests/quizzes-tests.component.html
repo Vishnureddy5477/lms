@@ -1,0 +1,169 @@
+<div class="container-fluid p-4">
+
+  <!-- Header Section with Title & Refresh Button -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h6 class="fw-bold text-dark-purple mb-0">Available MCQ Tests</h6>
+    
+    <button 
+      (click)="onRefreshTests()" 
+      [disabled]="isLoading" 
+      class="btn btn-refresh font-medium px-3 py-1.5 rounded-2 fs-8 d-flex align-items-center gap-1.5"
+    >
+      <i class="bi bi-arrow-repeat" [class.spin]="isLoading"></i>
+      <span>Refresh Tests</span>
+    </button>
+  </div>
+
+  <!-- Rules, shown here rather than on a separate screen. The button below is
+       the user gesture that grants fullscreen, which then carries into the test. -->
+  @if (pendingTest) {
+    <div class="mcq-rules-overlay" (click)="cancelStart()">
+      <div class="mcq-rules-panel" (click)="$event.stopPropagation()">
+
+        <div class="text-center mb-3">
+          <i class="bi bi-fullscreen text-primary" style="font-size: 2rem;"></i>
+          <h5 class="fw-bold mt-2 mb-1">This test runs in fullscreen</h5>
+          <p class="text-muted fs-8 mb-0">
+            {{ pendingTest.moduleName }} — Test {{ pendingTest.mcqTestNo }}
+          </p>
+        </div>
+
+        <ul class="mcq-rules-list fs-8 mb-3">
+          <li><i class="bi bi-clock text-primary"></i>
+            You get <strong>40 minutes</strong> for <strong>40 questions</strong>, 0.5 marks each.
+            The timer runs on the server and keeps going if you close the tab.</li>
+          <li><i class="bi bi-shield-exclamation text-warning"></i>
+            Leaving fullscreen, switching tabs or opening another window is recorded
+            as a warning. After <strong>3 warnings</strong> your test is submitted automatically.</li>
+          <li><i class="bi bi-cloud-check text-success"></i>
+            Every answer is saved as you go, so a crash or refresh will not lose your work.</li>
+          <li><i class="bi bi-check2-circle text-primary"></i>
+            You need <strong>50%</strong> to pass.</li>
+        </ul>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-outline-secondary rounded-3 flex-shrink-0" (click)="cancelStart()">
+            Cancel
+          </button>
+          <button class="btn btn-start-test rounded-3 flex-grow-1" (click)="beginTest()">
+            <i class="bi bi-play-circle me-1"></i> Enter fullscreen &amp; begin
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- Why the last start attempt was refused (server-supplied, one reason per check) -->
+  @if (blockedMessage) {
+    <div class="alert alert-danger alert-dismissible d-flex align-items-start gap-2 rounded-3 mb-4">
+      <i class="bi bi-shield-exclamation fs-5 mt-1"></i>
+      <div>
+        <div class="fw-semibold">{{ blockedTitle }}</div>
+        <div class="fs-8">{{ blockedMessage }}</div>
+      </div>
+      <button type="button" class="btn-close" (click)="dismissBlocked()"></button>
+    </div>
+  }
+
+  <!-- White Container Outer Card -->
+  <div class="card border-0 shadow-sm rounded-4 bg-white p-5 card-content-area">
+    
+    @if (isLoading) {
+      <div class="d-flex flex-column align-items-center justify-content-center py-5 text-center">
+        <app-skeleton variant="cards" [rows]="3" />
+      </div>
+    } @else if (availableTests.length === 0) {
+      <!-- Empty State -->
+      <div class="d-flex flex-column align-items-center justify-content-center py-5 text-center">
+        
+        <!-- Calendar Icon Box -->
+        <div class="calendar-icon-wrapper mb-3 d-flex align-items-center justify-content-center">
+          <div class="calendar-box border border-2 rounded-3 p-2 position-relative">
+            <i class="bi bi-calendar-event fs-1 text-muted opacity-50"></i>
+            <i class="bi bi-x-lg text-muted position-absolute top-50 start-50 translate-middle fs-6"></i>
+          </div>
+        </div>
+
+        <!-- Heading Text -->
+        <h6 class="fw-bold text-dark-purple mb-2">No Tests Available</h6>
+
+        <!-- Updated Black Text Subtitles -->
+        <p class="text-dark-muted fs-8 mb-1">
+          There are no tests scheduled for your batch at this time.
+        </p>
+        <p class="text-dark-muted fs-8 mb-0">
+          Please check back later or contact your instructor for more information.
+        </p>
+
+      </div>
+    } @else {
+      <!-- Test List View (when tests exist) -->
+      <div class="row g-3">
+        @for (test of availableTests; track test.id) {
+          <div class="col-12">
+            <div class="card border rounded-3 test-card"
+                 [class.test-live]="windowOf(test) === 'live'"
+                 [class.test-upcoming]="windowOf(test) === 'upcoming'"
+                 [class.test-ended]="windowOf(test) === 'ended'">
+              <div class="p-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
+
+                <div class="flex-grow-1">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <h6 class="fw-bold text-dark mb-0">
+                      <i class="bi bi-journal-text me-1"></i>{{ test.moduleName }}
+                    </h6>
+                    @if (test.testType === 'retake') {
+                      <span class="badge bg-warning text-dark fs-9">Retake</span>
+                    }
+                  </div>
+
+                  <div class="d-flex flex-wrap gap-2 mb-2">
+                    <span class="test-meta"><i class="bi bi-hash"></i> Test {{ test.mcqTestNo }}</span>
+                    <span class="test-meta"><i class="bi bi-calendar-event"></i> {{ test.testDate }}</span>
+                    <span class="test-meta"><i class="bi bi-clock"></i> {{ test.testStartTime }} – {{ test.testEndTime }} IST</span>
+                    <span class="test-meta"><i class="bi bi-people"></i> {{ test.batchName }}</span>
+                  </div>
+
+                  <div class="d-flex align-items-center gap-2">
+                    @switch (windowOf(test)) {
+                      @case ('live')     { <span class="badge bg-success">Live Now</span> }
+                      @case ('upcoming') { <span class="badge bg-warning text-dark">Upcoming</span> }
+                      @case ('ended')    { <span class="badge bg-danger">Ended</span> }
+                    }
+                    <span class="text-muted fs-9">{{ countdownOf(test) }}</span>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  @if (isLive(test)) {
+                    <button class="btn btn-start-test rounded-pill px-4"
+                            [disabled]="validatingId === test.id"
+                            (click)="onStartTest(test)">
+                      @if (validatingId === test.id) {
+                        <span class="spinner-border spinner-border-sm me-1"></span> Validating…
+                      } @else {
+                        <i class="bi bi-play-circle me-1"></i> Start Test Now
+                      }
+                    </button>
+                  } @else if (windowOf(test) === 'upcoming') {
+                    <button class="btn btn-warning rounded-pill px-4" disabled>
+                      <i class="bi bi-clock me-1"></i> Not Started
+                    </button>
+                  } @else {
+                    <button class="btn btn-secondary rounded-pill px-4" disabled>
+                      <i class="bi bi-x-circle me-1"></i> Test Ended
+                    </button>
+                  }
+                </div>
+
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+
+</div>

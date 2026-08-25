@@ -1,0 +1,152 @@
+/* Typography & Color Palette */
+.text-dark-purple {
+  color: #2E1065 !important;
+  font-size: 0.95rem;
+}
+
+/* Updated dark grey / black text rule for empty state descriptions */
+.text-dark-muted {
+  color: #334155 !important; /* Soft black / dark slate */
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+.card-content-area {
+  min-height: 480px;
+}
+
+/* Refresh Button */
+.btn-refresh {
+  background-color: #EDE9FE !important;
+  color: #5243C2 !important;
+  border: none !important;
+  transition: all 0.2s ease;
+}
+
+.btn-refresh:hover {
+  background-color: #DDD6FE !important;
+}
+
+/* Calendar Icon Container */
+.calendar-box {
+  width: 58px;
+  height: 58px;
+  border-color: #CBD5E1 !important;
+  background-color: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fs-9 {
+  font-size: 0.72rem;
+}
+
+/* Test cards — coloured left edge shows the window at a glance */
+.test-card {
+  border-left-width: 5px !important;
+  transition: box-shadow 0.2s ease;
+}
+
+.test-card:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+}
+
+.test-live     { border-left-color: #28a745 !important; }
+.test-upcoming { border-left-color: #ffc107 !important; }
+.test-ended    { border-left-color: #dc3545 !important; }
+
+.test-meta {
+  background: rgba(82, 67, 194, 0.08);
+  color: #3f3a63;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.btn-start-test {
+  background: #4d44b5;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.btn-start-test:hover:not(:disabled) {
+  background: #3f38a0;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.btn-start-test:disabled {
+  opacity: 0.65;
+}
+
+/* Rules popup.
+   Deliberately does NOT use Bootstrap's .card: the dashboard theme sets
+   `.card { height: calc(100% - 30px) }` so its dashboard tiles line up, which
+   would stretch this panel down the whole screen. */
+.mcq-rules-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 15, 35, 0.62);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 1060;
+}
+
+.mcq-rules-panel {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 470px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.mcq-rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mcq-rules-list li {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f0f0f5;
+  line-height: 1.5;
+  color: #334155;
+}
+
+.mcq-rules-list li:last-child { border-bottom: 0; }
+
+.mcq-rules-list i {
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+
+/* Spin Animation */
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

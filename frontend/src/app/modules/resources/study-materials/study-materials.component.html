@@ -1,0 +1,60 @@
+<div class="container-fluid p-4">
+
+  <!-- Main Title -->
+  <h5 class="fw-bold text-dark-purple mb-4">Class Materials</h5>
+
+  <!-- Table Card Wrapper -->
+  <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+    
+    <div class="table-responsive">
+      <table class="table table-borderless align-middle mb-0 custom-materials-table">
+        
+        <!-- Light Purple Table Header -->
+        <thead class="bg-purple-header text-purple-heading">
+          <tr>
+            <th scope="col" class="ps-4 col-sn">SN</th>
+            <th scope="col" class="col-module">ModuleName</th>
+            <th scope="col" class="pe-4 col-action text-start">Action</th>
+          </tr>
+        </thead>
+
+        <!-- Table Content -->
+        <tbody>
+          @if (loading) {
+            @for (r of [1,2,3,4,5]; track r) { <tr appSkeletonRow [columns]="3"></tr> }
+          } @else if (materialsList.length === 0) {
+            <tr><td colspan="3" class="text-center py-4 text-muted">No study materials available.</td></tr>
+          }
+          @for (item of materialsList; track item.id; let i = $index) {
+            <tr class="border-bottom-light">
+              <td class="ps-4 text-secondary font-medium">{{ i + 1 }}</td>
+              <td class="text-dark font-medium">{{ item.moduleName }}</td>
+              <td class="pe-4">
+                <div class="d-flex align-items-center gap-2">
+                  <!-- View Material Button (Purple) -->
+                  <button 
+                    (click)="onViewMaterial(item)" 
+                    class="btn btn-purple-action btn-sm rounded-1 px-2.5 py-1 fw-semibold fs-8"
+                  >
+                    View Material
+                  </button>
+
+                  <!-- Download Button (Green) -->
+                  <button 
+                    (click)="onDownloadMaterial(item)" 
+                    class="btn btn-green-action btn-sm rounded-1 px-2.5 py-1 fw-semibold fs-8"
+                  >
+                    Download
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+</div>

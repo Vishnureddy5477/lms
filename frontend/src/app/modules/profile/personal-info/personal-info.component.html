@@ -1,0 +1,255 @@
+<div class="container-fluid p-4">
+
+    <!-- Main Banner Header Card -->
+    <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+
+        <!-- Top Purple Section -->
+        <div class="bg-purple-gradient position-relative" style="height: 140px;">
+            <!-- Arches -->
+            <div class="banner-arcs"></div>
+        </div>
+
+        <!-- White Bottom Bar (Holds the Avatar) -->
+        <div class="position-relative bg-white px-4 pb-3" style="height: 45px;">
+            <!-- Avatar Circle OVERLAPPING top purple and bottom white -->
+            <div class="avatar-container position-absolute">
+                <div
+                    class="avatar-circle rounded-circle bg-white shadow-sm d-flex align-items-center justify-content-center">
+                    <!-- Same placeholder image as legacy my-profile.jsp's student.png fallback -->
+                    <img src="assets/images/student.png" alt="Profile" style="width: 65%; height: 65%; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Content Details Card -->
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs border-bottom-0 gap-4 mb-4" id="profileTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal"
+                    type="button" role="tab">
+                    Personal Details
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="course-tab" data-bs-toggle="tab" data-bs-target="#course" type="button"
+                    role="tab">
+                    Course Details
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="educational-tab" data-bs-toggle="tab" data-bs-target="#educational"
+                    type="button" role="tab">
+                    Educational Details
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="fees-tab" data-bs-toggle="tab" data-bs-target="#fees" type="button"
+                    role="tab">
+                    Fees Details
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password" type="button"
+                    role="tab">
+                    Change Password
+                </button>
+            </li>
+        </ul>
+
+        <hr class="mt-0 mb-4 text-muted opacity-25">
+
+        @if (loading) {
+          <app-skeleton variant="table" [rows]="5" [columns]="4" />
+        }
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="profileTabsContent" [class.d-none]="loading">
+
+            <!-- 1. Personal Details Pane -->
+            <div class="tab-pane fade show active" id="personal" role="tabpanel">
+                <div class="row g-4 fs-6">
+                    <div class="col-md-6 pe-md-5">
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-4 fw-bold text-dark-purple">Full Name:</div>
+                            <div class="col-8 font-medium">{{ personalDetails.fullName }}</div>
+                        </div>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-4 fw-bold text-dark-purple">Email:</div>
+                            <div class="col-8 font-medium">{{ personalDetails.email }}</div>
+                        </div>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-4 fw-bold text-dark-purple">Phone Number:</div>
+                            <div class="col-8 font-medium">{{ personalDetails.phone }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 ps-md-5">
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-4 fw-bold text-dark-purple">Address:</div>
+                            <div class="col-8 font-medium">{{ personalDetails.address }}</div>
+                        </div>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-4 fw-bold text-dark-purple">City:</div>
+                            <div class="col-8 font-medium">{{ personalDetails.city }}</div>
+                        </div>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-4 fw-bold text-dark-purple">State:</div>
+                            <div class="col-8 font-medium">{{ personalDetails.state }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Course Details Pane -->
+            <div class="tab-pane fade" id="course" role="tabpanel">
+                <div class="row g-4 fs-6">
+                    <div class="col-md-6 pe-md-5">
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-4 fw-bold text-dark-purple">Reg Number:</div>
+                            <div class="col-8 font-medium">{{ courseDetails.regNumber }}</div>
+                        </div>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-4 fw-bold text-dark-purple">Course Name:</div>
+                            <div class="col-8 font-medium">{{ courseDetails.courseName }}</div>
+                        </div>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-4 fw-bold text-dark-purple">Batch Number:</div>
+                            <div class="col-8 font-medium">{{ courseDetails.batchNumber }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 ps-md-5">
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-4 fw-bold text-dark-purple">College Name:</div>
+                            <div class="col-8 font-medium">{{ courseDetails.collegeName }}</div>
+                        </div>
+                        <div class="row mb-3 align-items-center">
+                            <div class="col-4 fw-bold text-dark-purple">Registration Date:</div>
+                            <div class="col-8 font-medium">{{ courseDetails.registrationDate }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Educational Details Pane -->
+            <div class="tab-pane fade" id="educational" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-borderless custom-edu-table align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-dark-purple fw-bold">Sl.No</th>
+                                <th scope="col" class="text-dark-purple fw-bold">Qualification</th>
+                                <th scope="col" class="text-dark-purple fw-bold">Branch/Stream</th>
+                                <th scope="col" class="text-dark-purple fw-bold">Marks (%)</th>
+                                <th scope="col" class="text-dark-purple fw-bold">Year Of Passing</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (item of educationalDetails; track item.slNo; let i = $index) {
+                            <tr [class.bg-light-row]="i % 2 === 0">
+                                <td class="text-secondary font-medium">{{ item.slNo }}</td>
+                                <td class="font-medium text-dark-purple">{{ item.qualification }}</td>
+                                <td class="text-secondary font-medium">{{ item.branch }}</td>
+                                <td class="text-secondary font-medium">{{ item.marks }}</td>
+                                <td class="text-secondary font-medium">{{ item.yearOfPassing }}</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- 4. Fees Details Pane -->
+            <div class="tab-pane fade" id="fees" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-borderless custom-fees-table align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-dark-purple fw-bold">Sl.No</th>
+                                <th scope="col" class="text-dark-purple fw-bold">Total Fees</th>
+                                <th scope="col" class="text-dark-purple fw-bold">Amount Paid</th>
+                                <th scope="col" class="text-dark-purple fw-bold">Due Amount</th>
+                                <th scope="col" class="text-dark-purple fw-bold">Due Date</th>
+                                <th scope="col" class="text-dark-purple fw-bold">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (item of feesDetails; track item.slNo; let i = $index) {
+                            <tr [class.bg-light-row]="i % 2 === 0">
+                                <td class="text-secondary font-medium">{{ item.slNo }}</td>
+                                <td class="text-secondary font-medium">{{ item.totalFees }}</td>
+                                <td class="text-secondary font-medium">{{ item.amountPaid }}</td>
+                                <td class="text-secondary font-medium">{{ item.dueAmount }}</td>
+                                <td class="text-secondary font-medium">{{ item.dueDate }}</td>
+                                <td>
+                                    <span
+                                        class="badge bg-success-badge px-3 py-1 text-white rounded-2 fs-7 fw-semibold">
+                                        {{ item.status }}
+                                    </span>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 5. Change Password Pane -->
+            <div class="tab-pane fade" id="password" role="tabpanel">
+                <div class="row justify-content-center py-2">
+                    <div class="col-md-7 col-lg-6">
+                        <form #pwForm (ngSubmit)="onChangePassword(currentPass.value, newPass.value, confirmPass.value, pwForm)">
+
+                            @if (passwordMessage) {
+                              <div class="alert py-2 px-3 mb-3"
+                                [class.alert-success]="passwordMessageType === 'success'"
+                                [class.alert-danger]="passwordMessageType === 'danger'"
+                                [class.alert-warning]="passwordMessageType === 'warning'">
+                                {{ passwordMessage }}
+                              </div>
+                            }
+
+                            <!-- Current Password -->
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label text-secondary fs-7 font-medium">Current
+                                    Password</label>
+                                <input #currentPass type="password" class="form-control custom-input py-2 px-3"
+                                    id="currentPassword" required>
+                            </div>
+
+                            <!-- New Password -->
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label text-secondary fs-7 font-medium">New
+                                    Password</label>
+                                <input #newPass type="password" class="form-control custom-input py-2 px-3"
+                                    id="newPassword" required>
+                            </div>
+
+                            <!-- Confirm New Password -->
+                            <div class="mb-4">
+                                <label for="confirmPassword" class="form-label text-secondary fs-7 font-medium">Confirm
+                                    New Password</label>
+                                <input #confirmPass type="password" class="form-control custom-input py-2 px-3"
+                                    id="confirmPassword" required>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-purple-submit px-4 py-2 rounded-2 fw-semibold" [disabled]="changingPassword">
+                                    <i class="fa fa-save me-2"></i>{{ changingPassword ? 'Changing...' : 'Change Password' }}
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

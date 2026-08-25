@@ -1,0 +1,78 @@
+/* Color Palette */
+.text-dark-purple {
+  color: #2E1065 !important;
+}
+
+.text-purple-heading {
+  color: #4A3E9D !important;
+}
+
+.bg-purple-header {
+  background-color: #F8F7FC !important;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.fs-8 {
+  font-size: 0.75rem;
+}
+
+/* Column Width Adjustments */
+.col-sn {
+  width: 80px;
+}
+
+.col-action {
+  width: 220px;
+}
+
+/* Table Styling */
+.custom-materials-table th {
+  font-size: 0.82rem;
+  padding: 14px 16px;
+  font-weight: 700;
+}
+
+.custom-materials-table td {
+  font-size: 0.82rem;
+  padding: 10px 16px;
+}
+
+.border-bottom-light {
+  border-bottom: 1px solid #F1F5F9;
+}
+
+/* Action Buttons */
+
+/* View Material Button (Purple) */
+.btn-purple-action {
+  background-color: #4A3E9D;
+  color: #FFFFFF;
+  border: none;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-purple-action:hover {
+  background-color: #3b3182;
+  color: #FFFFFF;
+}
+
+/* Download Button (Green) */
+.btn-green-action {
+  background-color: #10B981;
+  color: #FFFFFF;
+  border: none;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-green-action:hover {
+  background-color: #059669;
+  color: #FFFFFF;
+}
+
+.btn-purple-action:active,
+.btn-green-action:active {
+  transform: scale(0.97);
+}

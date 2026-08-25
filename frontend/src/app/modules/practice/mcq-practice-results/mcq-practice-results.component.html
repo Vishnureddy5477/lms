@@ -1,0 +1,61 @@
+<div class="container-fluid p-4">
+
+  <!-- White Outer Card Wrapper -->
+  <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden p-4">
+    
+    <!-- Title -->
+    <h6 class="fw-bold text-dark-purple mb-4">Practice MCQ Test Results</h6>
+
+    <!-- Table Container -->
+    <div class="table-responsive">
+      <table class="table table-borderless align-middle mb-0 custom-results-table">
+        
+        <!-- Light Purple Header -->
+        <thead class="bg-purple-header text-purple-heading">
+          <tr>
+            <th scope="col" class="ps-3 text-purple-heading">#</th>
+            <th scope="col">Registration No</th>
+            <th scope="col">Module Name</th>
+            <th scope="col">Chapter No</th>
+            <th scope="col">Total Correct</th>
+            <th scope="col">Total Incorrect</th>
+            <th scope="col">Total Not Attempt</th>
+            <th scope="col">Percentage</th>
+            <th scope="col" class="pe-3">Exam Datetime</th>
+          </tr>
+        </thead>
+
+        <!-- Table Body Rows -->
+        <tbody>
+          @if (loading) {
+            @for (r of [1,2,3,4,5]; track r) { <tr appSkeletonRow [columns]="9"></tr> }
+          }
+          @for (item of resultsList; track item.slNo) {
+            <tr class="border-bottom-light">
+              <td class="ps-3 text-dark font-medium">{{ item.slNo }}</td>
+              <td class="text-dark font-medium">{{ item.registrationNo }}</td>
+              <td class="text-dark font-medium">{{ item.moduleName }}</td>
+              <td class="text-dark font-medium">{{ item.chapter }}</td>
+              <td class="text-dark font-medium">{{ item.totalCorrect }}</td>
+              <td class="text-dark font-medium">{{ item.totalIncorrect }}</td>
+              <td class="text-dark font-medium">{{ item.totalNotAttempt }}</td>
+              <td class="text-dark font-medium">{{ item.percentage }}</td>
+              <td class="pe-3 text-dark font-medium">{{ item.examDatetime }}</td>
+            </tr>
+          } @empty {
+            @if (!loading) {
+              <tr>
+                <td colspan="9" class="text-center py-4 text-muted fs-8">
+                  No test results recorded yet.
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+</div>

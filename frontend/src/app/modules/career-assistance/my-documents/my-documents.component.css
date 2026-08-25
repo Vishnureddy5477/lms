@@ -1,0 +1,140 @@
+/* Color Palette */
+.text-navy {
+  color: #2b3674 !important;
+}
+
+.text-black {
+  color: #000000 !important;
+}
+
+.fs-8 {
+  font-size: 0.75rem;
+}
+
+/* Tabs Styling */
+.doc-tabs .nav-link {
+  border: none !important;
+  color: #a0aec0;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 8px 16px;
+  background: transparent;
+  transition: color 0.2s ease-in-out;
+}
+
+.doc-tabs .nav-link:hover {
+  color: #4a5568;
+}
+
+.doc-tabs .nav-link.active {
+  color: #5c4eb4 !important;
+  border-bottom: 2px solid #5c4eb4 !important;
+  font-weight: 600;
+  background: transparent !important;
+}
+
+/* Resume Format Preview Card */
+.resume-preview-card {
+  width: 380px;
+  min-height: 480px;
+  border-color: #cbd5e1 !important;
+  border-radius: 8px;
+}
+
+.logo-box {
+  width: 100px;
+  height: 90px;
+  background-color: #f8fafc;
+}
+
+.btn-indigo {
+  background-color: #4318ff;
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.btn-indigo:hover {
+  background-color: #3311cc;
+  color: #ffffff;
+}
+
+/* Form Styling */
+.form-control-custom {
+  background-color: #edf2f7;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  padding: 10px 14px;
+}
+
+.form-control-custom:focus {
+  background-color: #ffffff;
+  border-color: #5c4eb4;
+  box-shadow: none;
+}
+
+.btn-success-custom {
+  background-color: #22c55e;
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  min-width: 120px;
+}
+
+.btn-success-custom:hover {
+  background-color: #16a34a;
+}
+
+/* Documents Table Styling */
+.doc-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.doc-table th {
+  background-color: #f4f5f9;
+  color: #5c4eb4;
+  font-size: 0.825rem;
+  font-weight: 700;
+  padding: 14px 12px;
+  border-top: 1px solid #edf2f7;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.doc-table td {
+  padding: 14px 12px;
+  font-size: 0.85rem;
+  color: #000000 !important; /* Force text to appear in black */
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Table Button Actions */
+.btn-indigo-sm {
+  background-color: #5c4eb4;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.btn-indigo-sm:hover {
+  background-color: #483a9e;
+}
+
+.btn-danger-sm {
+  background-color: #ef4444;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.btn-danger-sm:hover {
+  background-color: #dc2626;
+}

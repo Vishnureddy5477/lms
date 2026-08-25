@@ -1,0 +1,110 @@
+/* Color Utilities */
+.text-black {
+  color: #000000 !important;
+}
+
+.text-navy {
+  color: #2b3674 !important;
+}
+
+.bg-navy {
+  background-color: #5c4eb4 !important;
+}
+
+/* Tabs Styling */
+.performance-tabs .nav-link {
+  border: none !important;
+  color: #a0aec0;
+  font-weight: 500;
+  font-size: 0.875rem;
+  padding: 8px 16px;
+  background: transparent;
+  transition: color 0.2s ease-in-out;
+}
+
+.performance-tabs .nav-link:hover {
+  color: #4a5568;
+}
+
+.performance-tabs .nav-link.active {
+  color: #5c4eb4 !important;
+  border-bottom: 2px solid #5c4eb4 !important;
+  font-weight: 600;
+  background: transparent !important;
+}
+
+/* Primary Table Styling */
+.performance-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.performance-table th {
+  background-color: #f4f5f9;
+  color: #5c4eb4;
+  font-size: 0.825rem;
+  font-weight: 700;
+  padding: 14px 12px;
+  border-top: 1px solid #edf2f7;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.performance-table td {
+  padding: 14px 12px;
+  font-size: 0.85rem;
+  color: #000000 !important; /* Forces black text on data */
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Mock Sub-Tabs Buttons */
+.mock-sub-btn {
+  background-color: #f1f5f9;
+  color: #000000;
+  border: 1px solid #cbd5e1;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+.mock-sub-btn.active {
+  background-color: #e2e8f0;
+  color: #000000;
+  border-color: #94a3b8;
+}
+
+/* Mock Table */
+.mock-table th {
+  font-size: 0.75rem;
+  color: #000000;
+  padding: 10px 8px;
+  white-space: nowrap;
+}
+
+.mock-table td {
+  font-size: 0.8rem;
+  color: #000000 !important;
+  padding: 10px 8px;
+}
+
+/* Criteria Table */
+.criteria-table th {
+  font-size: 0.75rem;
+  color: #000000;
+  padding: 8px 10px;
+}
+
+.criteria-table td {
+  font-size: 0.75rem;
+  color: #000000 !important;
+  padding: 8px 10px;
+}
+
+.fs-7 {
+  font-size: 0.825rem;
+}
+
+.whitespace-nowrap {
+  white-space: nowrap;
+}

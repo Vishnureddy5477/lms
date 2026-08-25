@@ -1,0 +1,85 @@
+<div class="container-fluid p-4">
+
+  <!-- Main Card Wrapper -->
+  <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden min-vh-table">
+    
+    <!-- Header Section -->
+    <div class="card-header bg-white border-0 p-3.5 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2 text-purple-title fw-bold fs-6">
+        <i class="bi bi-play-circle-fill fs-5"></i>
+        <span>Available Recorded Sessions</span>
+      </div>
+      
+      <!-- Batch Badge Tag -->
+      <span class="badge bg-purple-badge font-semibold px-3 py-2 rounded-2 fs-8">
+        Batch: {{ batchName }}
+      </span>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-responsive">
+      <table class="table table-borderless align-middle mb-0 custom-archive-table">
+        
+        <!-- Light Purple Table Header -->
+        <thead class="bg-purple-header text-purple-heading">
+          <tr>
+            <th scope="col" class="ps-4">Sl.No</th>
+            <th scope="col">Batch</th>
+            <th scope="col">Subject</th>
+            <th scope="col">Action</th>
+            <th scope="col">Date</th>
+            <th scope="col" class="pe-4">Status</th>
+          </tr>
+        </thead>
+
+        <!-- Table Body / Empty State Container -->
+        <tbody>
+          @if (loading) {
+            @for (r of [1,2,3,4,5]; track r) {
+              <tr appSkeletonRow [columns]="6"></tr>
+            }
+          } @else if (recordedSessionsList.length === 0) {
+            <tr>
+              <td colspan="6" class="text-center py-5 border-0">
+                <div class="d-flex flex-column align-items-center justify-content-center my-4">
+                  <!-- Video Camera Empty State Icon -->
+                  <div class="empty-video-icon mb-3">
+                    <i class="bi bi-camera-video-fill opacity-40"></i>
+                  </div>
+
+                  <!-- Empty Text -->
+                  <h6 class="fw-bold text-dark-purple mb-1 fs-6">No Recorded Sessions Available</h6>
+                  <p class="text-secondary fs-8 mb-0">
+                    Your batch doesn't have any recorded sessions yet or may not be eligible for this feature.
+                  </p>
+                </div>
+              </td>
+            </tr>
+          } @else {
+            @for (session of recordedSessionsList; track session.slNo) {
+              <tr class="border-bottom-light">
+                <td class="ps-4 text-secondary font-medium">{{ session.slNo }}</td>
+                <td class="text-dark font-medium">{{ session.batch }}</td>
+                <td class="text-dark font-medium">{{ session.subject }}</td>
+                <td>
+                  <button class="btn btn-purple-sm btn-sm px-3 rounded-2 fs-8 font-medium" (click)="openSession(session)">
+                    View Class
+                  </button>
+                </td>
+                <td class="text-dark font-medium">{{ session.date }}</td>
+                <td class="pe-4 font-medium">
+                  <span class="badge" [class.bg-success]="session.status === 'Available'" [class.bg-warning]="session.status === 'Archive'">
+                    {{ session.status }}
+                  </span>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,42 @@
+<div class="container-fluid p-4">
+  <h5 class="fw-bold text-dark-purple mb-4">Coding Practice</h5>
+
+  <div class="card border-0 shadow-sm rounded-4 bg-white p-4">
+    <div class="d-flex align-items-center gap-3 mb-3">
+      <label class="fw-bold text-secondary small mb-0">Language:</label>
+      <select class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched" [(ngModel)]="selectedLanguage" (change)="onLanguageChange()">
+        <option *ngFor="let lang of languageOptions" [value]="lang.value">{{ lang.label }}</option>
+      </select>
+
+      <button type="button" class="btn btn-primary btn-sm ms-auto px-4" [disabled]="running" (click)="onRun()">
+        <span *ngIf="running" class="spinner-border spinner-border-sm me-1"></span>
+        {{ running ? 'Running...' : 'Run Code' }}
+      </button>
+    </div>
+
+    <div class="row g-3">
+      <div class="col-lg-8">
+        <label class="fw-bold text-secondary small mb-1 d-block">Code</label>
+        <textarea class="form-control code-editor" rows="16" spellcheck="false" [(ngModel)]="code"></textarea>
+      </div>
+
+      <div class="col-lg-4 d-flex flex-column">
+        <label class="fw-bold text-secondary small mb-1 d-block">Input (stdin)</label>
+        <textarea class="form-control code-editor mb-3" rows="6" spellcheck="false"
+          placeholder="Optional input passed to your program" [(ngModel)]="stdin"></textarea>
+
+        <label class="fw-bold text-secondary small mb-1 d-block">Output</label>
+        <div class="output-panel flex-grow-1">
+          <div *ngIf="!result && !errorMessage && !running" class="text-muted small">Run your code to see output here.</div>
+          <div *ngIf="errorMessage" class="text-danger small">{{ errorMessage }}</div>
+
+          <ng-container *ngIf="result">
+            <pre *ngIf="compileFailed" class="text-danger mb-2">{{ result.compile?.output || result.compile?.stderr }}</pre>
+            <pre *ngIf="!compileFailed" class="mb-0">{{ result.run.output || result.run.stdout }}</pre>
+            <pre *ngIf="!compileFailed && result.run.stderr" class="text-danger mb-0">{{ result.run.stderr }}</pre>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="container-fluid p-4">
+
+  <!-- Main Title -->
+  <h5 class="fw-bold text-dark-purple mb-4">Class Notes</h5>
+
+  <!-- Table Card Wrapper -->
+  <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden min-vh-table">
+    
+    <div class="table-responsive">
+      <table class="table table-borderless align-middle mb-0 custom-notes-table">
+        
+        <!-- Light Purple Table Header -->
+        <thead class="bg-purple-header text-purple-heading">
+          <tr>
+            <th scope="col" class="ps-4">Sl No</th>
+            <th scope="col">Posted Date</th>
+            <th scope="col">Posted By</th>
+            <th scope="col">Batch</th>
+            <th scope="col">Module</th>
+            <th scope="col">Attach File</th>
+            <th scope="col" class="pe-4">Content</th>
+          </tr>
+        </thead>
+
+        <!-- Table Body -->
+        <tbody>
+          @if (loading) {
+            @for (r of [1,2,3,4,5]; track r) { <tr appSkeletonRow [columns]="7"></tr> }
+          } @else if (classNotesList.length === 0) {
+            <tr><td colspan="7" class="text-center py-4 text-muted">No class notes available for your batch yet.</td></tr>
+          }
+          @for (item of classNotesList; track item.slNo) {
+            <tr class="border-bottom-light">
+              <td class="ps-4 text-secondary font-medium">{{ item.slNo }}</td>
+              <td class="text-dark font-medium">{{ item.postedDate }}</td>
+              <td class="text-dark font-medium">{{ item.postedBy }}</td>
+              <td class="text-dark font-medium">{{ item.batch }}</td>
+              <td class="text-dark font-medium">{{ item.module }}</td>
+              <td class="font-medium">
+                @if (item.attachFile) {
+                  <a [href]="item.attachFile" target="_blank" class="text-purple-link">View Attach File</a>
+                } @else {
+                  <span class="text-muted">Not Attached</span>
+                }
+              </td>
+              <td class="pe-4 font-medium">
+                @if (item.content) {
+                  <a href="javascript:void(0)" (click)="openContentModal(item)" class="text-purple-link">View Content</a>
+                } @else {
+                  <span class="text-muted">No Content</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+  <dialog #contentModal class="content-modal">
+    @if (selectedNote) {
+      <div class="p-4">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <h6 class="fw-bold text-dark-purple mb-0">{{ selectedNote.module }} — {{ selectedNote.postedDate }}</h6>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeContentModal()"></button>
+        </div>
+        <div class="content-body" [innerHTML]="selectedNote.content"></div>
+      </div>
+    }
+  </dialog>
+
+</div>

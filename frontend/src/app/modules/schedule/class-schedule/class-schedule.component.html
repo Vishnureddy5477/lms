@@ -1,0 +1,130 @@
+<div class="container-fluid p-4">
+
+  <!-- Main Section Title -->
+  <h5 class="fw-bold text-dark-purple mb-4">My Schedule</h5>
+
+  <!-- 1. Today's Live Classes Section -->
+  <div class="card border-0 shadow-sm rounded-4 bg-white mb-4 overflow-hidden">
+    <!-- Header -->
+    <div class="card-header bg-white border-0 p-3 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2 text-dark-purple fw-bold fs-6">
+        <i class="bi bi-play-circle-fill text-success fs-5"></i>
+        <span>Today's Live Classes</span>
+      </div>
+      <span class="badge bg-success-badge font-medium px-2.5 py-1.5 rounded-1">
+        {{ todayDate }}
+      </span>
+    </div>
+
+    <!-- Content / Empty State -->
+    <div class="card-body" [class.text-center]="loading || todayClasses.length === 0" [class.py-5]="loading || todayClasses.length === 0">
+      @if (loading) {
+        <app-skeleton variant="text" [rows]="3" />
+      } @else if (todayClasses.length === 0) {
+        <div class="d-flex flex-column align-items-center justify-content-center my-3">
+          <!-- Calendar with X Icon -->
+          <div class="empty-icon-box mb-3 text-secondary">
+            <i class="bi bi-calendar-x fs-1 opacity-50"></i>
+          </div>
+          <h6 class="fw-bold text-muted mb-1 fs-6">No Live Classes Today</h6>
+          <p class="text-secondary fs-7 mb-0">There are no scheduled live classes for today.</p>
+        </div>
+      } @else {
+        <div class="table-responsive text-start">
+          <table class="table table-hover mb-0">
+            <thead class="table-success">
+              <tr>
+                <th>Module</th>
+                <th>Trainer</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of todayClasses; track item.module) {
+                <tr>
+                  <td><i class="bi bi-book me-2 text-primary"></i>{{ item.module }}</td>
+                  <td><i class="bi bi-person me-2 text-info"></i>{{ item.trainer }}</td>
+                  <td>{{ item.startTime }} - {{ item.endTime }}</td>
+                  <td><span class="badge" [ngClass]="statusBadgeClass(item.status)">{{ item.status }}</span></td>
+                  <td>
+                    @if (item.linkActive) {
+                      <a class="btn btn-success btn-sm" [href]="item.joinLink" target="_blank" rel="noopener">
+                        <i class="bi bi-play-fill me-1"></i>Join Class
+                      </a>
+                    } @else {
+                      <button class="btn btn-secondary btn-sm" disabled>
+                        <i class="bi bi-slash-circle me-1"></i>Unavailable
+                      </button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- 2. This Week's Schedule Section -->
+  <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden">
+    <!-- Header -->
+    <div class="card-header bg-white border-0 p-3 d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2 text-dark-purple fw-bold fs-6">
+        <i class="bi bi-calendar-event-fill text-purple-icon fs-5"></i>
+        <span>This Week's Schedule</span>
+      </div>
+      <span class="badge bg-purple-badge font-medium px-2.5 py-1.5 rounded-1">
+        {{ weekRange }}
+      </span>
+    </div>
+
+    <!-- Content / Empty State -->
+    <div class="card-body" [class.text-center]="loading || weekClasses.length === 0" [class.py-5]="loading || weekClasses.length === 0">
+      @if (loading) {
+        <app-skeleton variant="text" [rows]="3" />
+      } @else if (weekClasses.length === 0) {
+        <div class="d-flex flex-column align-items-center justify-content-center my-3">
+          <!-- Calendar Check Icon -->
+          <div class="empty-icon-box mb-3 text-secondary">
+            <i class="bi bi-calendar-minus fs-1 opacity-50"></i>
+          </div>
+          <h6 class="fw-bold text-muted mb-1 fs-6">No Classes This Week</h6>
+          <p class="text-secondary fs-7 mb-0">There are no scheduled classes for this week.</p>
+        </div>
+      } @else {
+        <div class="table-responsive text-start">
+          <table class="table table-striped table-hover mb-0">
+            <thead class="table-primary">
+              <tr>
+                <th>Module</th>
+                <th>Trainer</th>
+                <th>Time</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Mode</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of weekClasses; track item.module + item.startDate) {
+                <tr>
+                  <td><i class="bi bi-book me-2 text-primary"></i>{{ item.module }}</td>
+                  <td><i class="bi bi-person me-2 text-info"></i>{{ item.trainer }}</td>
+                  <td>{{ item.startTime }} - {{ item.endTime }}</td>
+                  <td>{{ item.startDate }}</td>
+                  <td>{{ item.endDate }}</td>
+                  <td><span class="badge bg-light text-dark">{{ item.mode }}</span></td>
+                  <td><span class="badge" [ngClass]="weekStatusBadgeClass(item.status)">{{ item.status }}</span></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+
+</div>

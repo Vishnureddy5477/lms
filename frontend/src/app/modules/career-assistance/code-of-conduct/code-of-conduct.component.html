@@ -1,0 +1,202 @@
+<div class="content-body w-100 p-0 m-0 min-vh-100 bg-white">
+  <div class="container-fluid p-4">
+    <div class="row g-0">
+      <div class="col-12">
+        
+        <!-- HEADER TITLE & INSTRUCTION LINE -->
+<div class="d-flex justify-content-between align-items-center mb-4 pb-1 border-bottom">
+  <h5 class="fw-bold text-black mb-0 tracking-wide fs-7">
+    PLACEMENT CODE OF CONDUCT
+  </h5>
+  <span class="fs-8 text-black fst-italic">
+    Candidates to read the instructions and give your choice of interest.
+  </span>
+</div>
+
+        <!-- MAIN QUESTION -->
+        <div class="mb-4">
+          <label class="fw-semibold text-black mb-2 d-block fs-7">
+            Are you interested in the placement assistance by Cranes Varsity?
+          </label>
+          <div class="d-flex gap-4">
+            <div class="form-check">
+              <input 
+                class="form-check-input" 
+                type="radio" 
+                name="placementInterest" 
+                id="interestYes" 
+                value="Yes" 
+                [(ngModel)]="placementInterest"
+                (change)="onPlacementInterestChange()" 
+              />
+              <label class="form-check-label text-black fw-medium" for="interestYes">Yes</label>
+            </div>
+            <div class="form-check">
+              <input 
+                class="form-check-input" 
+                type="radio" 
+                name="placementInterest" 
+                id="interestNo" 
+                value="No" 
+                [(ngModel)]="placementInterest"
+                (change)="onPlacementInterestChange()" 
+              />
+              <label class="form-check-label text-black fw-medium" for="interestNo">No</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONDITIONAL SECTIONS ROW -->
+        <div class="row g-4 mb-4">
+          
+          <!-- LEFT PANEL: YES DIRECTIVES -->
+          <div class="col-md-6">
+            <div class="card border-0 bg-light-panel p-4 h-100" [class.opacity-50]="placementInterest === 'No'">
+              <h6 class="fw-bold text-black mb-3 fs-7">If yes, you confirm the below assistances and directives:</h6>
+              
+              <ul class="ps-3 text-black fs-8 mb-3 directives-list">
+                <li class="mb-2">Candidates must be willing to work at <strong>PAN INDIA</strong> locations.</li>
+                <li class="mb-2">Candidates must <strong>express interest within the prescribed time</strong> for company JDs posted on the <strong>Students LMS Portal</strong>.</li>
+                <li class="mb-2">Once a candidate shows interest in a company and is shortlisted, they must <strong>attend the entire interview process</strong>.</li>
+                <li class="mb-2 text-danger fw-medium">Failure to complete the interview process will result in disqualification from future placement opportunities.</li>
+                <li class="mb-2">Candidates must undergo practice sessions/mock tests before attending every interview. Failure to participate in these will result in discontinuation of further placement opportunities.</li>
+                <li class="mb-2">The client's decision regarding <strong>shortlisting and selection</strong> is <strong>final and binding</strong>.</li>
+                <li>Weekly tests will be conducted. Based on scores, students will be categorized for companies as follows:</li>
+              </ul>
+
+              <!-- SALARY MATRIX TABLE -->
+              <div class="table-responsive border rounded bg-white">
+                <table class="table align-middle matrix-table mb-0 text-black">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="ps-3">Test Scores (%)</th>
+                      <th scope="col" class="pe-3">Company Packages</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (bracket of salaryBrackets; track bracket.scoreRange) {
+                      <tr>
+                        <td class="ps-3 text-black">{{ bracket.scoreRange }}</td>
+                        <td class="pe-3 text-black fw-medium">{{ bracket.packageRange }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="fs-8 text-black mt-2 italic">
+                Students can move up or down in the salary bracket based on performance in weekly assessments.
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT PANEL: NO DIRECTIVES -->
+          <div class="col-md-6">
+            <div class="card border-0 bg-light-panel p-4 h-100" [class.opacity-50]="placementInterest === 'Yes'">
+              <h6 class="fw-bold text-black mb-3 fs-7">If no, are you interested in a project experience certificate?</h6>
+
+              <div class="d-flex gap-4 mb-3">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="radio" 
+                    name="projectCertInterest" 
+                    id="certYes" 
+                    value="Yes" 
+                    [(ngModel)]="projectCertInterest"
+                    [disabled]="placementInterest !== 'No'" 
+                  />
+                  <label class="form-check-label text-black fw-medium" for="certYes">Yes</label>
+                </div>
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="radio" 
+                    name="projectCertInterest" 
+                    id="certNo" 
+                    value="No" 
+                    [(ngModel)]="projectCertInterest"
+                    [disabled]="placementInterest !== 'No'" 
+                  />
+                  <label class="form-check-label text-black fw-medium" for="certNo">No</label>
+                </div>
+              </div>
+
+              <!-- IF NO -> YES DIRECTIVES -->
+              <div class="fs-8 text-black mb-3">
+                <p class="fw-bold mb-1">If yes, then:</p>
+                <ul class="ps-3 mb-2">
+                  <li>The candidate will work as a <strong>Trainee R&D Engineer</strong> on academic projects.</li>
+                  <li>The <strong>**Experience Certificate**</strong> will mention the duration and project details.</li>
+                  <li>Candidates must <strong>maintain attendance and complete all projects/assignments/tests on time</strong>.</li>
+                </ul>
+                <div class="text-danger fw-bold">
+                  Note: Candidates opting for an Experience Certificate will not be eligible for placement assistance.
+                </div>
+              </div>
+
+              <!-- IF NO -> NO DIRECTIVES -->
+              <div class="fs-8 text-black">
+                <p class="fw-bold mb-1">If no, then:</p>
+                <p class="ps-3 mb-0">
+                  The candidate agrees to the <strong>certification process</strong>, including attendance and module assessments.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- FOOTER CONFIRMATION & SIGNATURE -->
+        <div class="row align-items-end g-3 mt-3">
+          
+          <div class="col-md-8">
+            <div class="form-check">
+              <input 
+                class="form-check-input" 
+                type="checkbox" 
+                id="termsCheck" 
+                [(ngModel)]="termsAgreed" 
+              />
+              <label class="form-check-label text-black fs-8 fw-medium" for="termsCheck">
+                I <strong>{{ studentName }}</strong>, hereby confirm that I have read, understood, and agree to abide by the above terms and conditions.
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-4 text-end">
+            <div class="d-inline-block text-start">
+              <label class="form-label fs-8 text-black mb-1 d-block">Signature:</label>
+              <input 
+                type="text" 
+                class="form-control form-control-sm text-black signature-input" 
+                placeholder="Signature" 
+                [(ngModel)]="signature" 
+              />
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ACTION BUTTON / ACCEPTED STATUS -->
+        <div class="text-center mt-4">
+          @if (!isAccepted) {
+            <button
+              class="btn btn-indigo px-5 py-2 fw-bold"
+              [disabled]="submitting"
+              (click)="submitAcceptance()"
+            >
+              {{ submitting ? 'Submitting...' : 'Accepted' }}
+            </button>
+          } @else {
+            <div class="badge bg-success fs-7 px-4 py-2">
+              <i class="bi bi-check-circle-fill me-1"></i> Terms Accepted
+            </div>
+          }
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

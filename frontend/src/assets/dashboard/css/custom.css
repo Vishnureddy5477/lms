@@ -1,0 +1,16 @@
+.dataTables_empty {
+    padding: 46px !important;
+    color: red !important;
+    font-size: 16px !important;
+}
+
+.line {
+    background-color: #FFFFFF !important;
+}
+
+.header {
+    background: #4d44b5 !important;
+}
+
+.sidebar-right { display: none; }
+.dlab-demo-trigger { display: none !important; }

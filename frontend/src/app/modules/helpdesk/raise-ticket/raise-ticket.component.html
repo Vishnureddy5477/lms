@@ -1,0 +1,109 @@
+<div class="content-body w-100 p-0 m-0 min-vh-100 bg-white">
+  <div class="container-fluid p-4 d-flex justify-content-center">
+    <div class="ticket-card-wrapper w-100" style="max-width: 720px;">
+      
+      <div class="card border-0 shadow-sm p-4 bg-white">
+        
+        <!-- TITLE -->
+        <h5 class="fw-bold text-navy text-center mb-4">Raise a Support Ticket</h5>
+
+        <!-- INFO BANNER -->
+        <div class="alert alert-purple-light border-0 mb-4 p-3">
+          <p class="fs-8 text-indigo mb-1">To help us track and resolve your concern, choose one option:</p>
+          <ul class="list-unstyled fs-8 mb-0 ps-2">
+            <li class="text-indigo"><strong>Registration Number</strong> &ndash; Identity visible</li>
+            <li class="text-indigo"><strong>Batch Number</strong> &ndash; Anonymous</li>
+          </ul>
+        </div>
+
+        <!-- FORM -->
+        <form (ngSubmit)="onSubmitTicket(ticketFormRef)" #ticketForm="ngForm" #ticketFormRef>
+
+          <!-- OPTION SELECTION -->
+          <div class="mb-3">
+            <label class="form-label fs-8 text-danger fw-semibold mb-2">
+              Choose one option <span class="text-danger">*</span>
+            </label>
+            <div class="d-flex flex-column gap-2">
+              <div class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="radio" 
+                  name="identityOption" 
+                  id="regNoOpt" 
+                  value="Registration Number" 
+                  [(ngModel)]="ticketData.identityOption" 
+                />
+                <label class="form-check-label fs-8 text-black fw-medium" for="regNoOpt">
+                  Registration Number
+                </label>
+              </div>
+              <div class="form-check">
+                <input 
+                  class="form-check-input" 
+                  type="radio" 
+                  name="identityOption" 
+                  id="batchNoOpt" 
+                  value="Batch Number (Anonymous)" 
+                  [(ngModel)]="ticketData.identityOption" 
+                />
+                <label class="form-check-label fs-8 text-black fw-medium" for="batchNoOpt">
+                  Batch Number (Anonymous)
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- FILE ATTACHMENT -->
+          <div class="mb-3">
+            <label class="form-label fs-8 text-black fw-medium mb-1">
+              Upload Only Pdf File (Optional)
+            </label>
+            <input 
+              type="file" 
+              accept=".pdf" 
+              class="form-control form-control-custom text-black" 
+              (change)="onFileSelected($event)" 
+            />
+          </div>
+
+          <!-- SUBJECT -->
+          <div class="mb-3">
+            <label class="form-label fs-8 text-danger fw-semibold mb-1">
+              Subject <span class="text-danger">*</span>
+            </label>
+            <input 
+              type="text" 
+              class="form-control form-control-custom text-black" 
+              name="subject" 
+              [(ngModel)]="ticketData.subject" 
+              required 
+            />
+          </div>
+
+          <!-- CONCERN DESCRIPTION -->
+          <div class="mb-4">
+            <label class="form-label fs-8 text-danger fw-semibold mb-1">
+              Concern Description <span class="text-danger">*</span>
+            </label>
+            <textarea 
+              class="form-control form-control-custom text-black" 
+              rows="4" 
+              name="concernDescription" 
+              [(ngModel)]="ticketData.concernDescription" 
+              required
+            ></textarea>
+          </div>
+
+          <!-- SUBMIT BUTTON -->
+          <button type="submit" class="btn btn-indigo w-100 py-2 fw-semibold" [disabled]="submitting">
+            {{ submitting ? 'Submitting Please Wait...' : 'Submit Ticket' }}
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>

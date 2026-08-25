@@ -1,0 +1,128 @@
+<div class="container-fluid p-4 bg-light min-vh-100 text-black">
+
+  <!-- TOP CARD: Upload Projects Form -->
+  <div class="card border-0 shadow-sm rounded-3 bg-white p-4 mb-4">
+    <h6 class="fw-bold text-black mb-4 fs-7">Upload Projects</h6>
+
+    <form (ngSubmit)="onSubmit()" class="d-flex flex-column align-items-center">
+      <div class="form-wrapper w-100" style="max-width: 420px;">
+
+        <!-- Registration Number -->
+        <div class="mb-3 text-center">
+          <label class="form-label text-black small mb-1">Registration Number</label>
+          <input 
+            type="text" 
+            [value]="registrationNumber" 
+            disabled 
+            class="form-control form-control-sm text-center bg-light-gray border-0 text-black py-2"
+          >
+        </div>
+
+        <!-- Batch -->
+        <div class="mb-3 text-center">
+          <label class="form-label text-black small mb-1">Batch</label>
+          <input 
+            type="text" 
+            [value]="batch" 
+            disabled 
+            class="form-control form-control-sm text-center bg-light-gray border-0 text-black py-2"
+          >
+        </div>
+
+        <!-- Select Project Type -->
+        <div class="mb-3 text-center">
+          <label class="form-label text-black small mb-1">Select Project Type <span class="text-danger">*</span></label>
+          <select 
+            [(ngModel)]="selectedProjectType" 
+            name="projectType" 
+            class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched"
+          >
+            <option value="" disabled selected class="text-black">Select Project Type</option>
+            @for (type of projectTypes; track type) {
+              <option [value]="type" class="text-black">{{ type }}</option>
+            }
+          </select>
+        </div>
+
+        <!-- Project Title -->
+        <div class="mb-3 text-center">
+          <label class="form-label text-black small mb-1">Project Title <span class="text-danger">*</span></label>
+          <input 
+            type="text" 
+            [(ngModel)]="projectTitle" 
+            name="projectTitle" 
+            placeholder="Enter project title" 
+            class="form-control form-control-sm text-center border-gray shadow-none text-black py-2"
+          >
+        </div>
+
+        <!-- Upload Document -->
+        <div class="mb-2 text-center">
+          <label class="form-label text-black small mb-2">Upload Your Document in PDF Only <span class="text-danger">*</span></label>
+          <div class="d-flex justify-content-center align-items-center gap-2">
+            <input 
+              type="file" 
+              accept=".pdf" 
+              (change)="onFileSelected($event)" 
+              class="form-control form-control-sm w-auto border-gray text-black"
+            >
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        @if (errorMessage) {
+          <div class="text-center text-danger small fw-semibold mb-3">
+            {{ errorMessage }}
+          </div>
+        }
+
+        <!-- Submit Button -->
+        <div class="text-center mt-3">
+          <button type="submit" class="btn btn-success px-4 py-2 fw-semibold btn-sm rounded-2" [disabled]="submitting">
+            {{ submitting ? 'Submitting...' : 'Submit' }}
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  <!-- BOTTOM CARD: My Uploaded Projects Table -->
+  <div class="card border-0 shadow-sm rounded-3 bg-white p-4">
+    <h6 class="fw-bold text-black mb-3 fs-7">My Uploaded Projects</h6>
+
+    <div class="table-responsive">
+      <table class="table table-borderless align-middle mb-0 custom-projects-table">
+        <thead class="bg-light-gray">
+          <tr>
+            <th scope="col" class="ps-3 text-black small fw-bold">Project Type</th>
+            <th scope="col" class="text-black small fw-bold">Project Title</th>
+            <th scope="col" class="text-black small fw-bold">Upload Date</th>
+            <th scope="col" class="pe-3 text-black small fw-bold">Document</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (project of uploadedProjects; track project.id) {
+            <tr class="border-bottom-light">
+              <td class="ps-3 text-black small">{{ project.projectType }}</td>
+              <td class="text-black small">{{ project.projectTitle }}</td>
+              <td class="text-black small">{{ project.uploadDate }}</td>
+              <td class="pe-3 text-black small">
+                <a [href]="project.documentLink" target="_blank" rel="noopener" class="text-decoration-none">
+                  <i class="bi bi-file-earmark-pdf me-1 text-danger"></i>{{ project.documentName }}
+                </a>
+              </td>
+            </tr>
+          } @empty {
+            <tr class="bg-light-gray">
+              <td colspan="4" class="text-center py-3 text-black small fw-medium">
+                No projects uploaded yet.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

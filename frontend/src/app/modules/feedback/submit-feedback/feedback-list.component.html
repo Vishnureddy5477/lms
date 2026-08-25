@@ -1,0 +1,54 @@
+<div class="content-body w-100 p-0 m-0 min-vh-100 bg-white">
+  <div class="container-fluid p-4">
+    <div class="row g-0">
+      <div class="col-12">
+        
+        <!-- PAGE TITLE -->
+        <h6 class="fw-bold text-navy mb-4 fs-7">Feedback Form</h6>
+
+        <!-- FEEDBACK TABLE CARD -->
+        <div class="card border-0 bg-white shadow-sm">
+          <div class="table-responsive">
+            <table class="table align-middle feedback-table mb-0">
+              <thead>
+                <tr>
+                  <th scope="col" class="ps-4 text-center">Slno</th>
+                  <th scope="col" class="text-center">BatchNo</th>
+                  <th scope="col">Module</th>
+                  <th scope="col">Trainer</th>
+                  <th scope="col" class="text-center">ActivatedDate</th>
+                  <th scope="col" class="pe-4 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                @if (loading) {
+                  @for (r of [1,2,3,4,5]; track r) { <tr appSkeletonRow [columns]="6"></tr> }
+                } @else if (feedbackList.length === 0) {
+                  <tr><td colspan="6" class="text-center py-4 text-muted">No pending feedback right now.</td></tr>
+                }
+                @for (item of feedbackList; track item.slNo) {
+                  <tr class="text-black">
+                    <td class="ps-4 text-center text-black fw-medium">{{ item.slNo }}</td>
+                    <td class="text-center text-black">{{ item.batchNo }}</td>
+                    <td class="text-black fw-semibold">{{ item.module }}</td>
+                    <td class="text-black">{{ item.trainer }}</td>
+                    <td class="text-center text-black">{{ item.activatedDate }}</td>
+                    <td class="pe-4 text-center">
+                      <button 
+                        class="btn btn-indigo px-3 py-1 text-white fs-8 fw-medium"
+                        (click)="openFeedbackForm(item)"
+                      >
+                        {{ item.status }}
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

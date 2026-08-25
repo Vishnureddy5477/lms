@@ -1,0 +1,99 @@
+/* Color Palette matching Image 2 */
+.text-navy {
+  color: #3f4785 !important;
+}
+
+.text-dark-blue {
+  color: #2b3674 !important;
+}
+
+/* Card Summary background colors */
+.bg-indigo {
+  background-color: #5142be !important;
+}
+
+.bg-emerald {
+  background-color: #22c55e !important;
+}
+
+.bg-coral {
+  background-color: #ff5252 !important;
+}
+
+.bg-teal {
+  background-color: #00b5ad !important;
+}
+
+/* Badges */
+.badge-attempt {
+  background-color: #ff7043 !important;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+}
+
+.badge-incorrect {
+  background-color: #ff4d4f !important;
+  padding: 6px 14px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+}
+
+/* Dropdown */
+.module-dropdown-wrapper select {
+  min-width: 180px;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 0.9rem;
+}
+
+/* Table Styling matching Image 2 */
+.custom-results-table {
+  width: 100% !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.custom-results-table th {
+  background-color: #fffaf8;
+  font-size: 0.85rem;
+  padding: 14px 12px;
+  border: 1px solid #f0e6e1 !important;
+}
+
+.custom-results-table td {
+  padding: 12px 14px;
+  vertical-align: middle;
+  border: 1px solid #f0e6e1 !important;
+}
+
+/* Alternating Row Tint matching Image 2 */
+.odd-row {
+  background-color: #ffffff;
+}
+
+.even-row {
+  background-color: #fdeee9 !important; /* Soft peach background tint */
+}
+
+/* Utilities */
+.question-cell {
+  max-width: 320px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+
+.border-gray {
+  border: 1px solid #dcdfe6;
+}
+
+.fs-7 {
+  font-size: 0.85rem;
+}
+
+.fs-8 {
+  font-size: 0.75rem;
+}

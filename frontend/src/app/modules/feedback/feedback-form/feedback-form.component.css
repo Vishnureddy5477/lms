@@ -1,0 +1,19 @@
+.bg-purple-header {
+  background-color: #f0eefc;
+}
+
+.btn-purple-submit {
+  background-color: #5050ce;
+  color: #fff;
+  border: none;
+}
+
+.btn-purple-submit:hover {
+  background-color: #4040b0;
+  color: #fff;
+}
+
+.custom-criteria-table th,
+.custom-criteria-table td {
+  vertical-align: middle;
+}

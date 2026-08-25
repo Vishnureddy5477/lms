@@ -1,0 +1,35 @@
+/* Color Palette */
+.text-dark-purple {
+  color: #2E1065 !important;
+}
+
+.text-purple-icon {
+  color: #4A3E9D !important;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.fs-7 {
+  font-size: 0.85rem;
+}
+
+/* Green Badge Date Tag */
+.bg-success-badge {
+  background-color: #10B981 !important;
+  color: #FFFFFF;
+  font-size: 0.75rem;
+}
+
+/* Purple Badge Date Range Tag */
+.bg-purple-badge {
+  background-color: #4A3E9D !important;
+  color: #FFFFFF;
+  font-size: 0.75rem;
+}
+
+/* Icon Box Styling */
+.empty-icon-box i {
+  color: #94A3B8;
+}

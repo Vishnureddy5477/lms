@@ -1,0 +1,107 @@
+<div class="content-body w-100 p-0 m-0 min-vh-100 bg-white">
+  <div class="container-fluid p-4">
+    <div class="row g-0">
+      <div class="col-12">
+        
+        <!-- PAGE TITLE -->
+        <h5 class="fw-bold text-navy mb-4">List Of Current Job Postings</h5>
+
+        <!-- IMPORTANT NOTICE BANNER 1 -->
+        <div class="alert alert-warning-custom mb-3 border-0">
+          <strong class="text-black">Important:</strong> 
+          <span class="text-black"> Before applying, please ensure you have uploaded your updated resume. You can do this in the "My Placement" section under "Upload Resume and doc".</span>
+        </div>
+
+        <!-- NOTE BANNER 2 -->
+        <div class="alert alert-warning-custom mb-4 border-0">
+          <strong class="text-black">Note:</strong> 
+          <span class="text-black"> If you submit your input, future job descriptions (JDs) may not be posted to you based on your preference. Kindly provide your response carefully by selecting Yes or No.</span>
+        </div>
+
+        <!-- JOB POSTINGS TABLE CARD -->
+        <div class="card border-0 bg-white">
+          <div class="table-responsive">
+            <table class="table align-middle company-jd-table mb-0">
+              <thead>
+                <tr>
+                  <th scope="col" class="ps-3 text-center">Interested?</th>
+                  <th scope="col" class="text-center">S.N.</th>
+                  <th scope="col">Drive Month</th>
+                  <th scope="col">Company Name</th>
+                  <th scope="col">Job Location</th>
+                  <th scope="col">Skills</th>
+                  <th scope="col">Domain</th>
+                  <th scope="col">CTC</th>
+                  <th scope="col" class="text-center">Job Description</th>
+                  <th scope="col" class="pe-3 text-center">About Company</th>
+                </tr>
+              </thead>
+              <tbody>
+                @if (loading) {
+                  @for (r of [1,2,3,4,5]; track r) { <tr appSkeletonRow [columns]="10"></tr> }
+                }
+                @if (!loading && jobPostings.length > 0) {
+                  @for (job of jobPostings; track job.sNo) {
+                    <tr class="text-black">
+                      <!-- INTEREST ACTION BUTTONS -->
+                      <td class="ps-3 text-center">
+                        <div class="btn-group btn-group-sm" role="group">
+                          <button
+                            type="button"
+                            class="btn btn-outline-success"
+                            [class.active]="job.interested === true"
+                            [disabled]="job.interested !== null"
+                            (click)="setInterest(job, true)">
+                            Yes
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-outline-danger"
+                            [class.active]="job.interested === false"
+                            [disabled]="job.interested !== null"
+                            (click)="setInterest(job, false)">
+                            No
+                          </button>
+                        </div>
+                      </td>
+                      <td class="text-center text-black">{{ job.sNo }}</td>
+                      <td class="text-black">{{ job.driveMonth }}</td>
+                      <td class="text-black">{{ job.companyName }}</td>
+                      <td class="text-black">{{ job.jobLocation }}</td>
+                      <td class="text-black">{{ job.skills }}</td>
+                      <td class="text-black">{{ job.domain }}</td>
+                      <td class="text-black">{{ job.ctc }}</td>
+                      <td class="text-center">
+                        <a [href]="job.jobDescriptionUrl" target="_blank" class="btn btn-indigo-sm px-2 py-1 text-white text-decoration-none">View JD</a>
+                      </td>
+                      <td class="pe-3 text-center">
+                        <a [href]="job.aboutCompanyUrl" target="_blank" class="btn btn-indigo-sm px-2 py-1 text-white text-decoration-none">View Details</a>
+                      </td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+
+            <!-- EMPTY STATE MESSAGE -->
+            @if (!loading && jobPostings.length === 0) {
+              <div class="text-center py-5 empty-state-container">
+                <div class="fw-bold fs-7 text-black mb-2">
+                  Right now, there are no company JDs available for you.
+                </div>
+                
+                @if (!isAvailableForPlacement) {
+                  <div class="fw-bold text-danger fs-8">
+                    Note: You are currently not marked as available for placement.
+                  </div>
+                }
+              </div>
+            }
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

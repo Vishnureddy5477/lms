@@ -1,0 +1,69 @@
+/* Typography & Color Palette */
+.text-dark-purple {
+  color: #2B1263 !important;
+  font-size: 0.95rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.fs-7 {
+  font-size: 0.88rem;
+}
+
+/* Horizontal Divider Line */
+.section-divider {
+  border: 0;
+  border-top: 1px solid #E2E8F0;
+  opacity: 1;
+}
+
+/* Inner Module Card Styling */
+.module-card {
+  background-color: #FFFFFF !important;
+  border: 1px solid #5243C2 !important; /* Purple border outline */
+  box-shadow: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.module-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(82, 67, 194, 0.12);
+}
+
+/* View Button Styling */
+.btn-purple-view {
+  background-color: #5243C2 !important; /* Purple button fill */
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 6px !important;
+  min-width: 72px;
+  padding: 6px 18px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-purple-view:hover {
+  background-color: #4233A8 !important;
+  color: #FFFFFF !important;
+}
+
+.btn-purple-view:active {
+  transform: scale(0.95);
+}
+
+/* Video list sidebar items */
+.module-nav-item {
+  background-color: #F8F7FC;
+  color: #2B1263;
+  text-align: left;
+}
+
+.module-nav-item:hover {
+  background-color: #ECE9FA;
+}
+
+.module-nav-item.active-module {
+  background-color: #5243C2 !important;
+  color: #FFFFFF !important;
+}

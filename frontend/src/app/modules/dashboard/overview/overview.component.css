@@ -1,0 +1,101 @@
+/* Attendance / MCQ Bar Chart */
+.chart-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.chart-container::-webkit-scrollbar-thumb {
+  background: #d7dae2;
+  border-radius: 4px;
+}
+
+/* Dialog Base & Overlay */
+.payment-dialog-reset {
+  width: 90%;
+  max-width: 700px;
+  background: transparent;
+}
+
+.payment-dialog-reset {
+  width: 95vw !important;
+  max-width: 900px !important; /* Increased from 700px to match target layout */
+  background: transparent;
+}
+
+.modal-card {
+  border-radius: 12px;
+}
+
+/* Header */
+.modal-header-custom {
+  background-color: #5142ba;
+}
+
+.modal-title-custom {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* Alert Banner */
+.alert-banner {
+  background-color: #cbcef5;
+  color: #3b3a72;
+  font-weight: 700;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+/* Labels & Inputs */
+.form-label-custom {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #9295a3; /* Muted gray label color matching Image 2 */
+  margin-bottom: 6px;
+}
+
+.required-star {
+  color: #e35d5d;
+}
+
+.form-control-custom {
+  font-size: 0.85rem;
+  border: 1px solid #e2e4ea;
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #495057;
+}
+
+.form-control-custom::placeholder {
+  color: #aeb4be;
+}
+
+.bg-readonly {
+  background-color: #edf0f5 !important;
+  color: #5f6672 !important;
+  font-weight: 600;
+}
+
+/* Action Buttons */
+.btn-cancel {
+  background-color: #ff7555 !important;
+  font-size: 0.88rem;
+}
+
+.btn-cancel:hover {
+  background-color: #f06443 !important;
+}
+
+.btn-submit {
+  background-color: #5142ba !important;
+  font-size: 0.88rem;
+}
+
+.btn-submit:hover {
+  background-color: #4335a3 !important;
+}
+
+.btn-submit:disabled {
+  background-color: #897ed8 !important;
+  opacity: 0.7;
+}

@@ -1,0 +1,83 @@
+/* Color Palette */
+.text-purple-heading {
+  color: #4A3E9D !important;
+}
+
+.bg-purple-header {
+  background-color: #F8F7FC !important;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+/* Dropdown Filter Select */
+.filter-dropdown-wrapper {
+  min-width: 260px;
+}
+
+.custom-select-filter {
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  color: #475569;
+  background-color: #F8FAFC;
+}
+
+.custom-select-filter:focus {
+  border-color: #4A3E9D;
+  box-shadow: 0 0 0 2px rgba(74, 62, 157, 0.1);
+}
+
+/* Primary Top Action Button */
+.btn-purple-primary {
+  background-color: #4A3E9D;
+  color: #FFFFFF;
+  border: none;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-purple-primary:hover {
+  background-color: #3b3182;
+  color: #FFFFFF;
+}
+
+/* Action Take Test Button inside Table Rows */
+.btn-purple-action {
+  background-color: #4A3E9D;
+  color: #FFFFFF;
+  border: none;
+  min-width: 90px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-purple-action:hover {
+  background-color: #3b3182;
+  color: #FFFFFF;
+}
+
+.btn-purple-primary:active,
+.btn-purple-action:active {
+  transform: scale(0.96);
+}
+
+/* Table Column & Cell Styling */
+.custom-mcq-table th {
+  font-size: 0.85rem;
+  padding: 14px 16px;
+  font-weight: 700;
+}
+
+.custom-mcq-table td {
+  font-size: 0.85rem;
+  padding: 12px 16px;
+}
+
+.border-bottom-light {
+  border-bottom: 1px solid #F1F5F9;
+}

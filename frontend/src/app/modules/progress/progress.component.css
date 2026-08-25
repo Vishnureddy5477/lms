@@ -1,0 +1,92 @@
+/* Color Utility Classes */
+.text-dark-purple {
+  color: #2E1065 !important;
+}
+
+.text-black {
+  color: #000000 !important;
+}
+
+.fs-7 {
+  font-size: 0.88rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+/* Header Pills Navigation (matches Evaluation Policy) */
+.pill-btn {
+  background-color: transparent;
+  color: #64748B;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.pill-btn:hover {
+  color: #4A3E9D;
+  background-color: #F1F5F9;
+}
+
+.pill-btn.active-pill {
+  background-color: #EDE9FE !important;
+  color: #5B21B6 !important;
+  font-weight: 600;
+}
+
+/* Table Header Light Purple Background */
+.bg-purple-header {
+  background-color: #F1F0FB !important;
+}
+
+.text-purple-heading th {
+  color: #5B21B6 !important;
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 12px 16px;
+}
+
+.custom-criteria-table td {
+  padding: 14px 16px;
+  font-size: 0.88rem;
+  color: #000000;
+}
+
+.border-bottom-light {
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.custom-criteria-table tbody tr:hover {
+  background-color: #FAF5FF;
+}
+
+/* View Course Outline / Lab Manual action button */
+.btn-purple-action {
+  background-color: #4A3E9D;
+  color: #FFFFFF;
+  border: none;
+  font-size: 0.82rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-purple-action:hover {
+  background-color: #3b3182;
+  color: #FFFFFF;
+}
+
+.btn-purple-action:active {
+  transform: scale(0.98);
+}
+
+/* Course Progress controls */
+.search-input {
+  width: 180px;
+  border-color: #E2E8F0;
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.search-input:focus {
+  border-color: #4A3E9D;
+  box-shadow: 0 0 0 0.2rem rgba(74, 62, 157, 0.15);
+}

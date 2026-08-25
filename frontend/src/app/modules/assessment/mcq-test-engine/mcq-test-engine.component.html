@@ -1,0 +1,313 @@
+<div class="mcq-engine">
+
+  <!-- ─── Loading ─────────────────────────────────────────────── -->
+  @if (loading) {
+    <div class="mcq-centre">
+      <div class="spinner-border text-primary mb-3" role="status"></div>
+      <p class="text-muted mb-0">Preparing your test…</p>
+    </div>
+  }
+
+  <!-- ─── Error ───────────────────────────────────────────────── -->
+  @else if (error && !submitted) {
+    <div class="mcq-centre">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center" style="max-width: 480px;">
+        <i class="bi bi-exclamation-triangle-fill text-danger fs-1 mb-3"></i>
+        <h5 class="fw-bold mb-2">Cannot start this test</h5>
+        <p class="text-muted fs-8 mb-4">{{ error }}</p>
+        <button class="btn btn-primary rounded-3" (click)="backToList()">
+          <i class="bi bi-arrow-left me-1"></i> Back to Test List
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- ─── Results ─────────────────────────────────────────────── -->
+  @else if (submitted && result) {
+    <div class="mcq-centre">
+      <div class="card border-0 shadow rounded-4 overflow-hidden" style="max-width: 560px; width: 100%;">
+
+        <div class="result-banner text-center text-white p-4"
+             [class.pass]="result.status === 'Pass'"
+             [class.fail]="result.status !== 'Pass'">
+          <i class="bi fs-1 d-block mb-2"
+             [class.bi-patch-check-fill]="result.status === 'Pass'"
+             [class.bi-x-octagon-fill]="result.status !== 'Pass'"></i>
+          <h4 class="fw-bold mb-1">
+            {{ result.status === 'Pass' ? 'Congratulations — you passed!' : 'Test submitted' }}
+          </h4>
+          <p class="mb-0 fs-8 opacity-75">{{ result.moduleName }} · Test {{ result.testNo }} · Attempt {{ result.attemptNo }}</p>
+          @if (result.autoSubmitted) {
+            <p class="mb-0 mt-2 fs-9 opacity-75">
+              <i class="bi bi-shield-exclamation me-1"></i>
+              This test was submitted automatically.
+            </p>
+          }
+        </div>
+
+        <div class="p-4">
+          <div class="d-flex justify-content-center align-items-baseline gap-2 mb-4">
+            <span class="display-6 fw-bold"
+                  [class.text-success]="result.status === 'Pass'"
+                  [class.text-danger]="result.status !== 'Pass'">
+              {{ result.obtainedMarks }}
+            </span>
+            <span class="text-muted fs-6">/ {{ result.totalMarks }} marks</span>
+            <span class="badge ms-2"
+                  [class.bg-success]="result.status === 'Pass'"
+                  [class.bg-danger]="result.status !== 'Pass'">
+              {{ result.percentage }}%
+            </span>
+          </div>
+
+          <div class="row g-2 text-center mb-4">
+            <div class="col-4">
+              <div class="stat-tile border rounded-3 py-3">
+                <div class="fs-4 fw-bold text-success">{{ result.correct }}</div>
+                <div class="fs-9 text-muted">Correct</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="stat-tile border rounded-3 py-3">
+                <div class="fs-4 fw-bold text-danger">{{ result.incorrect }}</div>
+                <div class="fs-9 text-muted">Incorrect</div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div class="stat-tile border rounded-3 py-3">
+                <div class="fs-4 fw-bold text-secondary">{{ result.notAttempted }}</div>
+                <div class="fs-9 text-muted">Not attempted</div>
+              </div>
+            </div>
+          </div>
+
+          @if (result.status !== 'Pass') {
+            @if (result.paidSlotRequired) {
+              <div class="alert alert-warning fs-8 mb-4">
+                <i class="bi bi-credit-card me-1"></i>
+                You have used your free attempts for this test. Please contact the Training
+                Delivery team to arrange your next attempt.
+              </div>
+            } @else if (result.nextDate && result.nextDate !== 'NA') {
+              <div class="alert alert-info fs-8 mb-4">
+                <i class="bi bi-calendar-event me-1"></i>
+                You can retake this test on <strong>{{ result.nextDate }}</strong>.
+              </div>
+            }
+          }
+
+          <button class="btn btn-primary w-100 rounded-3" (click)="backToList()">
+            <i class="bi bi-list-check me-1"></i> Back to Test List
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ─── Fullscreen gate ─────────────────────────────────────── -->
+  @else if (needsFullscreen) {
+    <div class="mcq-centre">
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center" style="max-width: 520px;">
+        <i class="bi bi-fullscreen text-primary fs-1 mb-3"></i>
+        <h5 class="fw-bold mb-2">This test runs in fullscreen</h5>
+        <p class="text-muted fs-8 mb-3">
+          Once you begin, leaving fullscreen, switching tabs or opening another window
+          is recorded as a warning. After
+          <strong>{{ maxViolations }} warnings</strong> your test is submitted automatically.
+        </p>
+        @if (violationCount > 0) {
+          <p class="text-danger fs-8 mb-3">
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            You already have {{ violationCount }} of {{ maxViolations }} warnings on this attempt.
+          </p>
+        }
+        <button class="btn btn-primary rounded-3 px-4" (click)="enterFullscreen()">
+          <i class="bi bi-play-circle me-1"></i> Enter fullscreen &amp; begin
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- ─── The test ────────────────────────────────────────────── -->
+  @else if (state) {
+    <div class="mcq-shell">
+
+      <!-- Header -->
+      <header class="mcq-header d-flex justify-content-between align-items-center px-4 py-2">
+        <div>
+          <div class="fw-bold">{{ state.moduleName }} — Test {{ state.testNo }}</div>
+          <div class="fs-9 opacity-75">
+            {{ state.studentName }} · {{ state.regNo }} · {{ state.batch }} · Attempt {{ state.attemptNo }}
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-4">
+          @if (savingStatus) {
+            <span class="fs-9 opacity-75"><i class="bi bi-cloud-arrow-up me-1"></i>{{ savingStatus }}</span>
+          }
+          @if (violationCount > 0) {
+            <span class="badge bg-warning text-dark">
+              <i class="bi bi-shield-exclamation me-1"></i>{{ violationCount }}/{{ maxViolations }}
+            </span>
+          }
+          <div class="text-end">
+            <div class="fs-9 opacity-75">Time remaining</div>
+            <div class="mcq-timer fw-bold"
+                 [class.danger]="timerDanger" [class.critical]="timerCritical">
+              {{ timerDisplay }}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="mcq-body">
+        <!-- Question -->
+        <section class="mcq-question card border-0 shadow-sm rounded-4 p-4">
+          @if (currentQuestion) {
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="fw-bold mb-0">
+                Question {{ currentIndex + 1 }}
+                <span class="text-muted fw-normal fs-8">of {{ state.questions.length }}</span>
+              </h6>
+              <span class="badge bg-light text-dark border">0.5 marks</span>
+            </div>
+
+            @if (currentParts) {
+              <p class="mb-2">{{ currentParts.prompt }}</p>
+              <pre class="mcq-code">{{ currentParts.code }}</pre>
+            } @else {
+              <p class="mb-3 mcq-prompt">{{ currentQuestion.question }}</p>
+            }
+
+            <div class="mcq-options mt-3">
+              @for (opt of optionsOf(currentQuestion); track opt.value) {
+                <label class="mcq-option"
+                       [class.selected]="selectedFor(currentQuestion.questionOrder) === opt.value">
+                  <input type="radio"
+                         [name]="'q' + currentQuestion.questionOrder"
+                         [value]="opt.value"
+                         [checked]="selectedFor(currentQuestion.questionOrder) === opt.value"
+                         (change)="selectOption(currentQuestion.questionOrder, opt.value)" />
+                  <span class="mcq-option-marker">{{ opt.value }}</span>
+                  <span class="mcq-option-text">{{ opt.text }}</span>
+                </label>
+              }
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <button class="btn btn-link btn-sm text-muted text-decoration-none"
+                      [disabled]="!isAnswered(currentQuestion.questionOrder)"
+                      (click)="clearResponse(currentQuestion.questionOrder)">
+                <i class="bi bi-eraser me-1"></i> Clear response
+              </button>
+
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary rounded-3" [disabled]="isFirst" (click)="prev()">
+                  <i class="bi bi-chevron-left"></i> Previous
+                </button>
+                @if (isLast) {
+                  <button class="btn btn-danger rounded-3" (click)="openSubmitModal()">
+                    Submit Test
+                  </button>
+                } @else {
+                  <button class="btn btn-primary rounded-3" (click)="next()">
+                    Next <i class="bi bi-chevron-right"></i>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </section>
+
+        <!-- Palette -->
+        <aside class="mcq-palette card border-0 shadow-sm rounded-4 p-3">
+          <h6 class="fw-bold fs-8 mb-3">Question Palette</h6>
+
+          <div class="mcq-palette-grid mb-3">
+            @for (q of state.questions; track q.questionOrder; let i = $index) {
+              <button class="mcq-palette-cell"
+                      [class.answered]="isAnswered(q.questionOrder)"
+                      [class.current]="i === currentIndex"
+                      (click)="goTo(i)"
+                      [title]="'Go to question ' + (i + 1)">
+                {{ i + 1 }}
+              </button>
+            }
+          </div>
+
+          <div class="fs-9 text-muted mb-1">
+            Answered <strong>{{ answeredCount }}</strong> / {{ state.questions.length }}
+          </div>
+          <div class="progress mb-2" style="height: 6px;">
+            <div class="progress-bar bg-success" [style.width.%]="progressPercent"></div>
+          </div>
+          <div class="fs-9 text-muted mb-3">
+            Attempted marks: {{ attemptedMarks }} / {{ state.totalMarks }}
+          </div>
+
+          <button class="btn btn-danger btn-sm w-100 rounded-3" (click)="openSubmitModal()">
+            Submit Test
+          </button>
+        </aside>
+      </div>
+    </div>
+  }
+
+  <!-- ─── Strike warning ──────────────────────────────────────── -->
+  @if (showViolation) {
+    <div class="mcq-overlay">
+      <div class="card border-0 shadow rounded-4 p-4 text-center" style="max-width: 440px;">
+        <i class="bi fs-1 mb-3"
+           [class.bi-exclamation-triangle-fill]="violationLevel !== 'critical'"
+           [class.bi-shield-fill-exclamation]="violationLevel === 'critical'"
+           [class.text-warning]="violationLevel === 'warn'"
+           [class.text-danger]="violationLevel !== 'warn'"></i>
+
+        <h5 class="fw-bold mb-2">{{ violationTitle }}</h5>
+        <p class="text-muted fs-8 mb-3">{{ violationReason }}</p>
+
+        <!-- One dot per strike, so the student can see exactly where they stand -->
+        <div class="mcq-strikes mb-3">
+          @for (s of strikeSlots; track s) {
+            <span class="mcq-strike" [class.used]="s <= violationCount"></span>
+          }
+        </div>
+
+        @if (violationLevel === 'critical') {
+          <p class="text-danger fw-semibold mb-0">
+            Submitting in {{ autoSubmitCountdown }}…
+          </p>
+        } @else {
+          <button class="btn btn-primary rounded-3 px-4" (click)="dismissViolation()">
+            Return to test
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ─── Submit confirmation ─────────────────────────────────── -->
+  @if (showSubmitModal && state) {
+    <div class="mcq-overlay" (click)="cancelSubmit()">
+      <div class="card border-0 shadow rounded-4 p-4" style="max-width: 420px;" (click)="$event.stopPropagation()">
+        <h5 class="fw-bold mb-2">Submit your test?</h5>
+        <p class="text-muted fs-8 mb-3">
+          You have answered <strong>{{ answeredCount }}</strong> of
+          {{ state.questions.length }} questions.
+          @if (answeredCount < state.questions.length) {
+            The remaining {{ state.questions.length - answeredCount }} will be marked as not attempted.
+          }
+          You cannot change your answers after submitting.
+        </p>
+        <div class="d-flex justify-content-end gap-2">
+          <button class="btn btn-outline-secondary rounded-3" (click)="cancelSubmit()">Cancel</button>
+          <button class="btn btn-danger rounded-3" [disabled]="submitting" (click)="confirmSubmit()">
+            @if (submitting) { <span class="spinner-border spinner-border-sm me-1"></span> }
+            Yes, submit
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

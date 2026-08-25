@@ -1,0 +1,70 @@
+/* Color Styling */
+.text-navy {
+  color: #2b3674 !important;
+}
+
+.text-black {
+  color: #000000 !important;
+}
+
+.fs-7 {
+  font-size: 0.875rem;
+}
+
+.fs-8 {
+  font-size: 0.825rem;
+}
+
+/* Custom Alert Banners */
+.alert-warning-custom {
+  background-color: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 0.825rem;
+}
+
+/* Company JD Table */
+.company-jd-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.company-jd-table th {
+  background-color: #f1f0fb;
+  color: #5c4eb4;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 12px 10px;
+  border-top: 1px solid #edf2f7;
+  border-bottom: 1px solid #edf2f7;
+  white-space: nowrap;
+}
+
+.company-jd-table td {
+  padding: 12px 10px;
+  font-size: 0.825rem;
+  color: #000000 !important;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Empty State Background */
+.empty-state-container {
+  background-color: #e2e8f0;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+/* Action Buttons */
+.btn-indigo-sm {
+  background-color: #5c4eb4;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.btn-indigo-sm:hover {
+  background-color: #483a9e;
+  color: #ffffff;
+}

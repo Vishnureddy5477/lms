@@ -1,0 +1,86 @@
+/* Typography & Palette */
+.text-dark-purple {
+  color: #2E1065 !important;
+}
+
+.text-purple-heading {
+  color: #4A3E9D !important;
+}
+
+.bg-purple-header {
+  background-color: #F8F7FC !important;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+/* Purple Pill Badge for Question Count */
+.bg-purple-badge {
+  background-color: #5243C2 !important;
+  color: #FFFFFF;
+  min-width: 38px;
+}
+
+/* Outlined Teal/Cyan View Button */
+.btn-outline-teal {
+  color: #0D9488 !important; /* Teal green border & text */
+  border: 1px solid #0D9488 !important;
+  background-color: #FFFFFF;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-teal:hover {
+  background-color: #0D9488 !important;
+  color: #FFFFFF !important;
+}
+
+.btn-outline-teal:active {
+  transform: scale(0.96);
+}
+
+/* Table Design Specs */
+.custom-interview-table th {
+  font-size: 0.85rem;
+  padding: 14px 16px;
+  font-weight: 700;
+}
+
+.custom-interview-table td {
+  font-size: 0.85rem;
+  padding: 14px 16px;
+}
+
+.border-bottom-light {
+  border-bottom: 1px solid #F1F5F9;
+}
+
+/* Answers modal */
+.answers-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 1rem;
+}
+
+.answers-modal-body {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 640px;
+  max-height: 80vh;
+  overflow-y: auto;
+}

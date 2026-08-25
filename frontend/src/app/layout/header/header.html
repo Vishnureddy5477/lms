@@ -1,0 +1,161 @@
+<!-- Nav Header (top-left: logo). Do not remove — the theme expects this block. -->
+<div class="nav-header" style="height: 62px;">
+  <a routerLink="/" class="brand-logo">
+    <img src="dashboard/images/logo/logo-small.png" width="40px" alt="logo">
+    <div class="brand-title">
+      <img src="dashboard/images/logo/logo-full.png" width="150px" style="margin-top: 10px;" alt="Cranes Varsity">
+    </div>
+  </a>
+  <div class="nav-control">
+    <div class="hamburger">
+      <span class="line"></span><span class="line"></span><span class="line"></span>
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="22" y="11" width="4" height="4" rx="2" fill="#FFFFFF" />
+        <rect x="11" width="4" height="4" rx="2" fill="#FFFFFF" />
+        <rect x="22" width="4" height="4" rx="2" fill="#FFFFFF" />
+        <rect x="11" y="11" width="4" height="4" rx="2" fill="#FFFFFF" />
+        <rect x="11" y="22" width="4" height="4" rx="2" fill="#FFFFFF" />
+        <rect width="4" height="4" rx="2" fill="#FFFFFF" />
+        <rect y="11" width="4" height="4" rx="2" fill="#FFFFFF" />
+        <rect x="22" y="22" width="4" height="4" rx="2" fill="#FFFFFF" />
+        <rect y="22" width="4" height="4" rx="2" fill="#FFFFFF" />
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- Header (purple top bar) -->
+<div class="header"
+  style="height: 62px; box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;">
+  <div class="header-content">
+    <nav class="navbar navbar-expand">
+      <div class="collapse navbar-collapse justify-content-between">
+
+        <div class="header-left">
+          <!-- CHANGE THIS to your project name -->
+          <div class="dashboard_bar text-white">Student Dashboard</div>
+        </div>
+
+        <ul class="navbar-nav header-right">
+
+          <!-- Theme mode toggle -->
+          <li class="nav-item dropdown notification_dropdown">
+            <a class="nav-link bell dz-theme-mode" href="javascript:void(0);">
+              <i id="icon-light-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-sun">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+              </i>
+              <i id="icon-dark-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-moon">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              </i>
+            </a>
+          </li>
+
+          <!-- Fullscreen -->
+          <li class="nav-item dropdown notification_dropdown">
+            <a class="nav-link bell dz-fullscreen" href="javascript:void(0);">
+              <svg id="icon-full-1" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2"
+                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                </path>
+              </svg>
+              <svg id="icon-minimize-1" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="A098AE"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-minimize">
+                <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3">
+                </path>
+              </svg>
+            </a>
+          </li>
+
+          <!-- Profile -->
+          <li class="nav-item">
+            <div class="dropdown header-profile2">
+              <a class="nav-link ms-0" href="javascript:void(0);" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <div class="header-info2 d-flex align-items-center">
+                  <img src="dashboard/images/learner-avatar.png" alt="">
+                </div>
+              </a>
+              <!-- Dropdown Card Container -->
+              <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 p-0 mt-2"
+                style="width: 280px; overflow: hidden; background: #fff;">
+
+                <!-- User Information Header -->
+                <div class="p-3 d-flex align-items-center gap-3 border-bottom" style="background-color: #f8f9fa;">
+                  <img src="assets/dashboard/images/learner-avatar.png" alt="User Avatar"
+                    class="rounded-circle flex-shrink-0" style="width: 42px; height: 42px; object-fit: cover;">
+                  <div class="overflow-hidden">
+                    <h6 class="mb-0 fw-bold text-dark">{{ currentUser?.full_name || 'LMS' }}</h6>
+                    <small class="text-muted d-block text-truncate" style="font-size: 0.78rem;">
+                      {{ currentUser?.email || 'intern@cranesvarsity.com' }}
+                    </small>
+                  </div>
+                </div>
+
+                <!-- Navigation Items -->
+                <ul class="list-unstyled mb-0 py-2">
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center gap-3 py-2 px-3 text-secondary"
+                      href="javascript:void(0)" (click)="navigateToProfile()">
+                      <i class="bi bi-person fs-5" style="color: #6b7280;"></i>
+                      <span style="color: #4b5563;">Profile</span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center gap-3 py-2 px-3 text-secondary"
+                      routerLink="/profile/enrollment-details">
+                      <i class="bi bi-clipboard-check fs-5" style="color: #6b7280;"></i>
+                      <span style="color: #4b5563;">Enrollment Details</span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center gap-3 py-2 px-3 text-secondary"
+                      routerLink="/profile/billing-payments">
+                      <i class="bi bi-credit-card fs-5" style="color: #6b7280;"></i>
+                      <span style="color: #4b5563;">Billing & Payments</span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center gap-3 py-2 px-3 text-secondary cursor-pointer"
+                      href="javascript:void(0)" (click)="navigateToHolidays()">
+                      <i class="bi bi-calendar-event fs-5" style="color: #6b7280;"></i>
+                      <span style="color: #4b5563;">Holidays</span>
+                    </a>
+                  </li>
+                </ul>
+
+                <!-- Logout Action Button -->
+                <div class="p-3 border-top text-center" style="background-color: #f8f9fa;">
+                  <button
+                    class="btn w-100 py-2 rounded-3 fw-semibold d-flex align-items-center justify-content-center gap-2"
+                    (click)="onLogout()" style="background-color: #edeefb; color: #5050ce; border: none;">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>

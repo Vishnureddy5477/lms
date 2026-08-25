@@ -1,0 +1,400 @@
+<div class="overview-container w-100">
+
+  <!-- Welcome Banner Card -->
+  <div class="card border-0 shadow-sm p-3 mb-3" style="border-radius: 6px; background: #fff;">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <div>
+        <h4 class="fw-bold mb-1" style="color: #2c323f; font-size: 1.25rem;">Welcome, {{ profile?.name || '...' }}</h4>
+        <small class="fw-bold" style="color: #00bcd4;">
+          The Better Way To Start The Skill.
+        </small>
+      </div>
+      <div class="d-flex gap-2">
+        <!-- Trigger Button -->
+        <button type="button" class="btn text-white px-3 py-2 fw-semibold" style="background-color: #5050ce;"
+          (click)="openPaymentModal()">
+          Update Payment Details
+        </button>
+
+        <dialog #paymentModal class="payment-dialog-reset p-0 border-0 rounded-3">
+          <div class="modal-card bg-white rounded-3 overflow-hidden shadow">
+
+            <!-- Modal Header -->
+            <div class="modal-header-custom d-flex align-items-center justify-content-between px-4 py-3 text-white">
+              <h5 class="modal-title-custom mb-0 fw-bold mx-auto text-white">Update Payment Details</h5>
+              <button type="button" class="btn-close btn-close-white ms-0" (click)="closePaymentModal()"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body-custom p-4">
+
+              <!-- Alert Banner -->
+              <div class="alert-banner text-center py-3 px-4 mb-4 rounded-3 border-0">
+                Submit your payment details for verification. Once the accounts team approves, you will receive a
+                confirmation email.
+              </div>
+
+              <div class="alert py-2 px-3 mb-3" [class.alert-success]="!paymentError" [class.alert-danger]="paymentError"
+                *ngIf="paymentMessage">
+                {{ paymentMessage }}
+              </div>
+
+              <form (ngSubmit)="onSubmitPaymentDetails()" #paymentForm="ngForm">
+
+                <!-- Row 1 -->
+                <div class="row g-3 mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label-custom">Student Name</label>
+                    <input type="text" class="form-control form-control-custom bg-readonly" [value]="profile?.name || ''"
+                      readonly>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label-custom">Email</label>
+                    <input type="email" class="form-control form-control-custom bg-readonly" [value]="profile?.email || ''"
+                      readonly>
+                  </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="row g-3 mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label-custom">Registration No</label>
+                    <input type="text" class="form-control form-control-custom bg-readonly" [value]="profile?.regNo || ''"
+                      readonly>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label-custom">Contact</label>
+                    <input type="text" class="form-control form-control-custom bg-readonly"
+                      [value]="profile?.contact || ''" readonly>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label-custom">Batch</label>
+                    <input type="text" class="form-control form-control-custom bg-readonly" [value]="profile?.batch || ''"
+                      readonly>
+                  </div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="row g-3 mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label-custom">Payment Method <span class="required-star">*</span></label>
+                    <select class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched" [(ngModel)]="paymentFormModel.method"
+                      name="method" required>
+                      <option value="" disabled selected>Select Payment Method</option>
+                      <option value="UPI">UPI / Net Banking</option>
+                      <option value="CreditCard">Credit / Debit Card</option>
+                      <option value="BankTransfer">Direct Bank Transfer</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label-custom">Amount Paid (Rs.) <span class="required-star">*</span></label>
+                    <input type="number" class="form-control form-control-custom" placeholder="e.g. 20000"
+                      [(ngModel)]="paymentFormModel.amount" name="amount" required>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label-custom">Payment Date <span class="required-star">*</span></label>
+                    <input type="date" class="form-control form-control-custom text-secondary"
+                      [(ngModel)]="paymentFormModel.date" name="date" required>
+                  </div>
+                </div>
+
+                <!-- Row 4: Remarks -->
+                <div class="mb-4">
+                  <label class="form-label-custom">Remarks (optional)</label>
+                  <textarea class="form-control form-control-custom" rows="3"
+                    placeholder="Anything else you'd like the accounts team to know"
+                    [(ngModel)]="paymentFormModel.remarks" name="remarks"></textarea>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex justify-content-end gap-2 pt-2">
+                  <button type="button" class="btn btn-cancel text-white px-4 py-2 rounded-3 fw-bold border-0"
+                    (click)="closePaymentModal()">
+                    Cancel
+                  </button>
+                  <button type="submit" class="btn btn-submit text-white px-4 py-2 rounded-3 fw-bold border-0"
+                    [disabled]="!paymentForm.form.valid || paymentSubmitting">
+                    {{ paymentSubmitting ? 'Submitting...' : 'Submit for Approval' }}
+                  </button>
+                </div>
+
+              </form>
+            </div>
+
+          </div>
+        </dialog>
+        <a href="https://pages.razorpay.com/cranes-varsity" target="_blank" rel="noopener"
+          class="btn text-white fw-bold px-3 py-2"
+          style="background-color: #5d53c0; font-size: 0.8rem; border-radius: 5px;">
+          Pay Course Fee
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Course Details Bar Card -->
+  <div class="card border-0 shadow-sm p-3 mb-3" style="border-radius: 6px; background: #fff;">
+    <div class="row align-items-center gy-2">
+      <div class="col-md-3 col-sm-6">
+        <span class="fw-bold text-dark me-1" style="font-size: 0.88rem;">Batch Number :</span><br>
+        <span class="fw-bold" style="color: #00bcd4; font-size: 0.88rem;">{{ profile?.batch || '-' }}</span>
+      </div>
+
+      <div class="col-md-4 col-sm-6">
+        <span class="fw-bold text-dark me-1" style="font-size: 0.88rem;">Course Name :</span><br>
+        <span class="fw-bold" style="color: #00bcd4; font-size: 0.88rem;">{{ profile?.course || '-' }}</span>
+      </div>
+
+      <div class="col-md-3 col-sm-6">
+        <span class="fw-bold text-dark me-1" style="font-size: 0.88rem;">Course Start Date :</span><br>
+        <span class="fw-bold" style="color: #00bcd4; font-size: 0.88rem;">{{ profile?.courseStartDate || '-' }}</span>
+      </div>
+
+      <div class="col-md-2 col-sm-6 text-md-end">
+        <button class="btn text-white fw-bold px-3 py-1"
+          style="background-color: #5d53c0; font-size: 0.8rem; border-radius: 5px;"
+          routerLink="/schedule/class-schedule">
+          <i class="bi bi-eye me-1"></i> My Schedule
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Job Description Details Section Wrapped in White Card -->
+  <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 6px; background: #fff;">
+    <h5 class="fw-bold mb-3" style="color: #2c323f; font-size: 1.05rem;">Job Description Details</h5>
+
+    <div class="row align-items-center g-3">
+      <!-- Total Opportunity Card -->
+      <div class="col-md-3 col-sm-6">
+        <div class="card p-3"
+          style="border: 1px solid #e0e4ec; border-bottom: 3px solid #5d53c0 !important; border-radius: 6px; background: #fff; min-height: 85px;">
+          <span class="fw-bold text-dark" style="font-size: 0.88rem;">Total Opportunity</span>
+          <span class="fw-bold fs-4 mt-2" style="color: #2c323f;">{{ jdStats.totalOpportunity }}</span>
+        </div>
+      </div>
+
+      <!-- Total Applied Card -->
+      <div class="col-md-3 col-sm-6">
+        <div class="card p-3"
+          style="border: 1px solid #e0e4ec; border-bottom: 3px solid #4caf50 !important; border-radius: 6px; background: #fff; min-height: 85px;">
+          <span class="fw-bold text-dark" style="font-size: 0.88rem;">Total Applied</span>
+          <span class="fw-bold fs-4 mt-2" style="color: #2c323f;">{{ jdStats.totalApplied }}</span>
+        </div>
+      </div>
+
+      <!-- Total Lost Card -->
+      <div class="col-md-3 col-sm-6">
+        <div class="card p-3"
+          style="border: 1px solid #e0e4ec; border-bottom: 3px solid #f44336 !important; border-radius: 6px; background: #fff; min-height: 85px;">
+          <span class="fw-bold text-dark" style="font-size: 0.88rem;">Total Lost</span>
+          <span class="fw-bold fs-4 mt-2" style="color: #2c323f;">{{ jdStats.totalLost }}</span>
+        </div>
+      </div>
+
+      <!-- View JD Details Button -->
+      <div class="col-md-3 col-sm-6 text-md-end">
+        <button class="btn text-white fw-bold px-3 py-2"
+          style="background-color: #5d53c0; font-size: 0.85rem; border-radius: 5px;"
+          routerLink="/career-assistance/placement-monitor">
+          <i class="bi bi-eye me-1"></i> View JD Details
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Attendance & MCQ Main Title -->
+  <h5 class="fw-bold mb-3" style="color: #2c323f; font-size: 1.05rem;">Attendance & MCQ Report</h5>
+
+  <!-- 1. MODULE-WISE ATTENDANCE OVERVIEW SECTION -->
+  <div class="row g-3 mb-4">
+    <!-- Attendance Table Card -->
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 6px; background: #fff;">
+        <h6 class="fw-bold mb-3" style="color: #3b4256; font-size: 1rem;">Module-Wise Attendance Overview</h6>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle text-center mb-0"
+            style="font-size: 0.85rem; border-color: #e9ecef;">
+            <thead class="bg-light fw-bold" style="color: #2c323f;">
+              <tr>
+                <th class="text-start ps-3">Module Name</th>
+                <th>Total</th>
+                <th>Present</th>
+                <th>Absent</th>
+                <th>Average</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="filteredAttendanceRows.length === 0">
+                <td colspan="5" class="text-muted py-3">No attendance records yet.</td>
+              </tr>
+              <tr *ngFor="let row of filteredAttendanceRows; let i = index"
+                [style.background-color]="i % 2 === 1 ? '#f8f9fa' : 'transparent'">
+                <td class="text-start ps-3 fw-semibold">{{ row.moduleName }}</td>
+                <td>{{ row.totalClasses }}</td>
+                <td>{{ row.presentCount }}</td>
+                <td>{{ row.absentCount }}</td>
+                <td>{{ row.averagePercent }}%</td>
+              </tr>
+            </tbody>
+            <tfoot class="fw-bold border-top" *ngIf="filteredAttendanceRows.length > 0">
+              <tr>
+                <td class="text-end pe-3 fw-bold">Totals:</td>
+                <td class="fw-bold">{{ attendanceTotals.totalClasses }}</td>
+                <td class="fw-bold">{{ attendanceTotals.presentCount }}</td>
+                <td class="fw-bold">{{ attendanceTotals.absentCount }}</td>
+                <td class="fw-bold">{{ attendanceTotalAveragePercent | number: '1.1-1' }}%</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Attendance Chart Card -->
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 6px; background: #fff;">
+        <h6 class="fw-bold mb-2" style="color: #3b4256; font-size: 1rem;">Module-Wise Attendance Overview</h6>
+
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <label class="fw-bold text-muted small">Select Module:</label>
+          <select class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched"
+            style="width: auto;" [(ngModel)]="selectedModule" (change)="onModuleChange()">
+            <option value="ALL">All Modules</option>
+            <option *ngFor="let mod of attendanceModules" [value]="mod">
+              {{ mod }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Attendance Bar Chart -->
+        <div class="chart-container d-flex align-items-end px-2 pt-4 pb-2"
+          style="height: 200px; border-bottom: 2px solid #e9ecef; overflow-x: auto; overflow-y: hidden;">
+          <div class="d-flex flex-column align-items-center h-100 justify-content-end flex-shrink-0"
+            *ngFor="let row of filteredAttendanceRows" style="width: 44px;">
+            <div class="d-flex align-items-end w-100 justify-content-center gap-1 h-100">
+              <div [style.height.%]="presentHeightPercent(row)"
+                style="width: 8px; background-color: #28a745; border-radius: 2px 2px 0 0;"></div>
+              <div [style.height.%]="absentHeightPercent(row)"
+                style="width: 8px; background-color: #dc3545; border-radius: 2px 2px 0 0;"></div>
+            </div>
+            <span class="text-muted mt-2 text-truncate d-inline-block"
+              style="font-size: 0.65rem; max-width: 70px; transform: rotate(-45deg); transform-origin: left bottom; white-space: nowrap;">{{
+              row.moduleName }}</span>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 mt-4 pt-2">
+          <div class="d-flex align-items-center gap-1" style="font-size: 0.78rem;">
+            <span
+              style="width: 10px; height: 10px; background-color: #28a745; display: inline-block; border-radius: 2px;"></span>
+            <span class="text-secondary fw-semibold">Present</span>
+          </div>
+          <div class="d-flex align-items-center gap-1" style="font-size: 0.78rem;">
+            <span
+              style="width: 10px; height: 10px; background-color: #dc3545; display: inline-block; border-radius: 2px;"></span>
+            <span class="text-secondary fw-semibold">Absent</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- 2. MODULE-WISE MCQ PERFORMANCE SECTION -->
+  <div class="row g-3 mb-4">
+    <!-- MCQ Table Card -->
+    <div class="col-lg-7">
+      <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 6px; background: #fff;">
+        <h6 class="fw-bold mb-3" style="color: #3b4256; font-size: 1rem;">Module-Wise MCQ Performance</h6>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle text-center mb-0"
+            style="font-size: 0.85rem; border-color: #e9ecef;">
+            <thead class="bg-light fw-bold" style="color: #2c323f;">
+              <tr>
+                <th class="text-start ps-3">Module Name</th>
+                <th>Total</th>
+                <th>Correct</th>
+                <th>Incorrect</th>
+                <th>Average</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="filteredMcqRows.length === 0">
+                <td colspan="6" class="text-muted py-3">No MCQ results yet.</td>
+              </tr>
+              <tr *ngFor="let row of filteredMcqRows; let i = index"
+                [style.background-color]="i % 2 === 1 ? '#f8f9fa' : 'transparent'">
+                <td class="text-start ps-3 fw-semibold">{{ row.moduleName }}</td>
+                <td>{{ row.totalQuestions }}</td>
+                <td>{{ row.correctCount }}</td>
+                <td>{{ row.incorrectCount }}</td>
+                <td>{{ row.averagePercent }}%</td>
+                <td><span class="fw-bold" [class.text-danger]="row.status === 'fail'"
+                    [class.text-success]="row.status !== 'fail'">{{ row.status }}</span></td>
+              </tr>
+            </tbody>
+            <tfoot class="fw-bold border-top" *ngIf="filteredMcqRows.length > 0">
+              <tr>
+                <td class="text-end pe-3 fw-bold">Totals:</td>
+                <td class="fw-bold">{{ mcqTotals.totalQuestions }}</td>
+                <td class="fw-bold">{{ mcqTotals.correctCount }}</td>
+                <td class="fw-bold">{{ mcqTotals.incorrectCount }}</td>
+                <td class="fw-bold">{{ mcqTotalAveragePercent | number: '1.1-1' }}%</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Chart Card -->
+    <div class="col-lg-5">
+      <div class="card border-0 shadow-sm p-3 h-100" style="border-radius: 6px; background: #fff;">
+        <h6 class="fw-bold mb-2" style="color: #3b4256; font-size: 1rem;">Module-Wise MCQ Performance</h6>
+
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <label class="fw-bold text-muted small">Select Module:</label>
+          <select class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched"
+            style="width: auto;" [(ngModel)]="selectedMcqModule" (change)="onMcqModuleChange()">
+            <option value="ALL">All Modules</option>
+            <option *ngFor="let mod of mcqModules" [value]="mod">
+              {{ mod }}
+            </option>
+          </select>
+        </div>
+
+        <div class="chart-container d-flex align-items-end px-2 pt-4 pb-2"
+          style="height: 200px; border-bottom: 2px solid #e9ecef; overflow-x: auto; overflow-y: hidden;">
+          <div class="d-flex flex-column align-items-center h-100 justify-content-end flex-shrink-0"
+            *ngFor="let row of filteredMcqRows" style="width: 50px;">
+            <div class="d-flex align-items-end w-100 justify-content-center gap-1 h-100">
+              <div [style.height.%]="mcqCorrectHeightPercent(row)"
+                style="width: 10px; background-color: #28a745; border-radius: 2px 2px 0 0;"></div>
+              <div [style.height.%]="mcqIncorrectHeightPercent(row)"
+                style="width: 10px; background-color: #dc3545; border-radius: 2px 2px 0 0;"></div>
+            </div>
+            <span class="text-muted mt-2 text-truncate d-inline-block"
+              style="font-size: 0.68rem; max-width: 70px; transform: rotate(-45deg); transform-origin: left bottom; white-space: nowrap;">{{
+              row.moduleName }}</span>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 mt-4 pt-2">
+          <div class="d-flex align-items-center gap-1" style="font-size: 0.78rem;">
+            <span
+              style="width: 10px; height: 10px; background-color: #28a745; display: inline-block; border-radius: 2px;"></span>
+            <span class="text-secondary fw-semibold">Correct</span>
+          </div>
+          <div class="d-flex align-items-center gap-1" style="font-size: 0.78rem;">
+            <span
+              style="width: 10px; height: 10px; background-color: #dc3545; display: inline-block; border-radius: 2px;"></span>
+            <span class="text-secondary fw-semibold">Incorrect</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

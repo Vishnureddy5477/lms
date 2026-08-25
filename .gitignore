@@ -1,0 +1,27 @@
+# secrets
+.env
+**/.env
+backend/set-local-env.ps1
+
+# node
+node_modules/
+**/node_modules/
+
+# angular build output (anchored — do NOT use a broad **/dist,
+# it would wrongly ignore the theme's vendor dist/ folders)
+/frontend/dist/
+.angular/
+
+# java / maven
+target/
+**/target/
+*.class
+
+# ide
+.idea/
+.vscode/
+*.iml
+
+# misc
+*.log
+.DS_Store

@@ -1,0 +1,57 @@
+<div class="container-fluid p-4">
+
+  <!-- Header Row with Title and Right Subtitle -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h6 class="fw-bold text-dark-purple mb-0">Test Schedule</h6>
+    <span class="text-subtitle fs-8">Your upcoming and active theory & lab tests</span>
+  </div>
+
+  <!-- White Outer Container Card -->
+  <div class="card border-0 shadow-sm rounded-4 bg-white p-5 card-content-area">
+    
+    @if (isLoading) {
+      <div class="d-flex flex-column align-items-center justify-content-center py-5 text-center">
+        <app-skeleton variant="cards" [rows]="3" />
+      </div>
+    } @else if (scheduledTests.length === 0) {
+      <!-- Empty State View -->
+      <div class="d-flex flex-column align-items-center justify-content-center py-5 text-center">
+        
+        <!-- Light Blue Calendar Box -->
+        <div class="calendar-icon-wrapper mb-3 d-flex align-items-center justify-content-center">
+          <div class="calendar-box rounded-3 p-2 position-relative">
+            <i class="bi bi-calendar-event fs-1 text-primary-subtle"></i>
+            <i class="bi bi-x-lg text-primary-subtle position-absolute top-50 start-50 translate-middle fs-6"></i>
+          </div>
+        </div>
+
+        <!-- Heading Text -->
+        <h6 class="fw-bold text-dark-purple mb-2">No Tests Scheduled</h6>
+
+        <!-- Subtitle Message in Dark Slate Text -->
+        <p class="text-dark-muted fs-8 mb-0">
+          There are no tests scheduled for your batch right now.
+        </p>
+
+      </div>
+    } @else {
+      <!-- Scheduled Tests List (When data is available) -->
+      <div class="row g-3">
+        @for (test of scheduledTests; track test.id) {
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="card border p-3 rounded-3">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="fw-bold text-dark mb-0">{{ test.testTitle }}</h6>
+                <span class="badge bg-primary fs-8">{{ test.testType }}</span>
+              </div>
+              <p class="text-muted fs-8 mb-1">Date: {{ test.scheduledDate }}</p>
+              <p class="text-muted fs-8 mb-0">Duration: {{ test.duration }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+
+</div>

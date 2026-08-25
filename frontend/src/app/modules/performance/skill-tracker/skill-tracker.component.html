@@ -1,0 +1,311 @@
+<div class="content-body w-100 p-0 m-0 min-vh-100 bg-white">
+  <div class="container-fluid p-4">
+    <div class="row g-0">
+      <div class="col-12">
+
+        <div class="card border-0 bg-white">
+
+          <!-- TOP MAIN TABS -->
+          <div class="card-header bg-white border-0 d-flex justify-content-end align-items-center pe-3 pb-2 pt-0">
+            <ul class="nav nav-tabs border-0 performance-tabs">
+              <li class="nav-item">
+                <button class="nav-link" [class.active]="activeTab === 'mcq'" (click)="setTab('mcq')">
+                  MCQ Results
+                </button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link" [class.active]="activeTab === 'theory'" (click)="setTab('theory')">
+                  Theory Results
+                </button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link" [class.active]="activeTab === 'lab'" (click)="setTab('lab')">
+                  Lab Results
+                </button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link" [class.active]="activeTab === 'project'" (click)="setTab('project')">
+                  Project Results
+                </button>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link" [class.active]="activeTab === 'mock'" (click)="setTab('mock')">
+                  Mock Results
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- CARD BODY CONTENTS -->
+          <div class="card-body p-0 mt-3">
+
+            @if (loading) {
+              <app-skeleton variant="table" [rows]="5" [columns]="4" />
+            } @else if (errorMessage) {
+              <div class="text-center p-5 text-danger">{{ errorMessage }}</div>
+            } @else {
+
+            <!-- 1. MCQ RESULTS TAB -->
+            @if (activeTab === 'mcq') {
+              @if (mcqResults.length > 0) {
+                <div class="table-responsive">
+                  <table class="table align-middle performance-table mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="ps-4">Sno</th>
+                        <th scope="col">Module</th>
+                        <th scope="col">Test</th>
+                        <th scope="col">Full Marks</th>
+                        <th scope="col">Obtained</th>
+                        <th scope="col">Rate</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Exam Date</th>
+                        <th scope="col">Next Exam Date</th>
+                        <th scope="col" class="pe-4">Attempt</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (item of mcqResults; track $index; let i = $index) {
+                        <tr>
+                          <td class="ps-4 text-black">{{ i + 1 }}</td>
+                          <td class="text-black">{{ item.module }}</td>
+                          <td class="text-black">{{ item.test }}</td>
+                          <td class="text-black">{{ item.total }}</td>
+                          <td class="text-black">{{ item.obtained }}</td>
+                          <td class="text-black">{{ item.rate }}</td>
+                          <td>
+                            <span [class.text-danger]="item.status === 'Fail'" [class.text-success]="item.status === 'Pass'" class="fw-semibold">
+                              {{ item.status }}
+                            </span>
+                          </td>
+                          <td class="text-black whitespace-nowrap">{{ item.examDate }}</td>
+                          <td>
+                            <span [class.text-danger]="item.nextExamDate !== 'NA'" [class.text-black]="item.nextExamDate === 'NA'" class="fw-medium">
+                              {{ item.nextExamDate }}
+                            </span>
+                          </td>
+                          <td class="pe-4 text-black">{{ item.attempt }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
+                <div class="text-center p-5 text-black">No MCQ Results Found.</div>
+              }
+            }
+
+            <!-- 2. THEORY RESULTS TAB -->
+            @if (activeTab === 'theory') {
+              @if (theoryResults.length > 0) {
+                <div class="table-responsive">
+                  <table class="table align-middle performance-table mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="ps-4">Sno</th>
+                        <th scope="col">Module</th>
+                        <th scope="col">Full Marks</th>
+                        <th scope="col">Obtained</th>
+                        <th scope="col" class="pe-4">Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (item of theoryResults; track $index; let i = $index) {
+                        <tr>
+                          <td class="ps-4 text-black">{{ i + 1 }}</td>
+                          <td class="text-black">{{ item.module }}</td>
+                          <td class="text-black">{{ item.totalMarks }}</td>
+                          <td class="text-black">{{ item.obtainedMarks }}</td>
+                          <td class="pe-4 text-black">{{ item.remarks }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
+                <div class="text-center p-5 text-black">No Theory Results Found.</div>
+              }
+            }
+
+            <!-- 3. LAB RESULTS TAB -->
+            @if (activeTab === 'lab') {
+              @if (labResults.length > 0) {
+                <div class="table-responsive">
+                  <table class="table align-middle performance-table mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="ps-4">Sno</th>
+                        <th scope="col">Module</th>
+                        <th scope="col">Full Marks</th>
+                        <th scope="col">Obtained</th>
+                        <th scope="col" class="pe-4">Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (item of labResults; track $index; let i = $index) {
+                        <tr>
+                          <td class="ps-4 text-black">{{ i + 1 }}</td>
+                          <td class="text-black">{{ item.module }}</td>
+                          <td class="text-black">{{ item.totalMarks }}</td>
+                          <td class="text-black">{{ item.obtainedMarks }}</td>
+                          <td class="pe-4 text-black">{{ item.remarks }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
+                <div class="text-center p-5 text-black">No Lab Results Found.</div>
+              }
+            }
+
+            <!-- 4. PROJECT RESULTS TAB -->
+            @if (activeTab === 'project') {
+              @if (projectResults.length > 0) {
+                <div class="table-responsive">
+                  <table class="table align-middle performance-table mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="ps-4">Sno</th>
+                        <th scope="col">Module</th>
+                        <th scope="col">Full Marks</th>
+                        <th scope="col">Obtained</th>
+                        <th scope="col" class="pe-4">Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (item of projectResults; track $index; let i = $index) {
+                        <tr>
+                          <td class="ps-4 text-black">{{ i + 1 }}</td>
+                          <td class="text-black">{{ item.module }}</td>
+                          <td class="text-black">{{ item.totalMarks }}</td>
+                          <td class="text-black">{{ item.obtainedMarks }}</td>
+                          <td class="pe-4 text-black">{{ item.remarks }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
+                <div class="text-center p-5 text-black">No Project Results Found.</div>
+              }
+            }
+
+            <!-- 5. MOCK RESULTS TAB -->
+            @if (activeTab === 'mock') {
+              <div class="px-2">
+
+                <div class="d-flex gap-2 mb-3">
+                  <button
+                    class="btn mock-sub-btn"
+                    [class.active]="mockSubTab === 'programming'"
+                    (click)="setMockSubTab('programming')"
+                  >
+                    <i class="bi bi-code-slash me-1"></i> Programming Mock
+                  </button>
+                  <button
+                    class="btn mock-sub-btn"
+                    [class.active]="mockSubTab === 'hardware'"
+                    (click)="setMockSubTab('hardware')"
+                  >
+                    <i class="bi bi-cpu me-1"></i> Hardware Mock
+                  </button>
+                </div>
+
+                <div class="mb-4">
+                  <h6 class="fw-bold text-navy mb-2">{{ activeMockLabel }} Marks</h6>
+
+                  @if (activeMockResults.length > 0) {
+                    <div class="card border-0 mb-3 overflow-hidden">
+                      <div class="bg-navy text-white px-3 py-2 fs-7 fw-medium">
+                        {{ activeMockLabel }} (Rating 0-5)
+                      </div>
+                      <div class="table-responsive">
+                        <table class="table align-middle mock-table mb-0">
+                          <thead>
+                            <tr class="bg-light">
+                              <th>Sno</th>
+                              <th>Batch No</th>
+                              <th>Reg No</th>
+                              <th>Participant</th>
+                              <th>Mock No</th>
+                              <th>Mock Date</th>
+                              <th>Communication &amp; Confidence</th>
+                              <th>Resume Standard</th>
+                              <th>Fundamental Concepts</th>
+                              <th>Problem Solving Ability</th>
+                              <th>Coding Skills</th>
+                              <th>Industry Application Awareness</th>
+                              <th>Project Level &amp; Explaining</th>
+                              <th>Technical Competency</th>
+                              <th>Trainers Remark</th>
+                              <th>Avg Marks</th>
+                              <th>Result</th>
+                              <th>Evaluated By</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            @for (item of activeMockResults; track $index; let i = $index) {
+                              <tr class="text-black">
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ item.batch }}</td>
+                                <td>{{ item.regNo }}</td>
+                                <td>{{ item.participantName }}</td>
+                                <td>{{ item.mockNo }}</td>
+                                <td>{{ item.mockDate }}</td>
+                                @for (rating of item.ratings; track $index) {
+                                  <td>{{ rating }}</td>
+                                }
+                                <td class="fw-bold">{{ item.avgMarks }}</td>
+                                <td class="fw-bold">{{ item.result }}</td>
+                                <td>{{ item.evaluatedBy }}</td>
+                              </tr>
+                            }
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  } @else {
+                    <div class="text-center p-5 text-black border rounded mb-3">No {{ activeMockLabel }} Records Available.</div>
+                  }
+                </div>
+
+                <div class="mb-4 col-md-7">
+                  <h6 class="fw-bold text-navy mb-2">{{ activeMockLabel }} Rating Criteria</h6>
+                  <div class="table-responsive border rounded">
+                    <table class="table align-middle criteria-table mb-0">
+                      <thead>
+                        <tr class="bg-light">
+                          <th>Sno</th>
+                          <th>Average Marks Range</th>
+                          <th>Result</th>
+                          <th>Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (crit of mockCriteria; track crit.sNo) {
+                          <tr class="text-black">
+                            <td>{{ crit.sNo }}</td>
+                            <td class="fw-bold text-black">{{ crit.averageMarksRange }}</td>
+                            <td class="fw-semibold text-black">{{ crit.result }}</td>
+                            <td class="text-black">{{ crit.description }}</td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+            }
+
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

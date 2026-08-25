@@ -1,0 +1,369 @@
+<div class="dlabnav">
+  <div class="dlabnav-scroll">
+    <ul class="metismenu" id="menu">
+
+      <!-- Dashboard (direct link — only ever had one page underneath, so no dropdown) -->
+      <li class="nav-item">
+        <a routerLink="/overview" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:true}"
+          class="nav-link d-flex align-items-center text-white py-2 px-3 text-decoration-none">
+          <i class="material-symbols-outlined me-2">dashboard</i>
+          <span class="nav-text">Dashboard</span>
+        </a>
+      </li>
+
+      <!-- Evaluation Policy (direct link — was "Criteria" accordion with a single sub-item) -->
+      <li class="nav-item">
+        <a routerLink="/criteria/evaluation-policy" routerLinkActive="active-link"
+          class="nav-link d-flex align-items-center text-white py-2 px-3 text-decoration-none">
+          <i class="material-symbols-outlined fs-6 me-2">assignment_turned_in</i>
+          <span class="nav-text">Evaluation Policy</span>
+        </a>
+      </li>
+
+      <!-- Category: LEARNING ENGAGEMENT -->
+      <li class="nav-label text-uppercase text-yellow-50 px-3 pt-3 pb-1"
+        style="font-size: 0.75rem; letter-spacing: 0.5px;">
+        LEARNING ENGAGEMENT
+      </li>
+
+      <!-- Progress (direct link — Course Outline / Lab Manual / Course Progress are now tabs on one page) -->
+      <li class="nav-item">
+        <a routerLink="/progress" routerLinkActive="active-link"
+          class="nav-link d-flex align-items-center text-white py-2 px-3 text-decoration-none">
+          <i class="material-symbols-outlined fs-6 me-2">bar_chart</i>
+          <span class="nav-text">Progress</span>
+        </a>
+      </li>
+
+      <!-- Schedule (direct link — was an accordion with a single sub-item) -->
+      <li class="nav-item">
+        <a routerLink="/schedule/class-schedule" routerLinkActive="active-link"
+          class="nav-link d-flex align-items-center text-white py-2 px-3 text-decoration-none">
+          <i class="material-symbols-outlined me-2">calendar_month</i>
+          <span class="nav-text">Schedule</span>
+        </a>
+      </li>
+
+      <!-- Attendance (direct link — was an accordion with a single sub-item) -->
+      <li class="nav-item">
+        <a routerLink="/attendance/daily-attendance" routerLinkActive="active-link"
+          class="nav-link d-flex align-items-center text-white py-2 px-3 text-decoration-none">
+          <i class="material-symbols-outlined me-2">check_box</i>
+          <span class="nav-text">Attendance</span>
+        </a>
+      </li>
+
+      <!-- Resources -->
+      <li class="nav-item">
+        <a class="nav-link collapsed d-flex align-items-center justify-content-between text-white py-2 px-3 text-decoration-none cursor-pointer"
+          data-bs-toggle="collapse" href="#resourcesSubmenu" role="button" aria-expanded="false"
+          aria-controls="resourcesSubmenu">
+          <div class="d-flex align-items-center gap-2">
+            <i class="material-symbols-outlined">menu_book</i>
+            <span class="nav-text">Resources</span>
+          </div>
+          <i class="bi bi-chevron-right arrow-icon" style="font-size: 0.75rem;"></i>
+        </a>
+
+        <div class="collapse" id="resourcesSubmenu" data-bs-parent="#menu">
+          <ul class="list-unstyled ps-4 pe-3 py-2 mb-0">
+            <li class="my-2">
+              <a routerLink="/resources/study-materials" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Study Materials
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/resources/class-notes" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Class Notes
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/resources/reference-videos" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Reference Videos
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/resources/digital-content" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Digital Content
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/tutorials/live-sessions-archive" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Live Sessions
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- Category: PRACTICE PLATFORM -->
+      <li class="nav-label text-uppercase text-yellow-50 px-3 pt-3 pb-1"
+        style="font-size: 0.75rem; letter-spacing: 0.5px;">
+        PRACTICE PLATFORM
+      </li>
+
+      <!-- Practice -->
+      <li class="nav-item">
+        <a class="nav-link collapsed d-flex align-items-center justify-content-between text-white py-2 px-3 text-decoration-none cursor-pointer"
+          data-bs-toggle="collapse" href="#practiceSubmenu" role="button" aria-expanded="false"
+          aria-controls="practiceSubmenu">
+          <div class="d-flex align-items-center gap-2">
+            <i class="material-symbols-outlined">code</i>
+            <span class="nav-text">Practice</span>
+          </div>
+          <i class="bi bi-chevron-right arrow-icon" style="font-size: 0.75rem;"></i>
+        </a>
+
+        <div class="collapse" id="practiceSubmenu" data-bs-parent="#menu">
+          <ul class="list-unstyled ps-4 pe-3 py-2 mb-0">
+            <li class="my-2">
+              <a routerLink="/practice/mcq-practice-tests" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                MCQ Practice
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/practice/mcq-practice-results" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Practice Results
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/practice/programming-exercises" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Exercises
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/practice/coding-practice" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Coding Practice
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/practice/industry-interview-questions" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Interview Questions
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/practice/programming-compiler" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Compiler
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- Category: ASSESSMENT & EVALUATION -->
+      <li class="nav-label text-uppercase text-yellow-50 px-3 pt-3 pb-1"
+        style="font-size: 0.75rem; letter-spacing: 0.5px;">
+        ASSESSMENT & EVALUATION
+      </li>
+
+      <!-- Assessment -->
+      <li class="nav-item">
+        <a class="nav-link collapsed d-flex align-items-center justify-content-between text-white py-2 px-3 text-decoration-none cursor-pointer"
+          data-bs-toggle="collapse" href="#assessmentSubmenu" role="button" aria-expanded="false"
+          aria-controls="assessmentSubmenu">
+          <div class="d-flex align-items-center gap-2">
+            <i class="material-symbols-outlined">quiz</i>
+            <span class="nav-text">Assessment</span>
+          </div>
+          <i class="bi bi-chevron-right arrow-icon" style="font-size: 0.75rem;"></i>
+        </a>
+
+        <div class="collapse" id="assessmentSubmenu" data-bs-parent="#menu">
+          <ul class="list-unstyled ps-4 pe-3 py-2 mb-0">
+            <li class="my-2">
+              <a routerLink="/assessment/quizzes-tests" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Quizzes and Tests
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/assessment/theory-lab-test" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Theory and Lab Test
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/assessment/upload-projects" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Upload Projects
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/assessment/results-reports" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Results and Reports
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- Performance -->
+      <li class="nav-item">
+        <a class="nav-link collapsed d-flex align-items-center justify-content-between text-white py-2 px-3 text-decoration-none cursor-pointer"
+          data-bs-toggle="collapse" href="#performanceSubmenu" role="button" aria-expanded="false"
+          aria-controls="performanceSubmenu">
+          <div class="d-flex align-items-center gap-2">
+            <i class="material-symbols-outlined fs-6">trending_up</i>
+            <span class="nav-text">Performance</span>
+          </div>
+          <i class="bi bi-chevron-right arrow-icon" style="font-size: 0.75rem;"></i>
+        </a>
+
+        <div class="collapse" id="performanceSubmenu" data-bs-parent="#menu">
+          <ul class="list-unstyled ps-4 pe-3 py-2 mb-0">
+            <li class="my-2">
+              <a routerLink="/performance/report-card" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Report Card
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/performance/skill-tracker" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Skill Tracker
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- Category: CAREER & PLACEMENT -->
+      <li class="nav-label text-uppercase text-yellow-50 px-3 pt-3 pb-1"
+        style="font-size: 0.75rem; letter-spacing: 0.5px;">
+        CAREER & PLACEMENT
+      </li>
+
+      <!-- Career Assistance -->
+      <li class="nav-item">
+        <a class="nav-link collapsed d-flex align-items-center justify-content-between text-white py-2 px-3 text-decoration-none cursor-pointer"
+          data-bs-toggle="collapse" href="#careerSubmenu" role="button" aria-expanded="false"
+          aria-controls="careerSubmenu">
+          <div class="d-flex align-items-center gap-2">
+            <i class="material-symbols-outlined">work</i>
+            <span class="nav-text">Career Assistance</span>
+          </div>
+          <i class="bi bi-chevron-right arrow-icon" style="font-size: 0.75rem;"></i>
+        </a>
+
+        <div class="collapse" id="careerSubmenu" data-bs-parent="#menu">
+          <ul class="list-unstyled ps-4 pe-3 py-2 mb-0">
+            <li class="my-2">
+              <a routerLink="/career-assistance/my-documents" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                My Documents
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/career-assistance/placement-monitor" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Placement Monitor
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/career-assistance/company-job-descriptions" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Job Descriptions
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/career-assistance/code-of-conduct" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Code of Conduct
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- Feedback -->
+      <li class="nav-item">
+        <a class="nav-link collapsed d-flex align-items-center justify-content-between text-white py-2 px-3 text-decoration-none cursor-pointer"
+          data-bs-toggle="collapse" href="#feedbackSubmenu" role="button" aria-expanded="false"
+          aria-controls="feedbackSubmenu">
+          <div class="d-flex align-items-center gap-2">
+            <i class="material-symbols-outlined">feedback</i>
+            <span class="nav-text">Feedback</span>
+          </div>
+          <i class="bi bi-chevron-right arrow-icon" style="font-size: 0.75rem;"></i>
+        </a>
+
+        <div class="collapse" id="feedbackSubmenu" data-bs-parent="#menu">
+          <ul class="list-unstyled ps-4 pe-3 py-2 mb-0">
+            <li class="my-2">
+              <a routerLink="/feedback/submit-feedback" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Submit Feedback
+              </a>
+            </li>
+            <li class="my-2">
+              <a routerLink="/feedback/feedback-history" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Feedback History
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+      <!-- Help Desk -->
+      <li class="nav-item">
+        <a class="nav-link collapsed d-flex align-items-center justify-content-between text-white py-2 px-3 text-decoration-none cursor-pointer"
+          data-bs-toggle="collapse" href="#helpSubmenu" role="button" aria-expanded="false" aria-controls="helpSubmenu">
+          <div class="d-flex align-items-center gap-2">
+            <i class="material-symbols-outlined">support_agent</i>
+            <span class="nav-text">Help Desk</span>
+          </div>
+          <i class="bi bi-chevron-right arrow-icon" style="font-size: 0.75rem;"></i>
+        </a>
+
+        <div class="collapse" id="helpSubmenu" data-bs-parent="#menu">
+          <ul class="list-unstyled ps-4 pe-3 py-2 mb-0">
+            <li class="my-2">
+              <a routerLink="/helpdesk/raise-ticket" routerLinkActive="active-sub"
+                class="sub-item text-white-50 text-decoration-none d-block py-2 px-3 rounded"
+                style="font-size: 0.88rem; letter-spacing: 0.2px;">
+                Raise a Ticket
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+
+    </ul>
+  </div>
+</div>

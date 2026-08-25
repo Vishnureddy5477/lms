@@ -1,0 +1,176 @@
+<div class="container-fluid p-4">
+
+  <!-- Main Card Wrapper -->
+  <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+    
+    <!-- Header with Tab Pills -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+      <h5 class="fw-bold text-dark-purple mb-0">Criteria Menu</h5>
+
+      <!-- Custom Pills Navigation -->
+      <div class="d-flex align-items-center gap-2">
+        <button 
+          (click)="setTab('module')" 
+          [class.active-pill]="activeTab === 'module'"
+          class="btn pill-btn px-3 py-2 rounded-2 fs-7 font-medium">
+          Module Evaluation
+        </button>
+
+        <button 
+          (click)="setTab('placement')" 
+          [class.active-pill]="activeTab === 'placement'"
+          class="btn pill-btn px-3 py-2 rounded-2 fs-7 font-medium">
+          Placement Evaluation
+        </button>
+
+        <button 
+          (click)="setTab('technical')" 
+          [class.active-pill]="activeTab === 'technical'"
+          class="btn pill-btn px-3 py-2 rounded-2 fs-7 font-medium">
+          Technical & HR Mock Criteria
+        </button>
+      </div>
+    </div>
+
+    <!-- 1 & 2: Module and Placement Evaluation View -->
+    @if (loading && (activeTab === 'module' || activeTab === 'placement')) {
+      <app-skeleton variant="table" [rows]="5" [columns]="4" />
+    }
+    @if (!loading && (activeTab === 'module' || activeTab === 'placement')) {
+      <div class="table-responsive">
+        <table class="table table-borderless align-middle custom-criteria-table">
+          <thead class="bg-purple-header text-purple-heading">
+            <tr>
+              <th scope="col" class="ps-3">Slno</th>
+              <th scope="col">Types</th>
+              @if (activeTab === 'placement') {
+                <th scope="col">TestName</th>
+              }
+              <th scope="col">Modes</th>
+              <th scope="col">Marks</th>
+              <th scope="col">Total</th>
+              <th scope="col" class="pe-3">PassMarks</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (activeTab === 'module') {
+              @for (item of moduleCriteria; track item.slNo) {
+                <tr class="border-bottom-light">
+                  <td class="ps-3 text-black font-medium">{{ item.slNo }}</td>
+                  <td class="text-black font-medium">{{ item.types }}</td>
+                  <td class="text-black font-medium">{{ item.modes }}</td>
+                  <td class="text-black font-medium">{{ item.marks }}</td>
+                  <td class="text-black font-medium">{{ item.total }}</td>
+                  <td class="pe-3 text-black font-medium">{{ item.passMarks }}</td>
+                </tr>
+              }
+            } @else if (activeTab === 'placement') {
+              @for (item of placementCriteria; track item.slNo) {
+                <tr class="border-bottom-light">
+                  <td class="ps-3 text-black font-medium">{{ item.slNo }}</td>
+                  <td class="text-black font-medium">{{ item.types }}</td>
+                  <td class="text-black font-medium">{{ item.testName }}</td>
+                  <td class="text-black font-medium">{{ item.modes }}</td>
+                  <td class="text-black font-medium">{{ item.marks }}</td>
+                  <td class="text-black font-medium">{{ item.total }}</td>
+                  <td class="pe-3 text-black font-medium">{{ item.passMarks }}</td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- 3: Technical & HR Mock Criteria View (Multiple Tables) -->
+    @else if (activeTab === 'technical') {
+      
+      <!-- Table A & B: Technical Mock and HR Mock — Evaluation Criteria (side by side) -->
+      <div class="row g-4 mb-5">
+        <div class="col-md-6">
+          <div class="text-center fw-bold text-dark-purple mb-1">
+            Technical Mock — Evaluation Criteria
+          </div>
+          <div class="text-center text-muted fs-8 mb-3">
+            Scoring 1–5 per criterion · Clearing score: 2.5 &amp; above (average)
+          </div>
+          <div class="table-responsive">
+            <table class="table table-borderless align-middle custom-criteria-table">
+              <thead class="bg-purple-header text-purple-heading">
+                <tr>
+                  <th scope="col" class="ps-3">Slno</th>
+                  <th scope="col" class="pe-3">Criterion</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of technicalMockCriteria; track row.slNo) {
+                  <tr class="border-bottom-light">
+                    <td class="ps-3 text-black font-medium">{{ row.slNo }}</td>
+                    <td class="pe-3 text-black font-medium">{{ row.criterion }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="text-center fw-bold text-dark-purple mb-1">
+            HR Mock — Evaluation Criteria
+          </div>
+          <div class="text-center text-muted fs-8 mb-3">
+            Scoring 1–5 per criterion · Clearing score: 2.5 average
+          </div>
+          <div class="table-responsive">
+            <table class="table table-borderless align-middle custom-criteria-table">
+              <thead class="bg-purple-header text-purple-heading">
+                <tr>
+                  <th scope="col" class="ps-3">Slno</th>
+                  <th scope="col" class="pe-3">Criterion</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (row of hrMockCriteria; track row.slNo) {
+                  <tr class="border-bottom-light">
+                    <td class="ps-3 text-black font-medium">{{ row.slNo }}</td>
+                    <td class="pe-3 text-black font-medium">{{ row.criterion }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table C: Technical Mock Initials and Their Values -->
+      <div class="text-center fw-bold text-dark-purple mb-3">
+        Technical Mock Initials and Their Values
+      </div>
+      <div class="table-responsive">
+        <table class="table table-borderless align-middle custom-criteria-table">
+          <thead class="bg-purple-header text-purple-heading">
+            <tr>
+              <th scope="col" class="ps-3">Slno</th>
+              <th scope="col">Initials</th>
+              <th scope="col">Trainer/HR Rating</th>
+              <th scope="col" class="pe-3">Marks</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of mockInitialsData; track row.slNo) {
+              <tr class="border-bottom-light">
+                <td class="ps-3 text-black font-medium">{{ row.slNo }}</td>
+                <td class="text-black font-medium">{{ row.initials }}</td>
+                <td class="text-black font-medium">{{ row.rating }}</td>
+                <td class="pe-3 text-black font-medium">{{ row.marks }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+    }
+
+  </div>
+
+</div>

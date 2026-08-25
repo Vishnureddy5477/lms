@@ -1,0 +1,39 @@
+/* Color Palette */
+.text-dark-purple {
+  color: #2E1065 !important;
+}
+
+.fs-7 {
+  font-size: 0.88rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+/* Pay Course Fee Button */
+.btn-purple-action {
+  background-color: #4A3E9D;
+  color: #FFFFFF;
+  border: none;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-purple-action:hover {
+  background-color: #3b3182;
+  color: #FFFFFF;
+}
+
+.btn-purple-action:active {
+  transform: scale(0.98);
+}
+
+/* Cyan Info Alert Banner */
+.custom-cyan-alert {
+  background-color: #99F6E4 !important; /* Soft cyan color matching reference image */
+  color: #0F766E !important;
+}
+
+.custom-cyan-alert svg {
+  fill: #0F766E;
+}

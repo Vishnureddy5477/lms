@@ -1,0 +1,177 @@
+<div class="content-body w-100 p-0 m-0">
+  <div class="container-fluid p-0">
+    <div class="row g-0">
+      <div class="col-12">
+        
+        <!-- MAIN CARD -->
+        <div class="card border-0 shadow-sm rounded-0 bg-white p-3 min-vh-100">
+          
+          <!-- CARD HEADER -->
+          <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center pt-2 px-3 pb-0">
+            <h6 class="fw-bold text-navy mb-0 fs-6 d-flex align-items-center">
+              <i class="bi bi-table me-2"></i>Test Results - Detailed View
+            </h6>
+            
+            <!-- Module Select Dropdown -->
+            <div class="module-dropdown-wrapper">
+              <select 
+                id="moduleSelect" 
+                class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched"
+                [(ngModel)]="selectedModule" 
+                (change)="loadTestResults()"
+              >
+                <option value="" disabled>Select a Module</option>
+                @for (mod of modules; track mod) {
+                  <option [value]="mod">{{ mod }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <!-- SUMMARY CARDS -->
+          @if (selectedModule && !isLoading) {
+            <div id="summaryCards" class="container-fluid px-3 mt-4">
+              <div class="row g-3">
+                
+                <!-- Total Questions -->
+                <div class="col-12 col-sm-6 col-md-3">
+                  <div class="card card-summary bg-indigo text-white border-0 rounded-3 p-3">
+                    <div class="card-body p-0">
+                      <span class="card-title text-white fs-7 fw-semibold d-block mb-2">Total Questions</span>
+                      <h2 class="text-white fw-bold mb-0 fs-1">{{ summary.totalQuestions }}</h2>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Correct Answers -->
+                <div class="col-12 col-sm-6 col-md-3">
+                  <div class="card card-summary bg-emerald text-white border-0 rounded-3 p-3">
+                    <div class="card-body p-0">
+                      <span class="card-title text-white fs-7 fw-semibold d-block mb-2">Correct Answers</span>
+                      <h2 class="text-white fw-bold mb-0 fs-1">{{ summary.correctAnswers }}</h2>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Incorrect Answers -->
+                <div class="col-12 col-sm-6 col-md-3">
+                  <div class="card card-summary bg-coral text-white border-0 rounded-3 p-3">
+                    <div class="card-body p-0">
+                      <span class="card-title text-white fs-7 fw-semibold d-block mb-2">Incorrect Answers</span>
+                      <h2 class="text-white fw-bold mb-0 fs-1">{{ summary.incorrectAnswers }}</h2>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Total Attempts -->
+                <div class="col-12 col-sm-6 col-md-3">
+                  <div class="card card-summary bg-teal text-white border-0 rounded-3 p-3">
+                    <div class="card-body p-0">
+                      <span class="card-title text-white fs-7 fw-semibold d-block mb-2">Total Attempts</span>
+                      <h2 class="text-white fw-bold mb-0 fs-1">{{ summary.totalAttempts }}</h2>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          }
+
+          <!-- CARD BODY -->
+          <div class="card-body p-3">
+
+            <!-- Loading Indicator -->
+            @if (isLoading) {
+              <div id="loadingIndicator" class="text-center p-5">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2 text-secondary small">Loading test results...</p>
+              </div>
+            }
+
+            <!-- Results Data Table -->
+            @if (!isLoading && selectedModule && filteredResults.length > 0) {
+              <div id="resultsContainer">
+                
+                <!-- Datatable Controls Header (Show Entries & Search) -->
+                <div class="d-flex justify-content-between align-items-center mb-3 text-secondary small px-1">
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="text-secondary">Show</span>
+                    <select class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched" [(ngModel)]="pageSize">
+                      <option [ngValue]="10">10</option>
+                      <option [ngValue]="25">25</option>
+                      <option [ngValue]="50">50</option>
+                      <option [ngValue]="100">100</option>
+                    </select>
+                    <span class="text-secondary">entries</span>
+                  </div>
+
+                  <div class="d-flex align-items-center gap-2">
+                    <span class="text-secondary">Search:</span>
+                    <input 
+                      type="search" 
+                      class="form-control form-control-sm border-gray shadow-none rounded-2 text-dark" 
+                      style="width: 170px;"
+                      [(ngModel)]="searchTerm"
+                    >
+                  </div>
+                </div>
+
+                <!-- Table -->
+                <div class="table-responsive">
+                  <table id="resultsTable" class="table table-bordered align-middle custom-results-table mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="text-navy fw-bold text-center">S.No <i class="bi bi-arrow-down-up text-muted ms-1 fs-8"></i></th>
+                        <th scope="col" class="text-navy fw-bold text-center">Test Name <i class="bi bi-arrow-down-up text-muted ms-1 fs-8"></i></th>
+                        <th scope="col" class="text-navy fw-bold text-center">Attempt <i class="bi bi-arrow-down-up text-muted ms-1 fs-8"></i></th>
+                        <th scope="col" class="text-navy fw-bold">Question</th>
+                        <th scope="col" class="text-navy fw-bold">Your Answer</th>
+                        <th scope="col" class="text-navy fw-bold">Correct Answer</th>
+                        <th scope="col" class="text-navy fw-bold text-center">Status <i class="bi bi-arrow-down-up text-muted ms-1 fs-8"></i></th>
+                        <th scope="col" class="text-navy fw-bold">Date & Time <i class="bi bi-arrow-down-up text-muted ms-1 fs-8"></i></th>
+                      </tr>
+                    </thead>
+                    <tbody id="resultsBody">
+                      @for (result of filteredResults; track result.sNo; let i = $index) {
+                        <tr [class.odd-row]="i % 2 === 0" [class.even-row]="i % 2 !== 0">
+                          <td class="text-dark-blue fs-7 text-center">{{ result.sNo }}</td>
+                          <td class="fw-bold text-navy fs-7 text-center">{{ result.test }}</td>
+                          <td class="text-center">
+                            <span class="badge badge-attempt text-white fw-medium">
+                              Attempt {{ result.attempt }}
+                            </span>
+                          </td>
+                          <td class="text-navy fs-7 question-cell">
+                            <span class="question-text" [title]="result.question">{{ result.question }}</span>
+                          </td>
+                          <td class="answer-cell text-navy fs-7">{{ result.answer }}</td>
+                          <td class="correct-answer-cell text-navy fs-7">{{ result.correct_answer }}</td>
+                          <td class="text-center">
+                            @if (result.status === 'Correct') {
+                              <span class="badge bg-success text-white fw-medium">Correct</span>
+                            } @else if (result.status === 'NOT_ATTEMPTED') {
+                              <span class="badge bg-secondary text-white fw-medium">Not Attempted</span>
+                            } @else {
+                              <span class="badge badge-incorrect text-white fw-medium">Incorrect</span>
+                            }
+                          </td>
+                          <td class="text-navy fs-7 whitespace-nowrap">{{ result.datetime }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

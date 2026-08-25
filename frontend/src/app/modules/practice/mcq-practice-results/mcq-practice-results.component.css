@@ -1,0 +1,38 @@
+/* Typography & Palette */
+.text-dark-purple {
+  color: #2E1065 !important;
+  font-size: 0.95rem;
+}
+
+.text-purple-heading {
+  color: #4A3E9D !important;
+}
+
+.bg-purple-header {
+  background-color: #F8F7FC !important;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+/* Table Design Specs */
+.custom-results-table th {
+  font-size: 0.82rem;
+  padding: 14px 12px;
+  font-weight: 700;
+}
+
+.custom-results-table td {
+  font-size: 0.82rem;
+  padding: 12px 12px;
+  color: #1E293B !important; /* Enforces dark/black text across all rows */
+}
+
+.border-bottom-light {
+  border-bottom: 1px solid #F1F5F9;
+}

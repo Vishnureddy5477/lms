@@ -1,0 +1,131 @@
+<div class="content-body w-100 p-0 m-0 min-vh-100 bg-white">
+  <div class="container-fluid p-4">
+    <div class="row g-0">
+      <div class="col-12">
+        
+        <!-- PAGE TITLE -->
+        <h5 class="fw-bold text-navy mb-4">Student JD Details</h5>
+
+        <!-- TOP CARDS ROW -->
+        <div class="row g-3 mb-4">
+          
+          <!-- 1. STUDENT INFORMATION CARD -->
+          <div class="col-md-6">
+            <div class="card border-0 bg-light-card h-100 p-4">
+              <h6 class="fw-bold text-navy mb-3">Student Information</h6>
+              
+              <div class="info-grid text-black">
+                <div class="row mb-2">
+                  <div class="col-4 fw-semibold text-black">Name:</div>
+                  <div class="col-8 text-black">{{ studentInfo.name }}</div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-4 fw-semibold text-black">Reg No:</div>
+                  <div class="col-8 text-black">{{ studentInfo.regNo }}</div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-4 fw-semibold text-black">Course:</div>
+                  <div class="col-8 text-black">{{ studentInfo.course }}</div>
+                </div>
+                <div class="row mb-2">
+                  <div class="col-4 fw-semibold text-black">Contact:</div>
+                  <div class="col-8 text-black">{{ studentInfo.contact }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-4 fw-semibold text-black">Email:</div>
+                  <div class="col-8 text-black">{{ studentInfo.email }}</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 2. PLACEMENT STATISTICS CARD -->
+          <div class="col-md-6">
+            <div class="card border-0 bg-light-card h-100 p-4">
+              <h6 class="fw-bold text-navy mb-3">Placement Statistics</h6>
+              
+              <div class="info-grid text-black">
+                <div class="row mb-3">
+                  <div class="col-6 fw-semibold text-black">Total Opportunities:</div>
+                  <div class="col-6 text-black">{{ placementStats.totalOpportunities }}</div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-6 fw-semibold text-black">Total Applied:</div>
+                  <div class="col-6 text-black">{{ placementStats.totalApplied }}</div>
+                </div>
+                <div class="row">
+                  <div class="col-6 fw-semibold text-black">Total Lost:</div>
+                  <div class="col-6 text-black">{{ placementStats.totalLost }}</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- JOB DESCRIPTION DETAILS SECTION -->
+        <div class="card border-0 bg-white">
+          <h6 class="fw-bold text-navy mb-3">Job Description Details</h6>
+
+          <div class="table-responsive">
+            <table class="table align-middle jd-table mb-0">
+              <thead>
+                <tr>
+                  <th scope="col" class="ps-3">S.No.</th>
+                  <th scope="col">Applied?</th>
+                  <th scope="col">Company Name</th>
+                  <th scope="col">Drive Month</th>
+                  <th scope="col">Job Location</th>
+                  <th scope="col">Skills</th>
+                  <th scope="col">Domain</th>
+                  <th scope="col">CTC</th>
+                  <th scope="col">Job Description</th>
+                  <th scope="col" class="pe-3">Posted Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                @if (loading) {
+                  @for (r of [1,2,3,4,5]; track r) { <tr appSkeletonRow [columns]="10"></tr> }
+                }
+                @if (!loading && jobList.length > 0) {
+                  @for (job of jobList; track job.sNo) {
+                    <tr class="text-black">
+                      <td class="ps-3 text-black">{{ job.sNo }}</td>
+                      <td class="text-black">{{ job.applied }}</td>
+                      <td class="text-black">{{ job.companyName }}</td>
+                      <td class="text-black">{{ job.driveMonth }}</td>
+                      <td class="text-black">{{ job.jobLocation }}</td>
+                      <td class="text-black">{{ job.skills }}</td>
+                      <td class="text-black">{{ job.domain }}</td>
+                      <td class="text-black">{{ job.ctc }}</td>
+                      <td class="text-black">
+                        <a [href]="job.jobDescriptionUrl" target="_blank" class="text-indigo text-decoration-none">View JD</a>
+                      </td>
+                      <td class="pe-3 text-black">{{ job.postedDate }}</td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+
+            <!-- EMPTY STATE ALERT BANNER -->
+            @if (!loading && jobList.length === 0) {
+              <div class="alert alert-cyan text-center border-0 rounded-0 m-0 py-3">
+                <div class="fw-bold fs-7 mb-1 text-black">
+                  <i class="bi bi-info-circle-fill me-1"></i> No Job Descriptions Available
+                </div>
+                <div class="fs-8 text-black">
+                  You haven't been assigned any job opportunities yet. Please check back later or contact your placement coordinator.
+                </div>
+              </div>
+            }
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

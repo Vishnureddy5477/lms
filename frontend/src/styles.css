@@ -1,0 +1,175 @@
+/* Global styles. The dashboard theme CSS is loaded via angular.json "styles". */
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+/* Small helpers the interns can reuse */
+.page-title {
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 2px;
+}
+
+.page-subtitle {
+  color: #7e7e7e;
+  font-size: 14px;
+  margin-bottom: 0;
+}
+/* 1. Reset page defaults */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+/* 2. Fix the Top Header Navbar */
+.header, app-header {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px !important; /* Exact height of header */
+  z-index: 1001;
+}
+
+/* 3. Fix the Left Sidebar Navigation */
+.dlabnav, app-sidebar {
+  position: fixed !important;
+  top: 70px !important; /* Matches header height */
+  left: 0 !important;
+  width: 240px !important; /* Width of left menu */
+  height: calc(100vh - 70px) !important; /* Full height remaining */
+  z-index: 1000;
+  background-color: #4c43b2;
+  overflow-y: auto; /* Enable internal scrolling if items exceed height */
+}
+
+/* 4. Offset Main Content Body */
+.content-body {
+  margin-left: 240px !important; /* Matches sidebar width */
+  padding-top: 70px !important;  /* Matches header height */
+  min-height: 100vh;
+  background-color: #f4f5f8;
+  box-sizing: border-box;
+}
+
+/* 5. Collapsed (icon-only) sidebar, toggled by the header hamburger via
+   #main-wrapper.menu-toggle. Without these, the hard-coded 240px widths
+   above block the theme's own collapse rules and the hamburger appears
+   to do nothing. */
+#main-wrapper.menu-toggle .dlabnav,
+#main-wrapper.menu-toggle app-sidebar {
+  width: 5.5rem !important;
+}
+
+#main-wrapper.menu-toggle .content-body {
+  margin-left: 5.5rem !important;
+}
+
+#main-wrapper.menu-toggle .dlabnav .arrow-icon {
+  display: none !important;
+}
+/* Remove divider lines above section labels */
+.dlabnav .nav-label {
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  padding-top: 1.25rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+/* Section header color, matching legacy sidebar.jsp's inline "#f4dc91" gold */
+.text-yellow-50 {
+  color: #f4dc91 !important;
+  font-weight: 500 !important;
+}
+
+/* Sidebar-specific sizing for the Material Symbols icons (base font-family/
+   font-size/ligature rules live in icons/material-symbols/material-symbols-outlined.css) */
+.dlabnav .material-symbols-outlined {
+  vertical-align: middle;
+  font-size: 1.15rem;
+}
+
+/* Ensure list items don't have bottom/top borders */
+.dlabnav li,
+.dlabnav ul {
+  border: none !important;
+}
+
+/* Submenu item hover/active state (undefined by the base theme since these are
+   custom class names, not the theme's own .mm-active) */
+.dlabnav .sub-item:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #ffffff !important;
+}
+
+.dlabnav .sub-item.active-sub {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Active state for top-level items that link directly (no dropdown), e.g. Dashboard */
+.dlabnav .nav-link.active-link {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+/* Arrow icon rotation logic */
+.arrow-icon {
+  display: inline-block;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Default state (collapsed / not active) -> Points Right */
+a.collapsed .arrow-icon,
+[aria-expanded="false"] .arrow-icon {
+  transform: rotate(0deg);
+}
+
+/* Expanded state (active / open) -> Rotates Downwards */
+a:not(.collapsed) .arrow-icon,
+[aria-expanded="true"] .arrow-icon {
+  transform: rotate(90deg);
+}
+
+/* --- Global Fixes for Text and List alignment --- */
+
+/* Target the text color for data values. 
+   Image 2 is too red/orange. Image 1 is grey. */
+.text-danger, .text-warning {
+    color: #6c757d !important; /* Muted Grey from Image 1 */
+}
+
+/* Target the data value text specifically if nested */
+.list-group-item .fw-bold.text-danger {
+    color: #6c757d !important; /* Muted Grey */
+    font-weight: 500 !important; /* Not too bold */
+}
+
+/* Ensure data labels remain dark blue/purple */
+.list-group-item .fw-bold:not(.text-danger):not(.text-warning) {
+    color: #2e1065 !important; /* Dark blue from Image 1 */
+}
+
+/* Correct list-group-item layout to match table spacing */
+.list-group-item.d-flex {
+    justify-content: start !important; /* Left align everything */
+    border: none !important; /* Remove separators if present */
+    padding-left: 0 !important;
+}
+
+/* Set fixed widths for labels to create a grid effect */
+.list-group-item.d-flex .fw-bold {
+    min-width: 150px; /* Fixed label width */
+    margin-right: 20px;
+}
+.text-dark-muted {
+  color: #334155 !important; /* Forces dark slate/black text color */
+}

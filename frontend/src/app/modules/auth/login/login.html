@@ -1,0 +1,108 @@
+<div class="container-fluid p-0">
+  <div class="row g-0 min-vh-100">
+
+    <!-- LEFT SIDE: Full Image Background (No text, no purple overlay) -->
+    <div class="col-lg-6 d-none d-lg-block" style="background-image: url('assets/login-banner.png'); 
+                background-size: cover; 
+                background-position: center; 
+                background-repeat: no-repeat;">
+    </div>
+
+    <!-- RIGHT SIDE: Login Form -->
+    <div class="col-lg-6 col-12 d-flex align-items-center justify-content-center bg-white p-4 p-md-5">
+      <div class="w-100" style="max-width: 400px;">
+
+        <h2 class="text-center fw-bold mb-4 text-dark">Sign In</h2>
+
+        <div class="alert alert-danger py-2 small" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+        <form (ngSubmit)="onLogin()">
+          <!-- Email Address -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold small mb-1" style="color: #4a5568;">Email Address</label>
+            <input type="email" class="form-control form-control-lg fs-6" [(ngModel)]="email" name="email"
+              placeholder="Enter email address...">
+          </div>
+
+          <!-- Password -->
+          <div class="mb-2">
+            <label class="form-label fw-semibold small mb-1" style="color: #4a5568;">Password</label>
+            <input type="password" class="form-control form-control-lg fs-6" [(ngModel)]="password" name="password"
+              placeholder="Enter valid password...">
+          </div>
+
+          <div class="text-end mb-4">
+            <a href="javascript:void(0)" (click)="openForgotPassword()" class="text-decoration-none small fw-semibold" style="color: #4c4cc7;">Forgot
+              Password?</a>
+          </div>
+
+          <button type="submit" class="btn w-100 text-white py-2 fw-semibold" [disabled]="isSubmitting"
+            style="background-color: #4c4cc7; border-radius: 6px;">
+            {{ isSubmitting ? 'Signing in...' : 'Login Account' }}
+          </button>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Forgot Password Modal -->
+  <div class="fp-modal-backdrop" *ngIf="showForgotPassword" (click)="closeForgotPassword()">
+    <div class="fp-modal-card" (click)="$event.stopPropagation()">
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0 text-dark">Forgot Password</h5>
+        <button type="button" class="btn-close" (click)="closeForgotPassword()" aria-label="Close"></button>
+      </div>
+
+      <div class="alert py-2 px-3 small" *ngIf="fpMessage" [class.alert-success]="fpMessageType === 'success'"
+        [class.alert-danger]="fpMessageType === 'danger'">
+        {{ fpMessage }}
+      </div>
+
+      <!-- Step 1: Email -->
+      <form *ngIf="fpStep === 'email'" (ngSubmit)="onSendOtp()">
+        <p class="small text-muted mb-3">Enter your registered email address and we'll send you a one-time password (OTP).</p>
+        <div class="mb-3">
+          <label class="form-label fw-semibold small mb-1" style="color: #4a5568;">Email Address</label>
+          <input type="email" class="form-control" [(ngModel)]="fpEmail" name="fpEmail" placeholder="Enter email address...">
+        </div>
+        <button type="submit" class="btn w-100 text-white py-2 fw-semibold" [disabled]="fpSubmitting"
+          style="background-color: #4c4cc7; border-radius: 6px;">
+          {{ fpSubmitting ? 'Sending...' : 'Send OTP' }}
+        </button>
+      </form>
+
+      <!-- Step 2: OTP -->
+      <form *ngIf="fpStep === 'otp'" (ngSubmit)="onVerifyOtp()">
+        <p class="small text-muted mb-3">Enter the 6-digit OTP sent to <strong>{{ fpEmail }}</strong>. It's valid for 10 minutes.</p>
+        <div class="mb-3">
+          <label class="form-label fw-semibold small mb-1" style="color: #4a5568;">OTP</label>
+          <input type="text" class="form-control" [(ngModel)]="fpOtp" name="fpOtp" placeholder="Enter 6-digit OTP" maxlength="6">
+        </div>
+        <button type="submit" class="btn w-100 text-white py-2 fw-semibold" [disabled]="fpSubmitting"
+          style="background-color: #4c4cc7; border-radius: 6px;">
+          {{ fpSubmitting ? 'Verifying...' : 'Verify OTP' }}
+        </button>
+      </form>
+
+      <!-- Step 3: Reset Password -->
+      <form *ngIf="fpStep === 'reset'" (ngSubmit)="onResetPassword()">
+        <div class="mb-3">
+          <label class="form-label fw-semibold small mb-1" style="color: #4a5568;">New Password</label>
+          <input type="password" class="form-control" [(ngModel)]="fpNewPassword" name="fpNewPassword" placeholder="Enter new password">
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold small mb-1" style="color: #4a5568;">Confirm New Password</label>
+          <input type="password" class="form-control" [(ngModel)]="fpConfirmPassword" name="fpConfirmPassword" placeholder="Confirm new password">
+        </div>
+        <button type="submit" class="btn w-100 text-white py-2 fw-semibold" [disabled]="fpSubmitting"
+          style="background-color: #4c4cc7; border-radius: 6px;">
+          {{ fpSubmitting ? 'Resetting...' : 'Reset Password' }}
+        </button>
+      </form>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+/* Color Utility Classes */
+.text-dark-purple {
+  color: #2E1065 !important;
+}
+
+/* Forces black text color for table body data */
+.text-black {
+  color: #000000 !important;
+}
+
+.fs-7 {
+  font-size: 0.88rem;
+}
+
+.fs-8 {
+  font-size: 0.82rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+/* Header Pills Navigation */
+.pill-btn {
+  background-color: transparent;
+  color: #64748B;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.pill-btn:hover {
+  color: #4A3E9D;
+  background-color: #F1F5F9;
+}
+
+/* Selected Active Pill matching screenshot */
+.pill-btn.active-pill {
+  background-color: #EDE9FE !important; /* Soft purple pill background */
+  color: #5B21B6 !important;
+  font-weight: 600;
+}
+
+/* Table Header Light Purple Background */
+.bg-purple-header {
+  background-color: #F1F0FB !important;
+}
+
+.text-purple-heading th {
+  color: #5B21B6 !important;
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 12px 16px;
+}
+
+/* Table Row Cells */
+.custom-criteria-table td {
+  padding: 14px 16px;
+  font-size: 0.88rem;
+  color: #000000; /* Fallback black color for all cells */
+}
+
+.border-bottom-light {
+  border-bottom: 1px solid #F1F5F9;
+}
+
+.custom-criteria-table tbody tr:hover {
+  background-color: #FAF5FF;
+}

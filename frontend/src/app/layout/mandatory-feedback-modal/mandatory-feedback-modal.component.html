@@ -1,0 +1,94 @@
+<dialog #feedbackDialog class="feedback-dialog" (cancel)="onDialogCancel($event)">
+  @if (current) {
+    <div class="p-4">
+
+      <!-- HEADER: progress + module/trainer -->
+      <div class="feedback-header mb-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <h6 class="fw-bold text-navy mb-0">Mandatory Module Feedback</h6>
+          <span class="badge bg-purple-header text-navy fw-semibold">
+            Module {{ currentIndex + 1 }} of {{ pendingItems.length }}
+          </span>
+        </div>
+        <div class="row g-2 mt-2 fs-8">
+          <div class="col-md-6"><strong>Module:</strong> {{ current.module }}</div>
+          <div class="col-md-6"><strong>Trainer:</strong> {{ current.trainer }}</div>
+        </div>
+      </div>
+
+      @if (!showSuccess) {
+
+        <!-- FORM PANEL -->
+        <div class="feedback-form-panel">
+          @if (errorMessage) {
+            <div class="alert alert-danger py-2 px-3 mb-3">{{ errorMessage }}</div>
+          }
+
+          <form (ngSubmit)="onSubmit()">
+            @for (section of sections; track section.title) {
+              <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+                <div class="bg-purple-header px-3 py-2">
+                  <h6 class="fw-bold text-navy mb-0 fs-7 text-uppercase">{{ section.title }}</h6>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-bordered align-middle mb-0 custom-criteria-table">
+                    <thead class="bg-light">
+                      <tr>
+                        <th style="width: 30%;">Criteria</th>
+                        @for (opt of ratingOptions; track opt.value) {
+                          <th class="text-center">{{ opt.label }}</th>
+                        }
+                        <th style="width: 22%;">Comment</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (row of section.rows; track row.field; let i = $index) {
+                        <tr>
+                          <td class="fs-8">{{ row.label }}</td>
+                          @for (opt of ratingOptions; track opt.value) {
+                            <td class="text-center">
+                              <input type="radio" [name]="row.field" [value]="opt.value" [(ngModel)]="formModel[row.field]">
+                            </td>
+                          }
+                          @if (i === 0) {
+                            <td [attr.rowspan]="section.rows.length">
+                              <textarea class="form-control form-control-sm" [style.height]="section.commentHeight"
+                                [(ngModel)]="formModel[section.commentField]" [name]="section.commentField"
+                                placeholder="Suggestions"></textarea>
+                            </td>
+                          }
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            }
+
+            <div class="text-center mb-2">
+              <button type="submit" class="btn btn-purple-submit px-5 py-2 rounded-2 fw-semibold" [disabled]="submitting">
+                {{ submitting ? 'Saving...' : 'Save' }}
+              </button>
+            </div>
+          </form>
+        </div>
+
+      } @else {
+
+        <!-- SUCCESS PANEL -->
+        <div class="feedback-success-panel text-center py-5">
+          <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+          <h5 class="fw-bold text-navy mt-3 mb-2">Feedback Saved!</h5>
+          <p class="text-secondary mb-4">
+            {{ remainingCount }} module{{ remainingCount === 1 ? '' : 's' }} remaining.
+          </p>
+          <button type="button" class="btn btn-purple-submit px-5 py-2 rounded-2 fw-semibold" (click)="onContinue()">
+            {{ remainingCount === 0 ? 'Done' : 'Continue to Next Module' }}
+          </button>
+        </div>
+
+      }
+
+    </div>
+  }
+</dialog>

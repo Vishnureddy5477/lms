@@ -1,0 +1,76 @@
+/* Background Gradient for Left Panel */
+.hero-banner {
+  background: linear-gradient(135deg, #18032d 0%, #1c0841 50%, #0d0121 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle Network/Grid Background effect (Optional) */
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Image adjustments */
+.hero-img {
+  max-width: 380px;
+  height: auto;
+}
+
+.tracking-wider {
+  letter-spacing: 1.5px;
+}
+
+/* Custom Purple Button matching target */
+.btn-primary-custom {
+  background-color: #4c4cc7;
+  border: none;
+  border-radius: 6px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-primary-custom:hover {
+  background-color: #3b3bb0;
+}
+
+/* Form Controls */
+.form-control {
+  border-color: #e2e8f0;
+  border-radius: 6px;
+}
+
+.form-control:focus {
+  border-color: #4c4cc7;
+  box-shadow: 0 0 0 0.25rem rgba(76, 76, 199, 0.15);
+}
+
+/* Forgot Password Modal */
+.fp-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 1rem;
+}
+
+.fp-modal-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}

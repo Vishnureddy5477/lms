@@ -1,0 +1,48 @@
+/* upload-projects.component.css */
+
+/* Keep main section titles in the dark purple/blue from the design */
+.text-dark-purple {
+  color: #3f4785;
+}
+
+/* Ensure data fields are black (and not light gray/disabled look) */
+.data-black,
+input[type="text"],
+input[type="text"]:disabled,  /* Specifically targets disabled inputs */
+select,
+.form-select,
+.table tbody td {
+  color: #000000 !important; /* Forces text to be pure black */
+}
+
+/* Maintain light gray background for read-only fields */
+.bg-light-gray {
+  background-color: #f1f3f7 !important;
+}
+
+/* Define borders */
+.border-gray {
+  border: 1px solid #dcdfe6;
+}
+
+/* Define table row borders */
+.border-bottom-light {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Define interactive pointer */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Design-specific green Submit button, matching the target image */
+.btn-submit {
+  background-color: #20c997; /* Teal/Green color from target image */
+  color: #ffffff;
+  border: none;
+}
+
+.btn-submit:hover {
+  background-color: #1ba87e; /* Darker teal/green for hover */
+  color: #ffffff;
+}

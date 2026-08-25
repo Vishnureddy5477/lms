@@ -1,0 +1,38 @@
+.feedback-dialog {
+  width: 95vw;
+  max-width: 1000px;
+  max-height: 90vh;
+  border: none;
+  border-radius: 12px;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.feedback-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.feedback-header {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 12px;
+}
+
+.bg-purple-header {
+  background-color: #f0eefc;
+}
+
+.btn-purple-submit {
+  background-color: #5050ce;
+  color: #fff;
+  border: none;
+}
+
+.btn-purple-submit:hover {
+  background-color: #4040b0;
+  color: #fff;
+}
+
+.custom-criteria-table th,
+.custom-criteria-table td {
+  vertical-align: middle;
+}

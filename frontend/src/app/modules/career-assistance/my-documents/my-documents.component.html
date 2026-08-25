@@ -1,0 +1,234 @@
+<div class="content-body w-100 p-0 m-0 min-vh-100 bg-white">
+  <div class="container-fluid p-4">
+    <div class="row g-0">
+      <div class="col-12">
+        
+        <div class="card border-0 bg-white">
+          
+          <!-- HEADER & TOP NAVIGATION TABS -->
+          <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center pb-2 pt-0 px-0">
+            <h5 class="fw-bold text-navy mb-0">My Documents</h5>
+
+            <ul class="nav nav-tabs border-0 doc-tabs">
+              <li class="nav-item">
+                <button 
+                  class="nav-link" 
+                  [class.active]="activeTab === 'resumeFormat'" 
+                  (click)="setTab('resumeFormat')"
+                >
+                  Resume Format
+                </button>
+              </li>
+              <li class="nav-item">
+                <button 
+                  class="nav-link" 
+                  [class.active]="activeTab === 'uploadDoc'" 
+                  (click)="setTab('uploadDoc')"
+                >
+                  Upload Document & Projects
+                </button>
+              </li>
+              <li class="nav-item">
+                <button 
+                  class="nav-link" 
+                  [class.active]="activeTab === 'viewDocs'" 
+                  (click)="setTab('viewDocs')"
+                >
+                  View Documents
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- CARD BODY CONTENTS -->
+          <div class="card-body p-0 mt-3">
+
+            <!-- TAB 1: RESUME FORMAT -->
+            @if (activeTab === 'resumeFormat') {
+              <div class="d-flex flex-column align-items-center justify-content-center py-4">
+                
+                <!-- RESUME PREVIEW CARD -->
+                <div class="resume-preview-card bg-white p-4 mb-4 border rounded shadow-sm text-black">
+                  <div class="d-flex justify-content-between align-items-start border-bottom pb-3 mb-3">
+                    <div class="logo-box border p-2 text-center text-muted fs-8">
+                      <strong class="text-navy d-block">Cranes Varsity</strong>
+                      <span>UPLOAD IMAGE HERE</span>
+                    </div>
+                    <div class="text-end">
+                      <span class="fs-8 text-uppercase text-muted d-block">DESIGNATION</span>
+                      <h3 class="fw-bold text-black mb-1">Name</h3>
+                      <span class="fs-8 text-uppercase text-muted">OBJECTIVE</span>
+                    </div>
+                  </div>
+
+                  <div class="row fs-8">
+                    <div class="col-5 border-end">
+                      <div class="mb-3">
+                        <strong class="text-navy d-block mb-1">CONTACT</strong>
+                        <div class="text-muted"><i class="bi bi-telephone"></i> ---</div>
+                        <div class="text-muted"><i class="bi bi-envelope"></i> ---</div>
+                        <div class="text-muted"><i class="bi bi-link-45deg"></i> ---</div>
+                      </div>
+                      <div class="mb-3">
+                        <strong class="text-navy d-block mb-1">EDUCATION</strong>
+                        <div class="text-muted">---</div>
+                      </div>
+                      <div class="mb-3">
+                        <strong class="text-navy d-block mb-1">SKILLS</strong>
+                        <div class="text-muted">---</div>
+                      </div>
+                      <div>
+                        <strong class="text-navy d-block mb-1">LANGUAGES</strong>
+                        <div class="text-muted">---</div>
+                      </div>
+                    </div>
+
+                    <div class="col-7">
+                        <div class="mb-3">
+                        <strong class="text-navy d-block mb-1">OBJECTIVE</strong>
+                        <div class="text-muted">---</div>
+                      </div>
+                      <div class="mb-3">
+                        <strong class="text-navy d-block mb-1">CERTIFICATIONS</strong>
+                        <div class="text-muted">---</div>
+                      </div>
+                      <div>
+                        <strong class="text-navy d-block mb-1">PROJECTS</strong>
+                        <ol class="ps-3 text-muted mb-0">
+                          <li>1.</li>
+                          <li>2.</li>
+                          <li>3.</li>
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- DOWNLOAD BUTTON -->
+                <button class="btn btn-indigo px-4 py-2" (click)="downloadFormat()">
+                  <i class="bi bi-download me-2"></i> Download Format
+                </button>
+
+              </div>
+            }
+
+            <!-- TAB 2: UPLOAD DOCUMENT & PROJECTS -->
+            @if (activeTab === 'uploadDoc') {
+              <div class="d-flex flex-column align-items-center justify-content-center py-4">
+                <h5 class="fw-bold text-navy mb-4">Upload Documents</h5>
+
+                <div class="upload-form-container w-100" style="max-width: 500px;">
+                  
+                  <!-- Reg No (Disabled) -->
+                  <div class="mb-3">
+                    <input 
+                      type="text" 
+                      class="form-control form-control-custom text-black bg-light" 
+                      [value]="uploadData.registrationNo" 
+                      disabled 
+                    />
+                  </div>
+
+                  <!-- Batch No (Disabled) -->
+                  <div class="mb-3">
+                    <input 
+                      type="text" 
+                      class="form-control form-control-custom text-black bg-light" 
+                      [value]="uploadData.batchNo" 
+                      disabled 
+                    />
+                  </div>
+
+                  <!-- Email Input -->
+                  <div class="mb-3">
+                    <input 
+                      type="email" 
+                      class="form-control form-control-custom text-black" 
+                      placeholder="Your email.." 
+                      [(ngModel)]="uploadData.email" 
+                    />
+                  </div>
+
+                  <!-- Document Type Selection -->
+                  <div class="mb-3">
+                    <select 
+                      class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched"
+                      [(ngModel)]="uploadData.selectedDocType"
+                    >
+                      <option value="" disabled selected>Select a document</option>
+                      @for (type of documentTypes; track type) {
+                        <option [value]="type">{{ type }}</option>
+                      }
+                    </select>
+                  </div>
+
+                  <!-- File Picker -->
+                  <div class="text-center my-3">
+                    <p class="fs-8 text-muted mb-2">Upload Your Document in PDF Only *</p>
+                    <input 
+                      type="file" 
+                      accept=".pdf" 
+                      class="form-control form-control-sm text-black" 
+                      (change)="onFileSelected($event)" 
+                    />
+                  </div>
+
+                  <!-- Submit Button -->
+                  <div class="text-center mt-4">
+                    <button class="btn btn-success-custom px-4 py-2" [disabled]="uploading" (click)="onSubmitUpload()">
+                      {{ uploading ? 'Submitting...' : 'Submit' }}
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            }
+
+            <!-- TAB 3: VIEW DOCUMENTS -->
+            @if (activeTab === 'viewDocs') {
+              @if (uploadedDocuments.length > 0) {
+                <div class="table-responsive">
+                  <table class="table align-middle doc-table mb-0">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="ps-4">SI No</th>
+                        <th scope="col">Registration No</th>
+                        <th scope="col">Email</th>
+                        <th scope="col" class="text-center">Document</th>
+                        <th scope="col" class="pe-4 text-center">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (doc of uploadedDocuments; track doc.id; let i = $index) {
+                        <tr class="text-black">
+                          <td class="ps-4 text-black">{{ i + 1 }}</td>
+                          <td class="text-black">{{ doc.registrationNo }}</td>
+                          <td class="text-black">{{ doc.email }}</td>
+                          <td class="text-center">
+                            <button class="btn btn-indigo-sm text-white px-3 py-1" (click)="viewDocument(doc)">
+                              {{ doc.documentName }}
+                            </button>
+                          </td>
+                          <td class="pe-4 text-center">
+                            <button class="btn btn-danger-sm text-white px-3 py-1" (click)="deleteDocument(doc.id)">
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              } @else {
+                <div class="text-center p-5 text-black">No Documents Uploaded Yet.</div>
+              }
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

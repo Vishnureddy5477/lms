@@ -1,0 +1,129 @@
+<div class="container-fluid p-4">
+
+  <!-- White Outer Card Wrapper -->
+  <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden content-container">
+    <div class="row g-0 h-100">
+
+      <!-- LEFT SIDEBAR: Module Navigation List -->
+      <div class="col-12 col-md-4 col-lg-3 border-end border-light-subtle p-3 module-sidebar">
+        @if (loadingModules) {
+          <app-skeleton variant="table" [rows]="5" [columns]="4" />
+        } @else if (modulesList.length === 0) {
+          <div class="text-center text-muted py-4">No modules available.</div>
+        } @else {
+          <ul class="list-unstyled mb-0 d-flex flex-column gap-2">
+            @for (item of modulesList; track item.moduleId) {
+              <li>
+                <button
+                  (click)="selectModule(item.moduleId)"
+                  class="btn w-100 text-start p-2.5 rounded-3 module-nav-item border-0"
+                  [class.active-module]="selectedModuleId === item.moduleId"
+                >
+                  <span class="fw-bold me-1">{{ item.seqNo }}.</span>
+                  <span class="module-title font-medium">{{ item.moduleName }}</span>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+      <!-- RIGHT PANE: Content Display Area -->
+      <div class="col-12 col-md-8 col-lg-9 p-4 content-display-pane">
+
+        @if (isLoading) {
+          <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+            <span class="fs-7">Data Fetching....</span>
+          </div>
+        } @else if (moduleContent) {
+          <div class="w-100">
+            <h5 class="fw-bold text-dark-purple mb-3">{{ selectedModuleName }}</h5>
+
+            <!-- Counter cards -->
+            <div class="row g-3 mb-4">
+              <div class="col-4">
+                <div class="card border-0 bg-light text-center p-2 rounded-3">
+                  <div class="fw-bold fs-5 text-dark-purple">{{ moduleContent.totalTopics }}</div>
+                  <div class="fs-8 text-secondary">Topics</div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="card border-0 bg-light text-center p-2 rounded-3">
+                  <div class="fw-bold fs-5 text-dark-purple">{{ moduleContent.totalSubtopics }}</div>
+                  <div class="fs-8 text-secondary">Sub Topics</div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="card border-0 bg-light text-center p-2 rounded-3">
+                  <div class="fw-bold fs-5 text-dark-purple">{{ moduleContent.totalVideos }}</div>
+                  <div class="fs-8 text-secondary">Videos</div>
+                </div>
+              </div>
+            </div>
+
+            @if (moduleContent.topics.length === 0) {
+              <p class="text-secondary fs-7">No content available for this module yet.</p>
+            } @else {
+              @for (topic of moduleContent.topics; track topic.topicId; let ti = $index) {
+                <div class="mb-3">
+                  <h6 class="fw-bold text-dark-purple">Topic {{ ti + 1 }}. {{ topic.topicName }}</h6>
+                  @for (subtopic of topic.subtopics; track subtopic.subtopicId; let si = $index) {
+                    <div class="ms-3 mb-2">
+                      <p class="fw-semibold text-secondary mb-1">{{ si + 1 }}. {{ subtopic.subtopicName }}</p>
+                      @if (subtopic.videos.length > 0) {
+                        <table class="table table-sm table-borderless mb-2">
+                          <tbody>
+                            @for (video of subtopic.videos; track video.id; let vi = $index) {
+                              <tr>
+                                <td class="text-secondary" style="width: 40px;">{{ vi + 1 }}</td>
+                                <td>{{ video.name }}</td>
+                                <td class="text-end">
+                                  <button class="btn btn-sm btn-outline-danger" (click)="playVideo(video)">
+                                    <i class="bi bi-play-circle-fill"></i> Play
+                                  </button>
+                                </td>
+                              </tr>
+                            }
+                          </tbody>
+                        </table>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            }
+          </div>
+        } @else {
+          <div class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+            <span class="fs-7">Select a module to view its content.</span>
+          </div>
+        }
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Video modal -->
+  @if (activeVideo) {
+    <div class="video-modal-backdrop" (click)="closeVideo()">
+      <div class="video-modal-body" (click)="$event.stopPropagation()">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="fw-bold text-dark-purple mb-0">{{ activeVideo.name }}</h6>
+          <button class="btn btn-sm btn-outline-secondary" (click)="closeVideo()">Close</button>
+        </div>
+        @if (activeVideoUrl) {
+          <div class="ratio ratio-16x9">
+            <iframe [src]="activeVideoUrl" title="Digital content video" allowfullscreen allow="autoplay"></iframe>
+          </div>
+        } @else {
+          <p class="text-secondary">Unable to load this video.</p>
+        }
+        @if (activeVideo.link) {
+          <a [href]="activeVideo.link" target="_blank" class="d-inline-block mt-2 fs-8">Open in New Tab</a>
+        }
+      </div>
+    </div>
+  }
+
+</div>

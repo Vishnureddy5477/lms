@@ -1,0 +1,155 @@
+<div class="container-fluid p-4">
+
+  <!-- White Outer Card Wrapper -->
+  <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden p-4">
+
+    @if (!selectedModuleCategory) {
+
+      <!-- Centered Section Title -->
+      <h5 class="fw-bold text-dark-purple text-center my-3">Interview Questions</h5>
+
+      <!-- Table Container -->
+      <div class="table-responsive pt-2">
+        <table class="table table-borderless align-middle mb-0 custom-interview-table">
+
+          <!-- Light Purple Header -->
+          <thead class="bg-purple-header text-purple-heading">
+            <tr>
+              <th scope="col" class="ps-4">S.N.</th>
+              <th scope="col">Company Name</th>
+              <th scope="col">Module Category</th>
+              <th scope="col">Module Name</th>
+              <th scope="col" class="text-center">Question Count</th>
+              <th scope="col" class="pe-4 text-center">View Questions</th>
+            </tr>
+          </thead>
+
+          <!-- Table Rows -->
+          <tbody>
+            @if (loading) {
+              @for (r of [1,2,3,4,5]; track r) { <tr appSkeletonRow [columns]="6"></tr> }
+            }
+            @for (item of questionsList; track item.moduleCategory; let i = $index) {
+              <tr class="border-bottom-light">
+                <td class="ps-4 text-secondary font-medium">{{ i + 1 }}</td>
+                <td class="text-dark font-medium">{{ item.companyName }}</td>
+                <td class="text-dark font-medium">{{ item.moduleCategory }}</td>
+                <td class="text-dark font-medium">{{ item.moduleName }}</td>
+
+                <!-- Purple Pill Badge -->
+                <td class="text-center">
+                  <span class="badge bg-purple-badge rounded-2 px-2.5 py-1.5 font-semibold fs-8">
+                    {{ item.questionCount }}
+                  </span>
+                </td>
+
+                <!-- Outlined View Button with Eye Icon -->
+                <td class="pe-4 text-center">
+                  <button
+                    (click)="onViewQuestions(item)"
+                    class="btn btn-outline-teal font-medium px-3 py-1 rounded-2 fs-8 d-inline-flex align-items-center gap-1.5"
+                  >
+                    <i class="bi bi-eye"></i>
+                    <span>View</span>
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              @if (!loading) {
+                <tr>
+                  <td colspan="6" class="text-center py-4 text-muted fs-8">
+                    No interview questions found.
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+
+        </table>
+      </div>
+
+    } @else {
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold text-dark-purple mb-0">{{ selectedModuleCategory }}</h5>
+        <button class="btn btn-outline-secondary btn-sm" (click)="backToCompanies()">Back</button>
+      </div>
+
+      <div class="table-responsive pt-2">
+        <table class="table table-borderless align-middle mb-0 custom-interview-table">
+          <thead class="bg-purple-header text-purple-heading">
+            <tr>
+              <th scope="col" class="ps-4">S.N.</th>
+              <th scope="col">Module Name</th>
+              <th scope="col">Question</th>
+              <th scope="col" class="text-center">Answers</th>
+              <th scope="col" class="pe-4 text-center">View Answers</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (loadingQuestions) {
+              @for (r of [1,2,3,4,5]; track r) { <tr appSkeletonRow [columns]="5"></tr> }
+            }
+            @for (q of drilldownQuestions; track q.id; let i = $index) {
+              <tr class="border-bottom-light">
+                <td class="ps-4 text-secondary font-medium">{{ i + 1 }}</td>
+                <td class="text-dark font-medium">{{ q.moduleName }}</td>
+                <td class="text-dark font-medium">{{ q.question }}</td>
+                <td class="text-center">
+                  <span class="badge bg-purple-badge rounded-2 px-2.5 py-1.5 font-semibold fs-8">
+                    {{ q.answerCount }}
+                  </span>
+                </td>
+                <td class="pe-4 text-center">
+                  <button
+                    (click)="onViewAnswers(q)"
+                    class="btn btn-outline-teal font-medium px-3 py-1 rounded-2 fs-8 d-inline-flex align-items-center gap-1.5"
+                    [disabled]="q.answerCount === 0"
+                  >
+                    <i class="bi bi-eye"></i>
+                    <span>View</span>
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              @if (!loadingQuestions) {
+                <tr>
+                  <td colspan="5" class="text-center py-4 text-muted fs-8">
+                    No questions found for this module.
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+
+    }
+
+  </div>
+
+  <!-- Answers Modal -->
+  @if (activeQuestion) {
+    <div class="answers-modal-backdrop" (click)="closeAnswers()">
+      <div class="answers-modal-body" (click)="$event.stopPropagation()">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="fw-bold text-dark-purple mb-0">{{ activeQuestion.question }}</h6>
+          <button class="btn btn-sm btn-outline-secondary" (click)="closeAnswers()">Close</button>
+        </div>
+        @if (loadingAnswers) {
+          <app-skeleton variant="table" [rows]="5" [columns]="4" />
+        } @else if (activeAnswers.length === 0) {
+          <div class="text-center text-muted py-3">No answers yet.</div>
+        } @else {
+          @for (a of activeAnswers; track a.answerId) {
+            <div class="answer-item mb-3 pb-3 border-bottom">
+              <p class="mb-1">{{ a.answerText }}</p>
+              <p class="text-secondary fs-8 mb-0">By {{ a.createdBy }} on {{ a.createdAt }}</p>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  }
+
+</div>

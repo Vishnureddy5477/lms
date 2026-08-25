@@ -1,0 +1,51 @@
+/* Palette Utilities */
+.text-navy {
+  color: #2b3674 !important;
+}
+
+.text-indigo {
+  color: #5c4eb4 !important;
+}
+
+.text-black {
+  color: #000000 !important;
+}
+
+.fs-8 {
+  font-size: 0.825rem;
+}
+
+/* Info Box */
+.alert-purple-light {
+  background-color: #f1f0fb;
+  border-radius: 6px;
+}
+
+/* Form Controls */
+.form-control-custom {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  background-color: #ffffff;
+}
+
+.form-control-custom:focus {
+  border-color: #5c4eb4;
+  box-shadow: none;
+}
+
+/* Button */
+.btn-indigo {
+  background-color: #4338ca;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-indigo:hover {
+  background-color: #3730a3;
+  color: #ffffff;
+}

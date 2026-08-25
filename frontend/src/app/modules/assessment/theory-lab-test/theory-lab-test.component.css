@@ -1,0 +1,37 @@
+/* Typography & Color Palette */
+.text-dark-purple {
+  color: #2E1065 !important;
+  font-size: 0.95rem;
+}
+
+.text-subtitle {
+  color: #94A3B8 !important;
+}
+
+.text-dark-muted {
+  color: #334155 !important; /* Dark slate text (no orange) */
+  font-weight: 400;
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+.card-content-area {
+  min-height: 480px;
+}
+
+/* Light Blue Calendar Container Box */
+.calendar-box {
+  width: 58px;
+  height: 58px;
+  background-color: #EFF6FF; /* Soft blue tint matching reference */
+  border: 1px solid #DBEAFE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-primary-subtle {
+  color: #93C5FD !important;
+}

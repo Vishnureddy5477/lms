@@ -1,0 +1,209 @@
+<div class="container-fluid p-4">
+
+  <!-- Main Card Wrapper -->
+  <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+
+    <!-- Header with Tab Pills -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+      <h5 class="fw-bold text-dark-purple mb-0">Progress Menu</h5>
+
+      <!-- Custom Pills Navigation -->
+      <div class="d-flex align-items-center gap-2">
+        <button
+          (click)="setTab('outline')"
+          [class.active-pill]="activeTab === 'outline'"
+          class="btn pill-btn px-3 py-2 rounded-2 fs-7 font-medium">
+          Course Outline
+        </button>
+
+        <button
+          (click)="setTab('lab')"
+          [class.active-pill]="activeTab === 'lab'"
+          class="btn pill-btn px-3 py-2 rounded-2 fs-7 font-medium">
+          Lab Manual
+        </button>
+
+        <button
+          (click)="setTab('progress')"
+          [class.active-pill]="activeTab === 'progress'"
+          class="btn pill-btn px-3 py-2 rounded-2 fs-7 font-medium">
+          Course Progress
+        </button>
+      </div>
+    </div>
+
+    <!-- Tab 1: Course Outline -->
+    @if (activeTab === 'outline') {
+      <div class="d-flex align-items-center gap-2 text-dark-purple mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-card-text" viewBox="0 0 16 16">
+          <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+          <path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8zm0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
+        </svg>
+        <h6 class="fw-bold mb-0">Course Name: {{ courseName }}</h6>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-borderless align-middle custom-criteria-table">
+          <thead class="bg-purple-header text-purple-heading">
+            <tr>
+              <th scope="col" class="ps-3">Sl.No</th>
+              <th scope="col">Module Name</th>
+              <th scope="col" class="pe-3 text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (loadingOutline) {
+              @for (r of [1,2,3,4,5]; track r) { <tr appSkeletonRow [columns]="3"></tr> }
+            } @else if (courseModules.length === 0) {
+              <tr><td colspan="3" class="text-center text-muted py-4">No modules available. Course modules are not yet updated. Please contact administration.</td></tr>
+            } @else {
+              @for (item of courseModules; track item.slNo) {
+                <tr class="border-bottom-light">
+                  <td class="ps-3 text-black font-medium">{{ item.slNo }}</td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2 text-black font-medium">
+                      <i class="bi bi-book-half" style="color:#4A3E9D;"></i>
+                      <span>{{ item.moduleName }}</span>
+                    </div>
+                  </td>
+                  <td class="pe-3 text-end">
+                    @if (item.hasContent) {
+                      <button (click)="onViewCourseOutline(item)" class="btn btn-purple-action btn-sm px-3 py-2 rounded-2 fw-semibold">
+                        <i class="bi bi-eye-fill me-1"></i> View Course Outline
+                      </button>
+                    } @else {
+                      <span class="badge bg-secondary">No outline available</span>
+                    }
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- Tab 2: Lab Manual -->
+    @if (activeTab === 'lab') {
+      <div class="d-flex align-items-center gap-2 text-dark-purple mb-3">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-card-text" viewBox="0 0 16 16">
+          <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+          <path d="M3 5.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 8zm0 2.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5z"/>
+        </svg>
+        <h6 class="fw-bold mb-0">Course Name: {{ courseName }}</h6>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-borderless align-middle custom-criteria-table">
+          <thead class="bg-purple-header text-purple-heading">
+            <tr>
+              <th scope="col" class="ps-3">Sl.No</th>
+              <th scope="col">Module Name</th>
+              <th scope="col" class="pe-3 text-end">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (loadingLab) {
+              @for (r of [1,2,3,4,5]; track r) { <tr appSkeletonRow [columns]="3"></tr> }
+            } @else if (labModules.length === 0) {
+              <tr><td colspan="3" class="text-center text-muted py-4">No modules available. Course modules are not yet updated. Please contact administration.</td></tr>
+            } @else {
+              @for (item of labModules; track item.slNo) {
+                <tr class="border-bottom-light">
+                  <td class="ps-3 text-black font-medium">{{ item.slNo }}</td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2 text-black font-medium">
+                      <i class="bi bi-book-half" style="color:#4A3E9D;"></i>
+                      <span>{{ item.moduleName }}</span>
+                    </div>
+                  </td>
+                  <td class="pe-3 text-end">
+                    @if (item.hasContent) {
+                      <button (click)="onViewLabManual(item)" class="btn btn-purple-action btn-sm px-3 py-2 rounded-2 fw-semibold">
+                        <i class="bi bi-eye-fill me-1"></i> View Lab Manual
+                      </button>
+                    } @else {
+                      <span class="badge bg-secondary">No outline available</span>
+                    }
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+    <!-- Tab 3: Course Progress -->
+    @if (activeTab === 'progress') {
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-3">
+        <div class="d-flex align-items-center gap-2 text-muted fs-7">
+          <span>Show</span>
+          <select class="form-select form-select-sm form-control ng-valid ng-dirty ng-touched" [(ngModel)]="pageSize">
+            <option [value]="10">10</option>
+            <option [value]="25">25</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+          <span>entries</span>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 text-muted fs-7">
+          <label for="progressSearch" class="mb-0">Search:</label>
+          <input
+            type="text"
+            id="progressSearch"
+            class="form-control form-control-sm search-input"
+            [(ngModel)]="searchQuery" />
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-borderless align-middle custom-criteria-table">
+          <thead class="bg-purple-header text-purple-heading">
+            <tr>
+              <th scope="col" class="ps-3">SN</th>
+              <th scope="col">Module Name</th>
+              <th scope="col">Start Date</th>
+              <th scope="col">End Date</th>
+              <th scope="col">Total Days</th>
+              <th scope="col" class="pe-3">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (loadingProgress) {
+              @for (r of [1,2,3,4,5]; track r) { <tr appSkeletonRow [columns]="6"></tr> }
+            } @else if (progressList.length === 0) {
+              <tr><td colspan="6" class="text-center py-5 text-danger fw-normal">No data available in table</td></tr>
+            } @else {
+              @for (row of progressList; track row.sn) {
+                <tr class="border-bottom-light">
+                  <td class="ps-3 text-black font-medium">{{ row.sn }}</td>
+                  <td class="text-black font-medium">{{ row.moduleName }}</td>
+                  <td class="text-black font-medium">{{ row.startDate }}</td>
+                  <td class="text-black font-medium">{{ row.endDate }}</td>
+                  <td class="text-black font-medium">{{ row.totalDays }}</td>
+                  <td class="pe-3 text-black font-medium">{{ row.status }}</td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="d-flex flex-wrap justify-content-between align-items-center mt-4 text-muted fs-7">
+        <div>Showing {{ rangeStart }} to {{ rangeEnd }} of {{ filteredRows.length }} entries</div>
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-link p-0 text-decoration-none text-muted" [class.disabled]="currentPage <= 1"
+            [disabled]="currentPage <= 1" (click)="prevPage()">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button class="btn btn-link p-0 text-decoration-none text-muted" [class.disabled]="currentPage >= totalPages"
+            [disabled]="currentPage >= totalPages" (click)="nextPage()">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    }
+
+  </div>
+
+</div>

@@ -1,0 +1,46 @@
+.section-title-bar {
+  background-color: #0b3280;
+  letter-spacing: 0.5px;
+}
+
+.section-header-bar {
+  background-color: #0b3280;
+  color: #ffffff;
+  padding: 6px 12px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  border-radius: 3px;
+}
+
+.form-label-custom {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 3px;
+}
+
+.passport-photo-box {
+  width: 150px;
+  height: 170px;
+  background-color: #f8f9fa;
+  border: 1px dashed #adb5bd !important;
+}
+
+.extra-small {
+  font-size: 0.75rem;
+}
+.signature-input {
+  border: none;
+  border-bottom: 1.5px solid #000000;
+  border-radius: 0;
+  width: 250px;
+  background: transparent;
+  padding-bottom: 2px;
+}
+
+.signature-input:focus {
+  outline: none;
+  box-shadow: none;
+  border-bottom-color: #0b3280;
+}

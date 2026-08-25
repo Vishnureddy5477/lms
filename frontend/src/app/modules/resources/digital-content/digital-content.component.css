@@ -1,0 +1,72 @@
+/* Container Layout */
+.content-container {
+  min-height: 580px;
+}
+
+.text-dark-purple {
+  color: #2E1065 !important;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.fs-7 {
+  font-size: 0.88rem;
+}
+
+/* Sidebar Navigation Items */
+.module-sidebar {
+  background-color: #FFFFFF;
+  max-height: 650px;
+  overflow-y: auto;
+}
+
+.module-nav-item {
+  color: #475569;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  background-color: transparent;
+  transition: all 0.2s ease;
+}
+
+.module-nav-item:hover {
+  background-color: #F8FAFC;
+  color: #1E293B;
+}
+
+/* Selected Active Module Highlight (Light Red/Orange Tint matching screenshot) */
+.module-nav-item.active-module {
+  background-color: #FFF2F0 !important;
+  color: #E5533D !important;
+}
+
+.module-nav-item.active-module .module-title {
+  font-weight: 600;
+}
+
+/* Right Content Display Pane */
+.content-display-pane {
+  background-color: #FFFFFF;
+  min-height: 480px;
+}
+
+/* Video modal */
+.video-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 1rem;
+}
+
+.video-modal-body {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 100%;
+  max-width: 720px;
+}

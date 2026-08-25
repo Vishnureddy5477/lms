@@ -1,0 +1,99 @@
+/* Color Utilities */
+.text-navy {
+  color: #2b3674 !important;
+}
+
+.text-black {
+  color: #000000 !important;
+}
+
+.bg-light-panel {
+  background-color: #f4f5f9;
+  border-radius: 8px;
+}
+
+.fs-7 {
+  font-size: 0.875rem;
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+.italic {
+  font-style: italic;
+}
+
+/* List Styling */
+.directives-list li {
+  line-height: 1.4;
+}
+
+/* Salary Matrix Table */
+.matrix-table th {
+  background-color: #e2e8f0;
+  color: #5c4eb4;
+  font-size: 0.775rem;
+  font-weight: 700;
+  padding: 8px 12px;
+}
+
+.matrix-table td {
+  padding: 8px 12px;
+  font-size: 0.775rem;
+  color: #000000 !important;
+  border-bottom: 1px solid #edf2f7;
+}
+
+/* Form Fields */
+.signature-input {
+  width: 200px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #ffffff;
+}
+
+.signature-input:focus {
+  border-color: #5c4eb4;
+  box-shadow: none;
+}
+
+/* Button */
+.btn-indigo {
+  background-color: #5c4eb4;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-indigo:hover {
+  background-color: #483a9e;
+  color: #ffffff;
+}
+
+.opacity-50 {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.text-black {
+  color: #000000 !important;
+}
+
+.fs-7 {
+  font-size: 0.875rem;
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+.fst-italic {
+  font-style: italic !important;
+}
+
+.tracking-wide {
+  letter-spacing: 0.5px;
+}
+

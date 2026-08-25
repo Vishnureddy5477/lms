@@ -1,0 +1,149 @@
+<div class="report-card-container bg-white p-3 border rounded shadow-sm">
+  
+  <!-- COMPANY HEADER -->
+  <div class="text-center mb-3">
+    <h5 class="fw-bold text-navy mb-0">Cranes Varsity Private Limited</h5>
+  </div>
+
+  <!-- STUDENT INFO HEADER BOXES -->
+  <div class="row text-center mb-3 g-2">
+    <div class="col-md-4">
+      <div class="info-box p-2 rounded">
+        <span class="info-label d-block text-muted">STUDENT REGISTRATION NUMBER</span>
+        <strong class="info-value text-navy">{{ student.studentRegistrationNo }}</strong>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="info-box p-2 rounded">
+        <span class="info-label d-block text-muted">STUDENT NAME</span>
+        <strong class="info-value text-navy">{{ student.studentName }}</strong>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="info-box p-2 rounded">
+        <span class="info-label d-block text-muted">PROGRAM</span>
+        <strong class="info-value text-navy">{{ student.program }}</strong>
+      </div>
+    </div>
+  </div>
+
+  @if (loading) {
+    <app-skeleton variant="table" [rows]="5" [columns]="8" ariaLabel="Loading your marks" />
+  }
+
+  @if (!loading && modules.length === 0) {
+    <div class="alert alert-info text-center">No marks records found for your account yet.</div>
+  }
+
+  <!-- MARKS BREAKDOWN TABLE -->
+  @if (!loading && modules.length > 0) {
+  <div class="table-responsive mb-3">
+    <table class="table table-bordered align-middle text-center mark-table mb-0">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Module Name</th>
+          <th>MCQ Max Marks</th>
+          <th>MCQ Obtained Marks</th>
+          <th>Theory Max Marks</th>
+          <th>Theory Obtained Marks</th>
+          <th>Lab Max Marks</th>
+          <th>Lab Obtained Marks</th>
+          <th>Assignment Max Marks</th>
+          <th>Assignment Obtained Marks</th>
+          <th>Projects Max Marks</th>
+          <th>Projects Obtained Marks</th>
+          <th>Total Max Marks</th>
+          <th>Total Obtained Marks</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (mod of modules; track mod.sNo) {
+          <tr>
+            <td>{{ mod.sNo }}</td>
+            <td class="text-start fw-medium">{{ mod.moduleName }}</td>
+            <td>{{ mod.mcqMaxMarks }}</td>
+            <td>{{ mod.mcqObtainedMarks }}</td>
+            <td>{{ mod.theoryMaxMarks }}</td>
+            <td>{{ mod.theoryObtainedMarks }}</td>
+            <td>{{ mod.labMaxMarks }}</td>
+            <td>{{ mod.labObtainedMarks }}</td>
+            <td>{{ mod.assignmentMaxMarks }}</td>
+            <td>{{ mod.assignmentObtainedMarks }}</td>
+            <td>{{ mod.projectMaxMarks }}</td>
+            <td>{{ mod.projectObtainedMarks }}</td>
+            <td class="fw-bold">{{ mod.totalMaxMarks }}</td>
+            <td class="fw-bold">{{ mod.totalObtainedMarks }}</td>
+          </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr class="fw-bold bg-light">
+          <td colspan="2" class="text-end">Total</td>
+          <td>{{ totalMcqMaxMarks }}</td>
+          <td>{{ totalMcqObtainedMarks }}</td>
+          <td>{{ totalTheoryMaxMarks }}</td>
+          <td>{{ totalTheoryObtainedMarks }}</td>
+          <td>{{ totalLabMaxMarks }}</td>
+          <td>{{ totalLabObtainedMarks }}</td>
+          <td>{{ totalAssignmentMaxMarks }}</td>
+          <td>{{ totalAssignmentObtainedMarks }}</td>
+          <td>{{ totalProjectMaxMarks }}</td>
+          <td>{{ totalProjectObtainedMarks }}</td>
+          <td class="text-primary">{{ grandTotalMaxMarks }}</td>
+          <td class="text-primary">{{ grandTotalObtainedMarks }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  }
+
+  <!-- FINAL GRADE -->
+  <div class="text-center my-3">
+    <h6 class="fw-bold text-dark">FINAL GRADE : <span class="text-navy">{{ finalGrade }}</span></h6>
+  </div>
+
+  <!-- GRADING SYSTEM LEGEND -->
+  <div class="mb-4">
+    <h6 class="text-center text-navy fw-bold fs-7 mb-2">Grading System</h6>
+    <div class="table-responsive">
+      <table class="table table-bordered text-center align-middle grading-table mb-0">
+        <thead>
+          <tr class="bg-light">
+            @for (item of gradingSystem; track item.grade) {
+              <th class="fw-bold text-navy fs-8">{{ item.grade }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            @for (item of gradingSystem; track item.criteria) {
+              <td class="fs-8 text-secondary">{{ item.criteria }}</td>
+            }
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SIGNATURE FOOTER -->
+  <div class="d-flex justify-content-between align-items-center pt-3 px-3">
+    <div class="signature-box text-center">
+      <div class="signature-line mb-1"></div>
+      <span class="fw-bold fs-8 text-navy d-block">Vice President</span>
+      <span class="text-muted fs-8">signature & stamp</span>
+    </div>
+
+    <div class="signature-box text-center">
+      <div class="signature-line mb-1"></div>
+      <span class="fw-bold fs-8 text-navy d-block">Program Manager</span>
+      <span class="text-muted fs-8">signature & stamp</span>
+    </div>
+  </div>
+
+  <!-- COPYRIGHT FOOTER -->
+  <div class="text-center mt-3 border-top pt-2">
+    <small class="text-muted fs-8">Copyright © Designed & Developed by Cranes Varsity - CRM Team 2026</small>
+  </div>
+
+</div>
