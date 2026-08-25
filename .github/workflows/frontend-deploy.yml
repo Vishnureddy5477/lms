@@ -1,0 +1,89 @@
+name: Deploy Angular Frontend to EC2
+
+# The assessment platform ships its frontend to S3 + CloudFront. The LMS serves
+# it from nginx on the same EC2 box, so this uploads a build to a staging
+# directory and swaps it in.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-deploy.yml'
+
+concurrency:
+  group: lms-frontend-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # `npm ci` (not `npm install`) so the build uses exactly the locked
+      # versions and cannot drift between a local build and CI.
+      - name: Install Dependencies
+        run: npm ci
+        working-directory: ./frontend
+
+      - name: Build Angular App (production)
+        run: npx ng build --configuration=production
+        working-directory: ./frontend
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+
+      - name: Prepare SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy.pem
+          chmod 600 ~/.ssh/deploy.pem
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Upload build to staging directory
+        run: |
+          ssh -i ~/.ssh/deploy.pem "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" \
+            'rm -rf /tmp/lms-frontend && mkdir -p /tmp/lms-frontend'
+          scp -i ~/.ssh/deploy.pem -r \
+            frontend/dist/frontend/browser/* \
+            "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/tmp/lms-frontend/"
+
+      # deploy.ps1 did `rm -rf /var/www/lms/*` and then copied, leaving the site
+      # empty for the duration. Building the new tree alongside and swapping
+      # directories keeps that window to a rename.
+      - name: Swap into place
+        run: |
+          ssh -i ~/.ssh/deploy.pem "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" 'bash -se' <<'REMOTE'
+          set -euo pipefail
+
+          if [ ! -s /tmp/lms-frontend/index.html ]; then
+            echo "!! Upload looks empty (no index.html) — refusing to swap"
+            exit 1
+          fi
+
+          sudo rm -rf /var/www/lms.new
+          sudo cp -r /tmp/lms-frontend /var/www/lms.new
+          sudo chown -R www-data:www-data /var/www/lms.new
+
+          sudo rm -rf /var/www/lms.old
+          if [ -d /var/www/lms ]; then sudo mv /var/www/lms /var/www/lms.old; fi
+          sudo mv /var/www/lms.new /var/www/lms
+
+          echo "==> Swapped. Previous build kept at /var/www/lms.old"
+          REMOTE
+
+      - name: Verify site
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 https://lms.cranesvarsity.com)
+          echo "https://lms.cranesvarsity.com -> HTTP $code"
+          test "$code" = "200"
