@@ -38,5 +38,5 @@ Start-Sleep -Seconds 25
 ssh -i $key $server "sudo systemctl is-active lms-backend"
 
 Write-Host "==> Done. Checking live site..." -ForegroundColor Green
-curl.exe -s -o /dev/null -w "https://lms.cranesvarsity.com -> HTTP %{http_code}`n" https://lms.cranesvarsity.com
-curl.exe -s -o /dev/null -w "https://lms.cranesvarsity.com/api -> HTTP %{http_code}`n" https://lms.cranesvarsity.com/api/students
+curl.exe -s -o NUL -w "https://lms.cranesvarsity.com -> HTTP %{http_code}`n" https://lms.cranesvarsity.com
+curl.exe -s -o NUL -w "https://lms.cranesvarsity.com/api -> HTTP %{http_code}`n" https://lms.cranesvarsity.com/api/students

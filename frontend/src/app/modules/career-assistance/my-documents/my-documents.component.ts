@@ -36,7 +36,9 @@ export class MyDocumentsComponent implements OnInit {
     '12th / Diploma Marks Card',
     'Graduation Marks Card',
     'Resume',
-    'Project Report'
+    'Project Report 1',
+    'Project Report 2',
+    'Project Report 3'
   ];
 
   uploadedDocuments: UserDocument[] = [];
