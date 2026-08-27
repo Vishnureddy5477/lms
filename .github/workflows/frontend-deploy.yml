@@ -100,8 +100,21 @@ jobs:
           echo "==> Swapped. Previous build kept at /var/www/lms.old"
           REMOTE
 
+      # Retries for the same reason as the backend's verify step: a transient
+      # 502/504 right after a swap should not fail a deploy that worked.
       - name: Verify site
         run: |
-          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 https://lms.cranesvarsity.com)
-          echo "https://lms.cranesvarsity.com -> HTTP $code"
-          test "$code" = "200"
+          ok=0
+          for i in $(seq 1 12); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 https://lms.cranesvarsity.com || echo 000)
+            if [ "$code" = "200" ]; then
+              echo "https://lms.cranesvarsity.com -> HTTP 200 (attempt $i)"
+              ok=1; break
+            fi
+            echo "  attempt $i: HTTP $code — retrying"
+            sleep 5
+          done
+          if [ "$ok" != "1" ]; then
+            echo "::error::Site did not return 200 after 12 attempts (~60s)"
+            exit 1
+          fi

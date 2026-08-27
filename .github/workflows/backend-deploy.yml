@@ -118,9 +118,25 @@ jobs:
           echo "==> Deployed. Service state: $(systemctl is-active lms-backend)"
           REMOTE
 
+      # Retries rather than firing once. Straight after `systemctl restart`,
+      # nginx can still hold a keepalive connection to the JVM that just died
+      # and returns a single 502 before re-establishing upstream. A one-shot
+      # check failed the build on a deploy that had actually succeeded.
       - name: Verify public endpoint
         run: |
-          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 https://lms.cranesvarsity.com/api/auth/login -X POST -H 'Content-Type: application/json' -d '{}')
-          echo "https://lms.cranesvarsity.com/api -> HTTP $code"
-          # 000 (unreachable) or 502 (nginx cannot reach the app) are failures.
-          if [ "$code" = "000" ] || [ "$code" = "502" ]; then exit 1; fi
+          ok=0
+          for i in $(seq 1 12); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 \
+              https://lms.cranesvarsity.com/api/auth/login \
+              -X POST -H 'Content-Type: application/json' -d '{}' || echo 000)
+            if [ "$code" != "000" ] && [ "$code" != "502" ] && [ "$code" != "504" ]; then
+              echo "https://lms.cranesvarsity.com/api -> HTTP $code (attempt $i)"
+              ok=1; break
+            fi
+            echo "  attempt $i: HTTP $code — waiting for nginx upstream"
+            sleep 5
+          done
+          if [ "$ok" != "1" ]; then
+            echo "::error::API still unreachable after 12 attempts (~60s)"
+            exit 1
+          fi
