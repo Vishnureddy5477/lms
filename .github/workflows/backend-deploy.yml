@@ -35,8 +35,15 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      # Uses the runner's Maven, not ./mvnw. This project only ever shipped the
+      # Windows wrapper (mvnw.cmd) — the Unix `mvnw` script does not exist, so
+      # `./mvnw` fails with exit 127 on a Linux runner. The wrapper pins Maven
+      # 3.9.6 and ubuntu-latest already provides 3.9.x, so the build matches.
+      # `clean package` (not the incremental `compile`) also matters: Maven's
+      # incremental build has been observed reporting success on code that does
+      # not actually compile.
       - name: Build jar
-        run: ./mvnw -B clean package -DskipTests
+        run: mvn -B clean package -DskipTests
         working-directory: ./backend
 
       # ssh-keyscan exits non-zero when it cannot reach the host, and as the last
