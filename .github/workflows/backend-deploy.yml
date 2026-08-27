@@ -39,16 +39,34 @@ jobs:
         run: ./mvnw -B clean package -DskipTests
         working-directory: ./backend
 
+      # ssh-keyscan exits non-zero when it cannot reach the host, and as the last
+      # command in the block that failed the whole step with no usable message.
+      # It is advisory only now, and the key is validated separately so a bad
+      # paste is reported as a bad paste rather than a connection error.
       - name: Prepare SSH
         run: |
           mkdir -p ~/.ssh
           printf '%s\n' "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy.pem
           chmod 600 ~/.ssh/deploy.pem
-          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+          if ssh-keygen -y -f ~/.ssh/deploy.pem > /dev/null 2>&1; then
+            echo "SSH key parsed OK"
+          else
+            echo "::error::EC2_SSH_KEY is not a valid private key - re-paste it including the BEGIN/END lines"
+            exit 1
+          fi
+
+          echo "Probing ${{ secrets.EC2_HOST }}:22 from this runner..."
+          if ssh-keyscan -T 15 -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts 2>/tmp/keyscan.err; then
+            echo "Host reachable, key pinned"
+          else
+            echo "::warning::ssh-keyscan could not reach the host. If the next step also fails, the EC2 security group is blocking GitHub runners on port 22."
+            cat /tmp/keyscan.err || true
+          fi
 
       - name: Upload jar
         run: |
-          scp -i ~/.ssh/deploy.pem \
+          scp -o StrictHostKeyChecking=accept-new -i ~/.ssh/deploy.pem \
             backend/target/template-0.0.1-SNAPSHOT.jar \
             "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/tmp/lms-backend.jar"
 
@@ -56,7 +74,7 @@ jobs:
       # The old deploy.ps1 overwrote it with no way back.
       - name: Deploy, restart, health-gate (auto-rollback on failure)
         run: |
-          ssh -i ~/.ssh/deploy.pem "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" 'bash -se' <<'REMOTE'
+          ssh -o StrictHostKeyChecking=accept-new -i ~/.ssh/deploy.pem "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" 'bash -se' <<'REMOTE'
           set -euo pipefail
 
           echo "==> Backing up current jar"
