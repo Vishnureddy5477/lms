@@ -3,12 +3,24 @@
   <!-- Header Row with Title and Right Subtitle -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h6 class="fw-bold text-dark-purple mb-0">Test Schedule</h6>
-    <span class="text-subtitle fs-8">Your upcoming and active theory & lab tests</span>
+    <span class="text-subtitle fs-8">Your upcoming and active theory &amp; lab tests</span>
   </div>
+
+  <!-- Why the last attempt to open a paper was refused (server-supplied) -->
+  @if (blockedMessage) {
+    <div class="alert alert-danger alert-dismissible d-flex align-items-start gap-2 rounded-3 mb-4">
+      <i class="bi bi-shield-exclamation fs-5 mt-1"></i>
+      <div>
+        <div class="fw-semibold">{{ blockedTitle }}</div>
+        <div class="fs-8">{{ blockedMessage }}</div>
+      </div>
+      <button type="button" class="btn-close" (click)="dismissBlocked()"></button>
+    </div>
+  }
 
   <!-- White Outer Container Card -->
   <div class="card border-0 shadow-sm rounded-4 bg-white p-5 card-content-area">
-    
+
     @if (isLoading) {
       <div class="d-flex flex-column align-items-center justify-content-center py-5 text-center">
         <app-skeleton variant="cards" [rows]="3" />
@@ -16,8 +28,7 @@
     } @else if (scheduledTests.length === 0) {
       <!-- Empty State View -->
       <div class="d-flex flex-column align-items-center justify-content-center py-5 text-center">
-        
-        <!-- Light Blue Calendar Box -->
+
         <div class="calendar-icon-wrapper mb-3 d-flex align-items-center justify-content-center">
           <div class="calendar-box rounded-3 p-2 position-relative">
             <i class="bi bi-calendar-event fs-1 text-primary-subtle"></i>
@@ -25,33 +36,156 @@
           </div>
         </div>
 
-        <!-- Heading Text -->
         <h6 class="fw-bold text-dark-purple mb-2">No Tests Scheduled</h6>
 
-        <!-- Subtitle Message in Dark Slate Text -->
         <p class="text-dark-muted fs-8 mb-0">
           There are no tests scheduled for your batch right now.
         </p>
 
       </div>
     } @else {
-      <!-- Scheduled Tests List (When data is available) -->
-      <div class="row g-3">
+      <!-- Scheduled Tests. Theory and lab are the same card; test_type only
+           changes the badge and the coloured left edge. -->
+      <div class="d-flex flex-column gap-3">
         @for (test of scheduledTests; track test.id) {
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="card border p-3 rounded-3">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="fw-bold text-dark mb-0">{{ test.testTitle }}</h6>
-                <span class="badge bg-primary fs-8">{{ test.testType }}</span>
+          <div class="test-card card border rounded-3 p-3"
+               [class.type-lab]="test.isLab"
+               [class.type-theory]="!test.isLab"
+               [class.is-ended]="test.status === 'ended'">
+
+            <!-- Title row -->
+            <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                <span class="type-badge" [class.lab]="test.isLab">
+                  <i class="bi" [class.bi-flask]="test.isLab" [class.bi-journal-text]="!test.isLab"></i>
+                  {{ test.isLab ? 'LAB TEST' : 'THEORY TEST' }}
+                </span>
+                <span class="test-title">{{ test.moduleName }}</span>
               </div>
-              <p class="text-muted fs-8 mb-1">Date: {{ test.scheduledDate }}</p>
-              <p class="text-muted fs-8 mb-0">Duration: {{ test.duration }}</p>
+
+              @switch (test.status) {
+                @case ('live')     { <span class="status-pill live"><i class="bi bi-circle-fill"></i> LIVE</span> }
+                @case ('upcoming') { <span class="status-pill upcoming"><i class="bi bi-clock"></i> UPCOMING</span> }
+                @case ('ended')    { <span class="status-pill ended"><i class="bi bi-x-circle"></i> ENDED</span> }
+              }
             </div>
+
+            <!-- Meta pills -->
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <span class="meta-pill"><i class="bi bi-people"></i> {{ test.batchName }}</span>
+              <span class="meta-pill"><i class="bi bi-calendar-event"></i> {{ test.testDate }}</span>
+              <span class="meta-pill"><i class="bi bi-clock"></i> {{ test.startTime }} – {{ test.endTime }}</span>
+              @if (test.totalQuestions) {
+                <span class="meta-pill"><i class="bi bi-question-circle"></i> {{ test.totalQuestions }} Questions</span>
+              }
+              @if (test.totalMarks) {
+                <span class="meta-pill"><i class="bi bi-star"></i> {{ test.totalMarks }} Marks</span>
+              }
+              @if (test.domainName) {
+                <span class="meta-pill"><i class="bi bi-globe"></i> {{ test.domainName }}</span>
+              }
+            </div>
+
+            <!-- Countdown line + progress bar -->
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="countdown-label" [class.live]="test.status === 'live'">
+                @switch (test.status) {
+                  @case ('live')     { <i class="bi bi-circle-fill"></i> Test is Live }
+                  @case ('upcoming') { <i class="bi bi-hourglass-split"></i> Starts in }
+                  @case ('ended')    { <i class="bi bi-flag"></i> Test has ended }
+                }
+              </span>
+              @if (test.status !== 'ended') {
+                <span class="countdown-clock">
+                  {{ test.status === 'live' ? 'Remaining:' : 'Begins in:' }}
+                  <strong>{{ clockOf(test) }}</strong>
+                </span>
+              }
+            </div>
+
+            <div class="progress test-progress mb-3">
+              <div class="progress-bar" [class.bg-success]="test.status === 'live'"
+                   [style.width.%]="progressOf(test)"></div>
+            </div>
+
+            <!-- Action -->
+            <div>
+              @if (test.status === 'live') {
+                <button class="btn btn-view-questions rounded-3 px-4"
+                        [disabled]="openingId === test.id"
+                        (click)="viewQuestions(test)">
+                  @if (openingId === test.id) {
+                    <span class="spinner-border spinner-border-sm me-2"></span> Opening…
+                  } @else {
+                    <i class="bi bi-eye me-2"></i> View Questions
+                  }
+                </button>
+              } @else if (test.status === 'upcoming') {
+                <button class="btn btn-secondary rounded-3 px-4" disabled>
+                  <i class="bi bi-lock me-2"></i> Opens at {{ test.startTime }}
+                </button>
+              } @else {
+                <button class="btn btn-secondary rounded-3 px-4" disabled>
+                  <i class="bi bi-x-circle me-2"></i> Test Ended
+                </button>
+              }
+            </div>
+
           </div>
         }
       </div>
     }
 
   </div>
+
+  <!-- ─── Question paper viewer ─────────────────────────────────────
+       Backdrop click does NOT close it: with a paper on screen a stray click
+       outside would wipe out what the student is reading mid-test. -->
+  @if (openPaper) {
+    <div class="paper-backdrop">
+      <div class="paper-modal">
+
+        <div class="paper-header d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <h6 class="fw-bold mb-0">{{ openPaper.test.moduleName }} – Question Paper</h6>
+            @if (openPaper.questionPaperId) {
+              <span class="paper-variant">Set {{ openPaper.questionPaperId }}</span>
+            }
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <span class="paper-remaining">
+              <i class="bi bi-clock-history me-1"></i>{{ clockOf(openPaper.test) }}
+            </span>
+            <button type="button" class="btn-close" aria-label="Close" (click)="closePaper()"></button>
+          </div>
+        </div>
+
+        <div class="paper-body">
+          <app-secure-pdf-viewer
+            [fileUrl]="openPaper.fileUrl"
+            [watermark]="watermark"
+            (loadFailed)="onViewerFailed($event)" />
+        </div>
+
+      </div>
+    </div>
+  }
+
+  <!-- Time ran out while the paper was open -->
+  @if (timeUpFor) {
+    <div class="paper-backdrop">
+      <div class="timeup-panel text-center">
+        <i class="bi bi-alarm text-danger" style="font-size: 2.5rem;"></i>
+        <h5 class="fw-bold mt-3 mb-2">Test Time Is Over</h5>
+        <p class="text-muted fs-8 mb-4">
+          The window for <strong>{{ timeUpFor }}</strong> has closed, so the question
+          paper has been withdrawn. Hand your answers to your invigilator.
+        </p>
+        <button class="btn btn-view-questions rounded-3 px-4" (click)="dismissTimeUp()">
+          Close
+        </button>
+      </div>
+    </div>
+  }
 
 </div>

@@ -30,8 +30,7 @@ import { MyDocumentsComponent } from './modules/career-assistance/my-documents/m
 import { PlacementMonitorComponent } from './modules/career-assistance/placement-monitor/placement-monitor.component';
 import { CompanyJdComponent } from './modules/career-assistance/company-job-descriptions/company-jd.component';
 import { CodeOfConductComponent } from './modules/career-assistance/code-of-conduct/code-of-conduct.component';
-import { FeedbackListComponent } from './modules/feedback/submit-feedback/feedback-list.component';
-import { FeedbackHistoryComponent } from './modules/feedback/feedback-history/feedback-history.component';
+import { FeedbackListComponent } from './modules/feedback/feedback-list/feedback-list.component';
 import { FeedbackFormComponent } from './modules/feedback/feedback-form/feedback-form.component';
 import { RaiseTicketComponent } from './modules/helpdesk/raise-ticket/raise-ticket.component';
 import { HolidaysComponent } from './pages/holidays/holidays.component';
@@ -87,9 +86,12 @@ export const routes: Routes = [
       { path: 'career-assistance/placement-monitor', component: PlacementMonitorComponent},
       { path: 'career-assistance/company-job-descriptions', component: CompanyJdComponent},
       { path: 'career-assistance/code-of-conduct', component: CodeOfConductComponent},
-      { path: 'feedback/submit-feedback', component: FeedbackListComponent},
-      { path: 'feedback/feedback-history', component: FeedbackHistoryComponent},
+      // One Feedback page. The old Submit/History split lives on only as
+      // redirects, so existing links and bookmarks still land somewhere useful.
+      { path: 'feedback', component: FeedbackListComponent},
       { path: 'feedback/feedback-form', component: FeedbackFormComponent},
+      { path: 'feedback/submit-feedback', redirectTo: 'feedback', pathMatch: 'full'},
+      { path: 'feedback/feedback-history', redirectTo: 'feedback', pathMatch: 'full'},
       { path: 'helpdesk/raise-ticket', component: RaiseTicketComponent},
       { path: 'holidays', component: HolidaysComponent },
       { path: 'profile/enrollment-details', component: EnrollmentDetailsComponent}

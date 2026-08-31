@@ -35,6 +35,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/students/**").permitAll()
+                        // Spring dispatches errors back through the filter chain.
+                        // Without this, every ResponseStatusException a controller
+                        // throws is swallowed and the client sees a bare 403
+                        // instead of the real status and message.
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

@@ -98,7 +98,7 @@ export class FeedbackFormComponent implements OnInit {
         next: (res) => {
           this.submitting = false;
           alert(res.message);
-          this.router.navigate(['/feedback/submit-feedback']);
+          this.router.navigate(['/feedback']);
         },
         error: (err) => {
           this.submitting = false;
@@ -108,7 +108,7 @@ export class FeedbackFormComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate([this.mode === 'view' ? '/feedback/feedback-history' : '/feedback/submit-feedback']);
+    this.router.navigate(['/feedback']);
   }
 
 }

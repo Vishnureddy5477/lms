@@ -1,5 +1,13 @@
 /* Global styles. The dashboard theme CSS is loaded via angular.json "styles". */
 
+/* pdf.js viewer styles, for the exam question-paper viewer.
+   Imported here rather than added to angular.json "styles" so it needs no
+   dev-server restart, and vendored under assets/ (like the theme's other
+   third-party libs) rather than pulled from node_modules. It has to be
+   global: pdf.js builds its page DOM at runtime, so Angular's component
+   style scoping would never match it. */
+@import './assets/pdfjs/pdf_viewer.css';
+
 html, body {
   height: 100%;
   margin: 0;

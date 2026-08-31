@@ -54,6 +54,7 @@ export interface AvailableTestItem {
 export interface TheoryTestItem {
   theoryTestId: string;
   domainName: string;
+  /** 'theory' | 'lab' — the only thing that differs between the two. */
   testType: string;
   moduleName: string;
   batchName: string;
@@ -62,6 +63,31 @@ export interface TheoryTestItem {
   testEndTime: string;
   totalMarks: string;
   totalQuestions: string;
+  /** Bucketed on the SERVER clock, so a wrong device clock cannot fake a window. */
+  status: 'upcoming' | 'live' | 'ended';
+  secondsUntilStart: number;
+  secondsRemaining: number;
+  durationSeconds: number;
+}
+
+/**
+ * The reply to "View Questions".
+ *
+ * A refusal arrives as allowed=false with a reason rather than an HTTP error,
+ * the same shape the MCQ access gate uses.
+ */
+export interface TheoryQuestionPaper {
+  allowed: boolean;
+  title: string | null;
+  message: string | null;
+  theoryTestId: string | null;
+  testType: string | null;
+  moduleName: string | null;
+  /** Which variant of the paper this student is locked to. */
+  questionPaperId: string | null;
+  /** API path that streams the PDF — never the real storage URL. */
+  fileUrl: string | null;
+  secondsRemaining: number;
 }
 
 // ─── MCQ Module Test engine ────────────────────────────────────────
@@ -167,6 +193,15 @@ export class AssessmentService {
 
   getTheoryTests(): Observable<TheoryTestItem[]> {
     return this.http.get<TheoryTestItem[]>(`${environment.apiUrl}/student/assessment/theory-tests`);
+  }
+
+  /**
+   * Draw this student's variant of the question paper, or get back the one they
+   * were already locked to. Idempotent by design — reopening never re-rolls.
+   */
+  getTheoryQuestionPaper(theoryTestId: string): Observable<TheoryQuestionPaper> {
+    return this.http.post<TheoryQuestionPaper>(
+      `${environment.apiUrl}/student/assessment/theory-tests/${theoryTestId}/question-paper`, {});
   }
 
   // ─── MCQ Module Test engine ──────────────────────────────────────

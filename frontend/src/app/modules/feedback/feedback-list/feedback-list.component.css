@@ -1,0 +1,110 @@
+/* Color Palette */
+.text-navy {
+  color: #2b3674 !important;
+}
+
+.text-black {
+  color: #000000 !important;
+}
+
+.fs-7 {
+  font-size: 0.875rem;
+}
+
+.fs-8 {
+  font-size: 0.8rem;
+}
+
+/* Feedback Table Styling */
+.feedback-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.feedback-table th {
+  background-color: #f1f0fb;
+  color: #5c4eb4;
+  font-size: 0.775rem;
+  font-weight: 700;
+  padding: 12px 10px;
+  border-top: 1px solid #edf2f7;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.feedback-table td {
+  padding: 14px 10px;
+  font-size: 0.825rem;
+  color: #000000 !important;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Status pill — the column that made two separate pages unnecessary */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.status-pill i {
+  font-size: 0.68rem;
+}
+
+.status-pill.submitted {
+  color: #16a34a;
+  border-color: #86efac;
+  background: #f0fdf4;
+}
+
+.status-pill.pending {
+  color: #b45309;
+  border-color: #fcd34d;
+  background: #fffbeb;
+}
+
+/* Header chip counting what still needs doing */
+.pending-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #b45309;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+/* Button Styling */
+.btn-indigo {
+  background-color: #5c4eb4;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-indigo:hover {
+  background-color: #483a9e;
+  color: #ffffff;
+}
+
+/* Already answered: still reachable, but not competing for attention */
+.btn-outline-indigo {
+  background-color: transparent;
+  color: #5c4eb4 !important;
+  border: 1px solid #c7c2e6;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-indigo:hover {
+  background-color: #f1f0fb;
+  color: #483a9e !important;
+}

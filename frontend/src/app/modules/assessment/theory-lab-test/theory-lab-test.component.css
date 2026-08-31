@@ -35,3 +35,192 @@
 .text-primary-subtle {
   color: #93C5FD !important;
 }
+
+/* ─── Test cards ──────────────────────────────────────────────────
+   Theory and lab are one card. test_type only picks the accent, which is
+   why the two rules below are the whole of the difference. */
+
+.test-card {
+  border-left-width: 5px !important;
+  transition: box-shadow 0.2s ease;
+}
+
+.test-card:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+}
+
+.test-card.type-theory { border-left-color: #4d44b5 !important; }
+.test-card.type-lab    { border-left-color: #F59E0B !important; }
+.test-card.is-ended    { opacity: 0.72; }
+
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #4d44b5;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 9px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.type-badge.lab {
+  background: #F59E0B;
+}
+
+.test-title {
+  color: #94A3B8;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Status pill (top right) */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.status-pill i { font-size: 0.5rem; }
+
+.status-pill.live     { color: #16A34A; border-color: #86EFAC; background: #F0FDF4; }
+.status-pill.upcoming { color: #B45309; border-color: #FCD34D; background: #FFFBEB; }
+.status-pill.ended    { color: #B91C1C; border-color: #FCA5A5; background: #FEF2F2; }
+
+/* Meta pills */
+.meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #F1F5F9;
+  color: #475569;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Countdown + progress */
+.countdown-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748B;
+}
+
+.countdown-label.live { color: #16A34A; }
+.countdown-label i    { font-size: 0.55rem; }
+
+.countdown-clock {
+  font-size: 0.72rem;
+  color: #64748B;
+}
+
+.test-progress {
+  height: 5px;
+  background: #E2E8F0;
+  border-radius: 999px;
+}
+
+.test-progress .progress-bar {
+  background: #CBD5E1;
+  border-radius: 999px;
+  transition: width 1s linear;
+}
+
+.btn-view-questions {
+  background: #F59E0B;
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.btn-view-questions:hover:not(:disabled) {
+  background: #D97706;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.btn-view-questions:disabled {
+  opacity: 0.7;
+}
+
+/* ─── Question paper modal ────────────────────────────────────────
+   Deliberately not Bootstrap's .card: the dashboard theme sets
+   `.card { height: calc(100% - 30px) }` for its tiles, which would fight the
+   fixed height this needs to give the PDF viewer a stage to fill. */
+
+.paper-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1060;
+  background: rgba(15, 15, 35, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.paper-modal {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 900px;
+  height: min(92vh, 950px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.paper-header {
+  flex: 0 0 auto;
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid #E2E8F0;
+  color: #1E293B;
+}
+
+.paper-variant {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #4d44b5;
+  background: #EDE9FE;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.paper-remaining {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #B91C1C;
+  font-variant-numeric: tabular-nums;
+}
+
+.paper-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 0.65rem;
+}
+
+.timeup-panel {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  padding: 2rem 1.75rem;
+  width: 100%;
+  max-width: 420px;
+}

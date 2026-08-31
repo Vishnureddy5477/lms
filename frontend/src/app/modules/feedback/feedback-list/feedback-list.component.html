@@ -1,0 +1,80 @@
+<div class="content-body w-100 p-0 m-0 min-vh-100 bg-white">
+  <div class="container-fluid p-4">
+    <div class="row g-0">
+      <div class="col-12">
+
+        <!-- PAGE TITLE -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h6 class="fw-bold text-navy mb-0 fs-7">Feedback</h6>
+          @if (!loading && pendingCount > 0) {
+            <span class="pending-chip">
+              <i class="bi bi-exclamation-circle"></i>
+              {{ pendingCount }} awaiting your response
+            </span>
+          }
+        </div>
+
+        <!-- FEEDBACK TABLE CARD -->
+        <div class="card border-0 bg-white shadow-sm">
+          <div class="table-responsive">
+            <table class="table align-middle feedback-table mb-0">
+              <thead>
+                <tr>
+                  <th scope="col" class="ps-4 text-center">Slno</th>
+                  <th scope="col" class="text-center">BatchNo</th>
+                  <th scope="col">Module</th>
+                  <th scope="col">Trainer</th>
+                  <th scope="col" class="text-center">Date</th>
+                  <th scope="col" class="text-center">Status</th>
+                  <th scope="col" class="pe-4 text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                @if (loading) {
+                  @for (r of [1,2,3,4,5]; track r) { <tr appSkeletonRow [columns]="7"></tr> }
+                } @else if (rows.length === 0) {
+                  <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">
+                      No feedback has been requested from you yet.
+                    </td>
+                  </tr>
+                }
+                @for (item of rows; track item.slNo) {
+                  <tr class="text-black">
+                    <td class="ps-4 text-center text-black fw-medium">{{ item.slNo }}</td>
+                    <td class="text-center text-black">{{ item.batch }}</td>
+                    <td class="text-black fw-semibold">{{ item.module }}</td>
+                    <td class="text-black">{{ item.trainer }}</td>
+                    <td class="text-center text-black">{{ item.date }}</td>
+                    <td class="text-center">
+                      @if (item.submitted) {
+                        <span class="status-pill submitted">
+                          <i class="bi bi-check-circle-fill"></i> Submitted
+                        </span>
+                      } @else {
+                        <span class="status-pill pending">
+                          <i class="bi bi-hourglass-split"></i> Pending
+                        </span>
+                      }
+                    </td>
+                    <td class="pe-4 text-center">
+                      <button
+                        class="btn px-3 py-1 text-white fs-8 fw-medium"
+                        [class.btn-indigo]="!item.submitted"
+                        [class.btn-outline-indigo]="item.submitted"
+                        (click)="openFeedbackForm(item)"
+                      >
+                        {{ item.action }}
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
