@@ -18,12 +18,12 @@ import { environment } from '../../../environments/environment';
 /**
  * Absolute URL for one of the pdf.js support files.
  *
- * These have to be absolute, not "assets/pdfjs/...". If the worker file is
- * missing, pdf.js quietly falls back to loading it as a module instead, and a
- * bare relative path is not a valid module specifier — so a plain 404 surfaces
- * as "Failed to resolve module specifier", which says nothing about the real
- * problem. Resolving against document.baseURI also keeps this correct when the
- * app is served under a sub-path rather than at the domain root.
+ * These have to be absolute, not "assets/pdfjs/...". If the worker cannot be
+ * loaded, pdf.js quietly falls back to importing it as a module instead, and a
+ * bare relative path is not a valid module specifier — so the real problem
+ * surfaces as "Failed to resolve module specifier", which says nothing useful.
+ * Resolving against document.baseURI also keeps this correct when the app is
+ * served under a sub-path rather than at the domain root.
  */
 function asset(name: string): string {
   return new URL(`assets/pdfjs/${name}`, document.baseURI).href;
@@ -126,7 +126,15 @@ export class SecurePdfViewerComponent implements AfterViewInit, OnDestroy {
       const pdfjs = await import('pdfjs-dist');
       if (this.destroyed) return;
 
-      pdfjs.GlobalWorkerOptions.workerSrc = asset('pdf.worker.min.mjs');
+      // .js, not the .mjs pdfjs-dist ships. pdf.js loads this with
+      // `new Worker(src, { type: "module" })`, and a module worker is rejected
+      // unless the server sends a JavaScript MIME type. Plenty of servers —
+      // including the nginx in front of production — have no mapping for .mjs
+      // and serve it as application/octet-stream, which the browser refuses;
+      // pdf.js then falls back to importing it, which refuses the same MIME.
+      // The module-ness comes from the option above, not the extension, and the
+      // worker bundle has no imports of its own, so the rename is free.
+      pdfjs.GlobalWorkerOptions.workerSrc = asset('pdf.worker.min.js');
       (globalThis as any).pdfjsLib = pdfjs;
 
       const viewerComponents: any = await import('pdfjs-dist/web/pdf_viewer.mjs');
