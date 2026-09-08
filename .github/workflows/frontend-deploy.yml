@@ -68,12 +68,25 @@ jobs:
             cat /tmp/keyscan.err || true
           fi
 
+      # rsync, not scp, and the staging directory is deliberately NOT wiped.
+      #
+      # The build output is ~94MB across ~1,180 files, but almost none of it
+      # changes between deploys - the dashboard theme, media and assets are
+      # static, only the app bundles differ. scp -r re-sent all of it every
+      # time, and at ~3MB/min to Mumbai that is a 35-minute upload. rsync
+      # compares against what is already on the box and sends only the
+      # difference, so a normal deploy moves 1-2MB.
+      #
+      # --delete keeps the staging tree exact, so a file dropped from the build
+      # is dropped here too rather than lingering.
       - name: Upload build to staging directory
         run: |
-          ssh -o StrictHostKeyChecking=accept-new -i ~/.ssh/deploy.pem "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" \
-            'rm -rf /tmp/lms-frontend && mkdir -p /tmp/lms-frontend'
-          scp -o StrictHostKeyChecking=accept-new -i ~/.ssh/deploy.pem -r \
-            frontend/dist/frontend/browser/* \
+          ssh -o StrictHostKeyChecking=accept-new -i ~/.ssh/deploy.pem \
+            "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" \
+            'mkdir -p /tmp/lms-frontend'
+          rsync -az --delete --stats \
+            -e "ssh -o StrictHostKeyChecking=accept-new -i ~/.ssh/deploy.pem" \
+            frontend/dist/frontend/browser/ \
             "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/tmp/lms-frontend/"
 
       # deploy.ps1 did `rm -rf /var/www/lms/*` and then copied, leaving the site
