@@ -7,12 +7,24 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface AdmissionRepository extends JpaRepository<Admission, String> {
 
-    @Query("SELECT a FROM Admission a WHERE a.email = :email AND a.dropout <> 'yes'")
-    Optional<Admission> findActiveByEmail(@Param("email") String email);
+    /**
+     * Every active admission row for this email, newest registration first.
+     *
+     * Deliberately a List, not an Optional: one person can hold more than one
+     * active admission (finish a diploma, then join an internship), and the
+     * production table has ~246 such emails. Declaring this Optional made
+     * Hibernate throw NonUniqueResultException the moment one of those students
+     * tried to log in, which surfaced as a 500 and locked them out entirely —
+     * while the legacy JSP, which just read the first row of its ResultSet, let
+     * them straight in. Callers pick the row they mean; see AuthService.
+     */
+    @Query("SELECT a FROM Admission a WHERE a.email = :email AND a.dropout <> 'yes' " +
+            "ORDER BY a.registrationDate DESC, a.registrationNo DESC")
+    List<Admission> findAllActiveByEmail(@Param("email") String email);
 
     /**
      * Registration is valid if it was created less than a year ago.

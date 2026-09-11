@@ -9,7 +9,7 @@ import com.cranesvarsity.template.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 /**
  * Re-implements the login gate from the legacy login.jsp against the same
@@ -39,18 +39,29 @@ public class AuthService {
         String email = rawEmail.trim();
         String password = rawPassword.trim();
 
-        Optional<Admission> maybeAdmission = admissionRepository.findActiveByEmail(email);
-        if (maybeAdmission.isEmpty()) {
+        List<Admission> candidates = admissionRepository.findAllActiveByEmail(email);
+        if (candidates.isEmpty()) {
             loginAuditDao.logFailure(null, email, "Not Loged In - Invalid Email");
             throw new AuthException("Email address not found. Please check your email and try again.");
         }
-        Admission admission = maybeAdmission.get();
-        String regNo = admission.getRegistrationNo();
 
-        if (!password.equals(admission.getPassword())) {
-            loginAuditDao.logFailure(regNo, email, "Not Loged In - Invalid Password");
+        // One email can own several active admissions, and in production more
+        // than half of those hold DIFFERENT passwords per row — so "newest row
+        // wins" would lock out anyone typing the password of their other
+        // enrolment. Match the password against each of the person's own rows
+        // and sign them in as whichever one it belongs to; newest first, so a
+        // student who reused a password lands on their current course.
+        Admission admission = candidates.stream()
+                .filter(candidate -> password.equals(candidate.getPassword()))
+                .findFirst()
+                .orElse(null);
+
+        if (admission == null) {
+            loginAuditDao.logFailure(candidates.get(0).getRegistrationNo(), email,
+                    "Not Loged In - Invalid Password");
             throw new AuthException("Invalid password. Please check your password and try again.");
         }
+        String regNo = admission.getRegistrationNo();
 
         boolean validRegistration = admissionRepository.countValidRegistration(email, password) > 0
                 || admissionRepository.countOnResumeValid(email, password) > 0;

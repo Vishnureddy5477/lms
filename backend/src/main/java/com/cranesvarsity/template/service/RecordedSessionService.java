@@ -36,7 +36,9 @@ public class RecordedSessionService {
             result.add(new RecordedSessionItem(slNo++, row.batch(), row.subject(), row.recordedLink(), row.linkDate(), "Available"));
         }
 
-        Admission admission = admissionRepository.findActiveByEmail(student.email()).orElse(null);
+        // By registration number: the JWT names the exact admission, and an
+        // email can own more than one (a lookup by email throws outright).
+        Admission admission = admissionRepository.findById(student.regNo()).orElse(null);
         if (admission != null && JAVA_COURSE.equalsIgnoreCase(admission.getCourse())) {
             result.add(new RecordedSessionItem(slNo++, student.batch(), "Java SE 9 - Path Setting",
                     "https://cranesawsfile.s3.us-east-2.amazonaws.com/javarecordedvidoe/Day2_2021-07-14.mp4",

@@ -40,7 +40,11 @@ public class ChangePasswordService {
             return "same_password";
         }
 
-        Optional<Admission> maybeAdmission = admissionRepository.findActiveByEmail(student.email());
+        // By registration number, not email: the JWT already names the exact
+        // admission this student signed in as, and an email can own several.
+        // Looking it up by email would compare the old password against — and
+        // then change the password of — whichever row happened to come back.
+        Optional<Admission> maybeAdmission = admissionRepository.findById(student.regNo());
         if (maybeAdmission.isEmpty()) {
             return "user_not_found";
         }

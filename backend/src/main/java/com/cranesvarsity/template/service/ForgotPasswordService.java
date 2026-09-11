@@ -53,7 +53,12 @@ public class ForgotPasswordService {
         }
         String trimmedEmail = email.trim();
 
-        Admission admission = admissionRepository.findActiveByEmail(trimmedEmail)
+        // Only needed to confirm the address exists and to greet them by name,
+        // so the newest of their admissions will do. The reset itself is keyed
+        // on email and updates every row, which also leaves a student with
+        // several enrolments holding one password across all of them.
+        Admission admission = admissionRepository.findAllActiveByEmail(trimmedEmail).stream()
+                .findFirst()
                 .orElseThrow(() -> new ForgotPasswordException("Email address not found in our records"));
 
         String otp = String.valueOf(100000 + new Random().nextInt(900000));
