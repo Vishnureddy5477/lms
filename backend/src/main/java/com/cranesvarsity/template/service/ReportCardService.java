@@ -37,17 +37,15 @@ import java.util.Set;
  *
  * Each module has five components with fixed weights — assignment 10, module
  * test 20, lab 25, theory 25, giving 80 — the same weights the Performance
- * Master Sheet uses. A component counts only if the BATCH conducted it. Where
- * it did, the mark counts, and a student with no mark row scores zero for it.
- * Where the batch never conducted it, the component is absent from both sides
- * of the total, so nobody is marked out of work that was never set.
+ * Master Sheet uses. A row shows every component the BATCH conducted, so a
+ * module test a student sat and scored 19.5/20 on appears even while the
+ * module is unfinished.
  *
- * That is deliberately NOT the all-or-nothing rule the Performance Master
- * Sheet applies, which drops a module entirely until all four components have
- * run. On a report card the student can see, a module test they sat and scored
- * 19.5/20 on has to appear. Chosen on 2026-10-28 over the stricter rule,
- * knowing it lowers the headline percentage for students whose trainers have
- * not finished entering marks.
+ * The FINAL GRADE is narrower: a module enters it only once its MCQ, theory
+ * and lab have all been conducted, and is then marked out of the full 80, a
+ * missing assignment scoring zero. Partly examined modules are listed but not
+ * graded. This is the rule the signed-off card format (2026-10-28) is computed
+ * by — for a student with five such modules it reads 260 / 400 / 65%.
  *
  * Marks themselves are read exactly as the Performance Master Sheet reads
  * them: keyed on a lower-cased module name, newest row per module, and not
@@ -138,7 +136,16 @@ public class ReportCardService {
             MarkComponent assignment =
                     MarkComponent.of(assignmentConducted.contains(key), ASSIGNMENT_MAX, assignmentMarks.get(key));
 
-            running.add(mcq, theory, lab, assignment, MarkComponent.NOT_CONDUCTED);
+            // The final grade counts a module only once its MCQ, theory and lab
+            // have all been held, and then marks it out of the full 80 — a
+            // missing assignment scores zero rather than shrinking the total.
+            // This is the rule the signed-off card format is computed by.
+            if (mcq.conducted() && theory.conducted() && lab.conducted()) {
+                MarkComponent gradedAssignment = assignment.conducted()
+                        ? assignment
+                        : MarkComponent.of(true, ASSIGNMENT_MAX, null);
+                running.add(mcq, theory, lab, gradedAssignment, MarkComponent.NOT_CONDUCTED);
+            }
 
             BigDecimal max = sumMax(mcq, theory, lab, assignment);
             BigDecimal obtained = sumObtained(mcq, theory, lab, assignment);
@@ -158,9 +165,8 @@ public class ReportCardService {
             MarkComponent project =
                     MarkComponent.of(true, weight, mark == null ? null : mark.obtained());
 
-            running.add(MarkComponent.NOT_CONDUCTED, MarkComponent.NOT_CONDUCTED,
-                    MarkComponent.NOT_CONDUCTED, MarkComponent.NOT_CONDUCTED, project);
-
+            // Listed on the card but outside the final grade, which the card
+            // format computes from module marks alone.
             rows.add(new ModuleMarksRow(++sNo, projectLabel(slot, mark),
                     MarkComponent.NOT_CONDUCTED, MarkComponent.NOT_CONDUCTED,
                     MarkComponent.NOT_CONDUCTED, MarkComponent.NOT_CONDUCTED,

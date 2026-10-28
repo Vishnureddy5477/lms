@@ -1,178 +1,95 @@
-<div class="report-card-container bg-white p-3 border rounded shadow-sm">
+<div class="report-card-container bg-white p-4 border rounded shadow-sm">
 
-  <!-- COMPANY HEADER -->
-  <div class="text-center mb-3">
-    <h5 class="fw-bold text-navy mb-0">Cranes Varsity Private Limited</h5>
-  </div>
-
-  <!-- STUDENT INFO HEADER BOXES -->
-  <div class="row text-center mb-3 g-2">
-    <div class="col-md-3">
-      <div class="info-box p-2 rounded">
-        <span class="info-label d-block text-muted">STUDENT REGISTRATION NUMBER</span>
-        <strong class="info-value text-navy">{{ student.studentRegistrationNo }}</strong>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="info-box p-2 rounded">
-        <span class="info-label d-block text-muted">STUDENT NAME</span>
-        <strong class="info-value text-navy">{{ student.studentName }}</strong>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="info-box p-2 rounded">
-        <span class="info-label d-block text-muted">PROGRAM</span>
-        <strong class="info-value text-navy">{{ student.program }}</strong>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="info-box p-2 rounded">
-        <span class="info-label d-block text-muted">BATCH</span>
-        <strong class="info-value text-navy">{{ batch || '-' }}</strong>
-      </div>
-    </div>
-  </div>
-
-  @if (loading) {
-    <app-skeleton variant="table" [rows]="5" [columns]="8" ariaLabel="Loading your marks" />
-  }
-
-  @if (!loading && modules.length === 0) {
-    <div class="alert alert-info text-center">No marks records found for your account yet.</div>
-  }
-
-  <!-- MARKS BREAKDOWN TABLE -->
-  @if (!loading && modules.length > 0) {
-  <div class="table-responsive mb-3">
-    <table class="table table-bordered align-middle text-center mark-table mb-0">
-      <thead>
-        <tr>
-          <th>S.No</th>
-          <th>Module Name</th>
-          <th>MCQ Max Marks</th>
-          <th>MCQ Obtained Marks</th>
-          <th>Theory Max Marks</th>
-          <th>Theory Obtained Marks</th>
-          <th>Lab Max Marks</th>
-          <th>Lab Obtained Marks</th>
-          <th>Assignment Max Marks</th>
-          <th>Assignment Obtained Marks</th>
-          <th>Projects Max Marks</th>
-          <th>Projects Obtained Marks</th>
-          <th>Total Max Marks</th>
-          <th>Total Obtained Marks</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (mod of modules; track mod.sNo) {
-          <tr [class.row-pending]="!mod.scored">
-            <td>{{ mod.sNo }}</td>
-            <td class="text-start fw-medium">{{ mod.moduleName }}</td>
-
-            <td>{{ cellMax(mod.mcq) }}</td>
-            <td [class.awaiting]="awaitingMark(mod.mcq)">{{ cell(mod.mcq) }}</td>
-
-            <td>{{ cellMax(mod.theory) }}</td>
-            <td [class.awaiting]="awaitingMark(mod.theory)">{{ cell(mod.theory) }}</td>
-
-            <td>{{ cellMax(mod.lab) }}</td>
-            <td [class.awaiting]="awaitingMark(mod.lab)">{{ cell(mod.lab) }}</td>
-
-            <td>{{ cellMax(mod.assignment) }}</td>
-            <td [class.awaiting]="awaitingMark(mod.assignment)">{{ cell(mod.assignment) }}</td>
-
-            <td>{{ cellMax(mod.project) }}</td>
-            <td [class.awaiting]="awaitingMark(mod.project)">{{ cell(mod.project) }}</td>
-
-            @if (mod.scored) {
-              <td class="fw-bold">{{ show(mod.totalMax) }}</td>
-              <td class="fw-bold">{{ show(mod.totalObtained) }}</td>
-            } @else {
-              <td colspan="2" class="text-muted fst-italic small">Not yet conducted</td>
-            }
-          </tr>
-        }
-      </tbody>
-      <tfoot>
-        @if (totals) {
-        <tr class="fw-bold bg-light">
-          <td colspan="2" class="text-end">Total</td>
-          <td>{{ show(totals.mcqMax) }}</td>
-          <td>{{ show(totals.mcqObtained) }}</td>
-          <td>{{ show(totals.theoryMax) }}</td>
-          <td>{{ show(totals.theoryObtained) }}</td>
-          <td>{{ show(totals.labMax) }}</td>
-          <td>{{ show(totals.labObtained) }}</td>
-          <td>{{ show(totals.assignmentMax) }}</td>
-          <td>{{ show(totals.assignmentObtained) }}</td>
-          <td>{{ show(totals.projectMax) }}</td>
-          <td>{{ show(totals.projectObtained) }}</td>
-          <td class="text-primary">{{ show(totals.totalMax) }}</td>
-          <td class="text-primary">{{ show(totals.totalObtained) }}</td>
-        </tr>
-        }
-      </tfoot>
-    </table>
-  </div>
-
-  <p class="text-muted fs-8 mb-3">
-    A dash means the batch has not conducted that test yet, so it counts towards neither
-    the marks obtained nor the maximum. A highlighted zero means the test was conducted
-    but no mark has been recorded for you yet.
-  </p>
-  }
-
-  <!-- FINAL GRADE -->
-  <div class="text-center my-3">
-    <h6 class="fw-bold text-dark">
-      FINAL GRADE : <span class="text-navy">{{ finalGrade }}</span>
-      @if (totals?.percentage !== null && totals?.percentage !== undefined) {
-        <span class="text-muted fw-normal fs-8 ms-2">({{ totals!.percentage }}%)</span>
+  <div class="d-flex justify-content-end mb-2">
+    <button type="button" class="btn btn-download btn-sm px-3"
+            [disabled]="loading || modules.length === 0 || downloading"
+            (click)="downloadPdf()">
+      @if (downloading) {
+        <span class="spinner-border spinner-border-sm me-2"></span> Preparing PDF…
+      } @else {
+        <i class="bi bi-download me-2"></i> Download PDF
       }
-    </h6>
+    </button>
   </div>
+  @if (downloadError) {
+    <div class="alert alert-danger py-2 small">{{ downloadError }}</div>
+  }
 
-  <!-- GRADING SYSTEM LEGEND -->
-  <div class="mb-4">
-    <h6 class="text-center text-navy fw-bold fs-7 mb-2">Grading System</h6>
-    <div class="table-responsive">
-      <table class="table table-bordered text-center align-middle grading-table mb-0">
-        <thead>
-          <tr class="bg-light">
-            @for (item of gradingSystem; track item.grade) {
-              <th class="fw-bold text-navy fs-8">{{ item.grade }}</th>
+  <div class="card-sheet">
+
+    <div class="text-center mb-4">
+      <img [src]="logoUrl" alt="Cranes Varsity — Where Technology Meets Excellence" class="card-logo">
+    </div>
+
+    <div class="d-flex justify-content-between flex-wrap gap-2 fw-bold info-line mb-2">
+      <span>Registration No: {{ student.studentRegistrationNo }}</span>
+      <span>Name : {{ student.studentName }}</span>
+    </div>
+    <div class="text-center fw-bold info-line mb-3">
+      Certification In : {{ student.program }}
+    </div>
+
+    @if (loading) {
+      <app-skeleton variant="table" [rows]="6" [columns]="7" ariaLabel="Loading your marks" />
+    }
+
+    @if (!loading && modules.length === 0) {
+      <div class="alert alert-info text-center">No marks records found for your account yet.</div>
+    }
+
+    @if (!loading && modules.length > 0) {
+      <div class="table-responsive mb-4">
+        <table class="mark-table">
+          <thead>
+            <tr>
+              <th class="col-sl">SL NO</th>
+              <th class="col-module">Module Name</th>
+              <th>MCQ<br>Marks 20</th>
+              <th>Theory<br>Marks 25</th>
+              <th>Lab Max<br>Marks 25</th>
+              <th>Assignments</th>
+              <th>Total<br>Obtained<br>Marks</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of modules; track row.sNo) {
+              <tr>
+                <td>{{ row.sNo }}</td>
+                <td>{{ row.moduleName }}</td>
+                <td>{{ cell(row.mcq) }}</td>
+                <td>{{ cell(row.theory) }}</td>
+                <td>{{ cell(row.lab) }}</td>
+                <td>{{ cell(row.assignment) }}</td>
+                <td>{{ rowTotal(row) }}</td>
+              </tr>
             }
-          </tr>
-        </thead>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td></td>
+              <td>FINAL GRADE</td>
+              <td title="Marks obtained in graded modules">{{ footerObtained }}</td>
+              <td title="Maximum marks of graded modules">{{ footerMax }}</td>
+              <td title="Percentage">{{ footerPercentage }}</td>
+              <td class="text-end">Grade</td>
+              <td>{{ footerGrade }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <table class="grading-table">
         <tbody>
-          <tr>
-            @for (item of gradingSystem; track item.criteria) {
-              <td class="fs-8 text-secondary">{{ item.criteria }}</td>
-            }
-          </tr>
+          @for (gradeRow of gradingRows; track $index) {
+            <tr>
+              @for (band of gradeRow; track band) {
+                <td>{{ band }}</td>
+              }
+            </tr>
+          }
         </tbody>
       </table>
-    </div>
+    }
+
   </div>
-
-  <!-- SIGNATURE FOOTER -->
-  <div class="d-flex justify-content-between align-items-center pt-3 px-3">
-    <div class="signature-box text-center">
-      <div class="signature-line mb-1"></div>
-      <span class="fw-bold fs-8 text-navy d-block">Vice President</span>
-      <span class="text-muted fs-8">signature &amp; stamp</span>
-    </div>
-
-    <div class="signature-box text-center">
-      <div class="signature-line mb-1"></div>
-      <span class="fw-bold fs-8 text-navy d-block">Program Manager</span>
-      <span class="text-muted fs-8">signature &amp; stamp</span>
-    </div>
-  </div>
-
-  <!-- COPYRIGHT FOOTER -->
-  <div class="text-center mt-3 border-top pt-2">
-    <small class="text-muted fs-8">Copyright &copy; Designed &amp; Developed by Cranes Varsity - CRM Team 2026</small>
-  </div>
-
 </div>
