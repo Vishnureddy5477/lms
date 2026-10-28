@@ -1,15 +1,18 @@
 package com.cranesvarsity.template.dao;
 
-import com.cranesvarsity.template.dto.MarksPair;
 import com.cranesvarsity.template.dto.SkillTrackerMarksRow;
+import com.cranesvarsity.template.util.Marks;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-/** Raw SQL against "manage_theory_marks" (schema cranescrm) — copied from mark-card.jsp. */
+/** Raw SQL against "manage_theory_marks" (schema cranescrm). */
 @Repository
 public class ManageTheoryMarksDao {
 
@@ -19,40 +22,44 @@ public class ManageTheoryMarksDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public MarksPair getMarks(String regNo, String moduleName) {
-        String sql = "SELECT total_marks, obtained_marks FROM manage_theory_marks " +
-                "WHERE registration_no = ? AND theory_module = ?";
-        List<MarksPair> rows = jdbcTemplate.query(sql,
-                (rs, rowNum) -> new MarksPair(rs.getInt("total_marks"), rs.getInt("obtained_marks")),
-                regNo, moduleName);
-        return rows.isEmpty() ? MarksPair.ZERO : rows.get(0);
+    /** Modules this batch has conducted a theory test for, for any student. */
+    public Set<String> modulesConductedForBatch(String batch) {
+        String sql = "SELECT DISTINCT TRIM(theory_module) AS m FROM manage_theory_marks WHERE TRIM(batch) = ?";
+        Set<String> out = new HashSet<>();
+        jdbcTemplate.query(sql, rs -> {
+            String k = Marks.key(rs.getString("m"));
+            if (!k.isEmpty()) {
+                out.add(k);
+            }
+        }, batch);
+        return out;
     }
 
     /**
-     * Every module's theory marks in ONE query, for the Report Card.
+     * This student's theory mark per module — newest row wins.
      *
-     * Replaces calling {@link #getMarks} once per module. The report card ran
-     * five such calls inside a loop over the student's modules — 26 queries for
-     * an average student, 132 for the worst — and this backend is ~309ms from
-     * its database, so that loop cost 8-41 seconds of pure round trips.
+     * 292 student/module pairs here have duplicate rows with DIFFERENT marks.
+     * The report card used to take whichever row MySQL happened to return
+     * first, with no ORDER BY, so the mark shown could change between page
+     * loads. ORDER BY id DESC + putIfAbsent takes the newest, which is what the
+     * Performance Master Sheet does and what a re-entered mark is meant to be.
      *
-     * putIfAbsent reproduces {@code rows.get(0)} exactly: the per-module query
-     * takes the first row it is handed, and adding a WHERE filter removes rows
-     * without reordering them, so the first row for a module is the same either
-     * way. That matters — 292 student/module pairs here have duplicate rows
-     * with DIFFERENT marks, so picking a different one would change what a
-     * student sees.
+     * Not filtered by batch, also matching the Performance Master Sheet: a
+     * student who sat a module under an earlier batch number still earned that
+     * mark, and whether the module counts is decided by the batch's conducted
+     * set, not by where the mark happens to be filed.
      */
-    public Map<String, MarksPair> getMarksByModule(String regNo) {
-        String sql = "SELECT theory_module, total_marks, obtained_marks FROM manage_theory_marks " +
-                "WHERE registration_no = ?";
-
-        Map<String, MarksPair> byModule = new HashMap<>();
+    public Map<String, BigDecimal> latestObtainedByModule(String regNo) {
+        String sql = "SELECT TRIM(theory_module) AS m, obtained_marks AS o FROM manage_theory_marks " +
+                "WHERE TRIM(registration_no) = ? ORDER BY id DESC";
+        Map<String, BigDecimal> out = new HashMap<>();
         jdbcTemplate.query(sql, rs -> {
-            byModule.putIfAbsent(rs.getString("theory_module"),
-                    new MarksPair(rs.getInt("total_marks"), rs.getInt("obtained_marks")));
+            String k = Marks.key(rs.getString("m"));
+            if (!k.isEmpty()) {
+                out.putIfAbsent(k, Marks.value(rs.getString("o")));
+            }
         }, regNo);
-        return byModule;
+        return out;
     }
 
     /** Every module — for the Skill Tracker's Theory Results tab. Copied faithfully from student-performance.jsp. */

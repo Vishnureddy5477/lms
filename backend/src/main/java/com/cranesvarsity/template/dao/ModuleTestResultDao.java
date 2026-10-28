@@ -1,15 +1,17 @@
 package com.cranesvarsity.template.dao;
 
-import com.cranesvarsity.template.dto.MarksPair;
 import com.cranesvarsity.template.dto.McqPerformanceItem;
 import com.cranesvarsity.template.dto.SkillTrackerMcqRow;
+import com.cranesvarsity.template.util.Marks;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Raw SQL against "exam_system.moduletestresult" — a different legacy schema
@@ -54,62 +56,87 @@ public class ModuleTestResultDao {
     }
 
     /**
-     * Report-card MCQ marks for one module — copied faithfully from mark-card.jsp: "total" is
-     * whichever row is seen LAST while iterating (not deduped/maxed, just overwritten each loop),
-     * "obtained" is the average across all matching rows (no_of_test IN (1,2)), integer division.
-     */
-    public MarksPair getReportCardMarks(String regNo, String moduleName) {
-        String sql = "SELECT total, obtained FROM exam_system.moduletestresult " +
-                "WHERE reg = ? AND module = ? AND no_of_test IN (1,2)";
-
-        List<int[]> rows = jdbcTemplate.query(sql,
-                (rs, rowNum) -> new int[]{rs.getInt("total"), rs.getInt("obtained")}, regNo, moduleName);
-
-        if (rows.isEmpty()) {
-            return MarksPair.ZERO;
-        }
-
-        int total = rows.get(rows.size() - 1)[0];
-        int obtainedSum = rows.stream().mapToInt(r -> r[1]).sum();
-        int obtainedAverage = obtainedSum / rows.size();
-
-        return new MarksPair(total, obtainedAverage);
-    }
-
-    /**
-     * Report-card MCQ marks for EVERY module in one query.
+     * Report-card MCQ mark per module — newest attempt, Module Test 1 preferred.
      *
-     * Reproduces {@link #getReportCardMarks} exactly, module by module, rather
-     * than being called once per module inside a loop:
-     *   - "total" is whichever row is seen LAST while iterating (mark-card.jsp
-     *     overwrote it each pass rather than picking a max), which is why the
-     *     accumulator assigns it unconditionally instead of comparing.
-     *   - "obtained" is the INTEGER average across matching rows.
-     *   - rs.getInt() is used on both columns, matching the original's narrowing
-     *     of these FLOAT columns before the arithmetic.
+     * What this replaces was the single biggest source of wrong marks on the
+     * page: it summed every matching row and divided by the row count, giving
+     * the MEAN of Module Test 1, Module Test 2 and every retake, truncated by
+     * integer division. A student who failed at 5 and passed the retake at 18
+     * read as 11. Here the highest attempt number wins — a retake supersedes
+     * what it replaced — and within that attempt Test 1 is the report-card
+     * mark, with Test 2 standing in only where Test 1 was never recorded. Same
+     * rule as the Performance Master Sheet.
      *
-     * Row order is load-bearing here: 555 student/module pairs have duplicate
-     * rows with different totals, so "last row" must stay the last row the
-     * engine returns. Adding a WHERE filter removes rows without reordering
-     * them, so the broad query preserves it.
+     * Placement and Aptitude tests live in this table too and are not module
+     * marks, so they are excluded.
      */
-    public Map<String, MarksPair> getReportCardMarksByModule(String regNo) {
-        String sql = "SELECT module, total, obtained FROM exam_system.moduletestresult " +
-                "WHERE reg = ? AND no_of_test IN (1,2)";
+    public Map<String, BigDecimal> reportCardMarksByModule(String regNo) {
+        String sql = "SELECT TRIM(module) AS m, no_of_test, obtained AS o, attempt " +
+                "FROM exam_system.moduletestresult " +
+                "WHERE TRIM(reg) = ? AND no_of_test IN ('1','2') " +
+                "  AND module NOT LIKE '%Placement%' AND module NOT LIKE '%Aptitude%'";
 
-        // module -> [lastTotal, sumOfObtained, rowCount]
-        Map<String, int[]> acc = new LinkedHashMap<>();
+        Map<String, Attempt> best = new HashMap<>();
         jdbcTemplate.query(sql, rs -> {
-            int[] a = acc.computeIfAbsent(rs.getString("module"), k -> new int[3]);
-            a[0] = rs.getInt("total");        // last row wins, as in the original
-            a[1] += rs.getInt("obtained");
-            a[2] += 1;
+            String k = Marks.key(rs.getString("m"));
+            if (k.isEmpty()) {
+                return;
+            }
+            int attempt = rs.getInt("attempt");
+            Attempt slot = best.computeIfAbsent(k, x -> new Attempt());
+            if (attempt > slot.attempt) {
+                slot.attempt = attempt;
+                slot.test1 = null;
+                slot.test2 = null;
+            }
+            if (attempt != slot.attempt) {
+                return;
+            }
+            BigDecimal mark = Marks.value(rs.getString("o"));
+            if ("1".equals(trimmed(rs.getString("no_of_test")))) {
+                slot.test1 = mark;
+            } else {
+                slot.test2 = mark;
+            }
         }, regNo);
 
-        Map<String, MarksPair> out = new HashMap<>();
-        acc.forEach((module, a) -> out.put(module, new MarksPair(a[0], a[1] / a[2])));
+        Map<String, BigDecimal> out = new HashMap<>();
+        best.forEach((module, slot) -> out.put(module, slot.mark()));
         return out;
     }
+
+    /** Modules this batch has conducted a module test for, for any student. */
+    public Set<String> modulesConductedForBatch(String batch) {
+        String sql = "SELECT DISTINCT TRIM(module) AS m FROM exam_system.moduletestresult " +
+                "WHERE TRIM(batchno) = ? AND no_of_test IN ('1','2')";
+        Set<String> out = new HashSet<>();
+        jdbcTemplate.query(sql, rs -> {
+            String k = Marks.key(rs.getString("m"));
+            if (!k.isEmpty()) {
+                out.add(k);
+            }
+        }, batch);
+        return out;
+    }
+
+    private static String trimmed(String v) {
+        return v == null ? "" : v.trim();
+    }
+
+    /** Mutable accumulator for the newest attempt's two test slots. */
+    private static final class Attempt {
+        private int attempt = -1;
+        private BigDecimal test1;
+        private BigDecimal test2;
+
+        private BigDecimal mark() {
+            if (test1 != null) {
+                return test1;
+            }
+            return test2 != null ? test2 : BigDecimal.ZERO;
+        }
+    }
+
 
     /** Every attempt, every module — for the Skill Tracker's MCQ Results tab. Copied faithfully from student-performance.jsp. */
     public List<SkillTrackerMcqRow> findAllByRegNo(String regNo) {

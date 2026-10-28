@@ -1,25 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DashboardService } from '../../../services/dashboard.service';
-import { ReportCardService } from '../../../services/report-card.service';
+import {
+  MarkComponent as Mark,
+  MarkTotals,
+  ModuleMarksRow,
+  ReportCardService,
+} from '../../../services/report-card.service';
 import { SkeletonComponent } from '../../../shared/skeleton/skeleton.component';
-
-export interface ModuleMark {
-  sNo: number;
-  moduleName: string;
-  mcqMaxMarks: number;
-  mcqObtainedMarks: number;
-  theoryMaxMarks: number;
-  theoryObtainedMarks: number;
-  labMaxMarks: number;
-  labObtainedMarks: number;
-  assignmentMaxMarks: number;
-  assignmentObtainedMarks: number;
-  projectMaxMarks: number;
-  projectObtainedMarks: number;
-  totalMaxMarks: number;
-  totalObtainedMarks: number;
-}
 
 export interface StudentDetails {
   studentRegistrationNo: string;
@@ -42,13 +30,13 @@ export class ReportCardComponent implements OnInit {
     program: ''
   };
 
-  // Left blank/unset — grading here is manual/offline in the legacy system too, not computed.
-  finalGrade = '-----------';
-
-  modules: ModuleMark[] = [];
+  batch = '';
+  modules: ModuleMarksRow[] = [];
+  totals: MarkTotals | null = null;
   loading = true;
 
-  // Matches the legacy mark-card.jsp grading table exactly.
+  // Matches the grading table printed below the marks, and the bands the
+  // backend grades against. Changing one means changing all three.
   gradingSystem = [
     { grade: 'A+ (Excellent)', criteria: '90% and above' },
     { grade: 'A (Good)', criteria: '80% to 89%' },
@@ -71,22 +59,9 @@ export class ReportCardComponent implements OnInit {
     this.reportCardService.getReportCard().subscribe({
       next: (reportCard) => {
         this.student.program = reportCard.course;
-        this.modules = reportCard.modules.map((m, i) => ({
-          sNo: i + 1,
-          moduleName: m.moduleName,
-          mcqMaxMarks: m.mcqMax,
-          mcqObtainedMarks: m.mcqObtained,
-          theoryMaxMarks: m.theoryMax,
-          theoryObtainedMarks: m.theoryObtained,
-          labMaxMarks: m.labMax,
-          labObtainedMarks: m.labObtained,
-          assignmentMaxMarks: m.assignmentMax,
-          assignmentObtainedMarks: m.assignmentObtained,
-          projectMaxMarks: m.projectMax,
-          projectObtainedMarks: m.projectObtained,
-          totalMaxMarks: m.totalMax,
-          totalObtainedMarks: m.totalObtained,
-        }));
+        this.batch = reportCard.batch;
+        this.modules = reportCard.modules;
+        this.totals = reportCard.totals;
         this.loading = false;
       },
       error: () => {
@@ -95,18 +70,34 @@ export class ReportCardComponent implements OnInit {
     });
   }
 
-  // Getters to compute totals across all modules
-  get totalMcqMaxMarks(): number { return this.modules.reduce((sum, m) => sum + m.mcqMaxMarks, 0); }
-  get totalMcqObtainedMarks(): number { return this.modules.reduce((sum, m) => sum + m.mcqObtainedMarks, 0); }
-  get totalTheoryMaxMarks(): number { return this.modules.reduce((sum, m) => sum + m.theoryMaxMarks, 0); }
-  get totalTheoryObtainedMarks(): number { return this.modules.reduce((sum, m) => sum + m.theoryObtainedMarks, 0); }
-  get totalLabMaxMarks(): number { return this.modules.reduce((sum, m) => sum + m.labMaxMarks, 0); }
-  get totalLabObtainedMarks(): number { return this.modules.reduce((sum, m) => sum + m.labObtainedMarks, 0); }
-  get totalAssignmentMaxMarks(): number { return this.modules.reduce((sum, m) => sum + m.assignmentMaxMarks, 0); }
-  get totalAssignmentObtainedMarks(): number { return this.modules.reduce((sum, m) => sum + m.assignmentObtainedMarks, 0); }
-  get totalProjectMaxMarks(): number { return this.modules.reduce((sum, m) => sum + m.projectMaxMarks, 0); }
-  get totalProjectObtainedMarks(): number { return this.modules.reduce((sum, m) => sum + m.projectObtainedMarks, 0); }
-  get grandTotalMaxMarks(): number { return this.modules.reduce((sum, m) => sum + m.totalMaxMarks, 0); }
-  get grandTotalObtainedMarks(): number { return this.modules.reduce((sum, m) => sum + m.totalObtainedMarks, 0); }
+  /** Grade comes from the backend so one set of bands decides it. */
+  get finalGrade(): string {
+    return this.totals?.grade ?? '-----------';
+  }
 
+  /** A component the batch never conducted prints as a dash, never as 0. */
+  cell(mark: Mark): string {
+    return mark.conducted ? this.show(mark.obtained) : '—';
+  }
+
+  cellMax(mark: Mark): string {
+    return mark.conducted ? this.show(mark.max) : '—';
+  }
+
+  /**
+   * True where the batch set the work but no mark has been entered for this
+   * student. It scores zero, so the page says why rather than leaving them to
+   * assume they failed it.
+   */
+  awaitingMark(mark: Mark): boolean {
+    return mark.conducted && !mark.recorded;
+  }
+
+  /** Marks carry half points; trailing zeros are noise on a printed card. */
+  show(value: number | null): string {
+    if (value === null || value === undefined) {
+      return '—';
+    }
+    return String(Number(value));
+  }
 }

@@ -1,30 +1,47 @@
 package com.cranesvarsity.template.dao;
 
-import com.cranesvarsity.template.dto.MarksPair;
 import com.cranesvarsity.template.dto.ProjectItem;
 import com.cranesvarsity.template.dto.SkillTrackerMarksRow;
+import com.cranesvarsity.template.util.Marks;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Raw SQL against "cranescrm.manage_project_marks" — this single table backs
- * two different student-facing features: the Report Card's per-module
- * project marks (getMarks, copied from mark-card.jsp) and the Upload
- * Projects page's document upload/listing (everything else here, copied
- * from UploadProjectDocument.jsp / GetStudentProjects.jsp). The ORDER BY
- * FIELD() list in findByRegNoAndBatch is copied verbatim, including its gap
- * (legacy's list omits "Specialization" — rows with that project_type sort
- * first, ahead of everything else, since FIELD() returns 0 for unlisted
- * values and MySQL sorts 0 before 1/2/3/4 ascending). Not "fixing" this
- * since it's existing production sort behavior, not a bug affecting data.
+ * two different student-facing features: the Report Card's project marks and
+ * the Upload Projects page's document upload/listing (everything below
+ * findExistingLink, copied from UploadProjectDocument.jsp /
+ * GetStudentProjects.jsp). The ORDER BY FIELD() list in findByRegNoAndBatch is
+ * copied verbatim, including its gap (legacy's list omits "Specialization" —
+ * rows with that project_type sort first, ahead of everything else, since
+ * FIELD() returns 0 for unlisted values and MySQL sorts 0 before 1/2/3/4
+ * ascending). Not "fixing" this since it's existing production sort behavior,
+ * not a bug affecting data.
+ *
+ * WHY PROJECTS ARE KEYED BY TYPE, NOT BY MODULE
+ *
+ * The report card used to look projects up by project_module against the
+ * training module list, which could never match: project_module holds a
+ * project CATEGORY — "Cranes Programming Project", "Cranes Hardware Project",
+ * "Specialization", "College Project", "Other Project/Internship" — not a
+ * module name. That is why the Projects column read 0/0 for every student.
+ * Projects belong to the batch as a whole and are weighted by project_type,
+ * exactly as the Performance Master Sheet scores them.
  */
 @Repository
 public class ManageProjectMarksDao {
+
+    /** Project 1 and 2 are worth 25 each, Project 3 is worth 50. Same weights as the Performance Master Sheet. */
+    public static final Map<Integer, BigDecimal> SLOT_WEIGHTS = Map.of(
+            1, new BigDecimal("25"), 2, new BigDecimal("25"), 3, new BigDecimal("50"));
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -32,33 +49,57 @@ public class ManageProjectMarksDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public MarksPair getMarks(String regNo, String moduleName) {
-        String sql = "SELECT total_marks, obtained_marks FROM manage_project_marks " +
-                "WHERE registration_no = ? AND project_module = ?";
-        List<MarksPair> rows = jdbcTemplate.query(sql,
-                (rs, rowNum) -> new MarksPair(rs.getInt("total_marks"), rs.getInt("obtained_marks")),
-                regNo, moduleName);
-        return rows.isEmpty() ? MarksPair.ZERO : rows.get(0);
+    /** One scored project: its category label and the student's mark. */
+    public record ProjectMark(String label, BigDecimal obtained) {
     }
 
     /**
-     * Every module's project marks in ONE query, for the Report Card.
-     *
-     * Replaces calling {@link #getMarks} once per module inside a loop. See
-     * ManageTheoryMarksDao#getMarksByModule for why putIfAbsent reproduces the
-     * per-module {@code rows.get(0)} behaviour exactly.
+     * project_type is free text ("Project 1", "Project 2", ...). Classified by
+     * digit, as the Performance Master Sheet does. Project 4 and 5 exist in the
+     * data and do not score, so they return null.
      */
-    public Map<String, MarksPair> getMarksByModule(String regNo) {
-        String sql = "SELECT project_module, total_marks, obtained_marks FROM manage_project_marks " +
-                "WHERE registration_no = ?";
-
-        Map<String, MarksPair> byModule = new HashMap<>();
-        jdbcTemplate.query(sql, rs -> {
-            byModule.putIfAbsent(rs.getString("project_module"),
-                    new MarksPair(rs.getInt("total_marks"), rs.getInt("obtained_marks")));
-        }, regNo);
-        return byModule;
+    public static Integer slotOf(String projectType) {
+        String s = projectType == null ? "" : projectType;
+        if (s.contains("1")) {
+            return 1;
+        }
+        if (s.contains("2")) {
+            return 2;
+        }
+        if (s.contains("3")) {
+            return 3;
+        }
+        return null;
     }
+
+    /** Which project slots this batch ran, for any student. */
+    public Set<Integer> slotsConductedForBatch(String batch) {
+        String sql = "SELECT DISTINCT project_type FROM manage_project_marks WHERE TRIM(batch) = ?";
+        Set<Integer> out = new HashSet<>();
+        jdbcTemplate.query(sql, rs -> {
+            Integer slot = slotOf(rs.getString("project_type"));
+            if (slot != null) {
+                out.add(slot);
+            }
+        }, batch);
+        return out;
+    }
+
+    /** This student's project mark per slot — newest row wins. */
+    public Map<Integer, ProjectMark> latestObtainedBySlot(String regNo) {
+        String sql = "SELECT project_type, project_module, obtained_marks AS o FROM manage_project_marks " +
+                "WHERE TRIM(registration_no) = ? ORDER BY id DESC";
+        Map<Integer, ProjectMark> out = new HashMap<>();
+        jdbcTemplate.query(sql, rs -> {
+            Integer slot = slotOf(rs.getString("project_type"));
+            if (slot != null) {
+                out.putIfAbsent(slot, new ProjectMark(
+                        rs.getString("project_module"), Marks.value(rs.getString("o"))));
+            }
+        }, regNo);
+        return out;
+    }
+
 
     public Optional<String> findExistingLink(String regNo, String batch, String projectModule, String projectType) {
         String sql = "SELECT project_link FROM cranescrm.manage_project_marks " +

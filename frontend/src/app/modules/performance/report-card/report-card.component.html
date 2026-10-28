@@ -1,5 +1,5 @@
 <div class="report-card-container bg-white p-3 border rounded shadow-sm">
-  
+
   <!-- COMPANY HEADER -->
   <div class="text-center mb-3">
     <h5 class="fw-bold text-navy mb-0">Cranes Varsity Private Limited</h5>
@@ -7,22 +7,28 @@
 
   <!-- STUDENT INFO HEADER BOXES -->
   <div class="row text-center mb-3 g-2">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="info-box p-2 rounded">
         <span class="info-label d-block text-muted">STUDENT REGISTRATION NUMBER</span>
         <strong class="info-value text-navy">{{ student.studentRegistrationNo }}</strong>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="info-box p-2 rounded">
         <span class="info-label d-block text-muted">STUDENT NAME</span>
         <strong class="info-value text-navy">{{ student.studentName }}</strong>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="info-box p-2 rounded">
         <span class="info-label d-block text-muted">PROGRAM</span>
         <strong class="info-value text-navy">{{ student.program }}</strong>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="info-box p-2 rounded">
+        <span class="info-label d-block text-muted">BATCH</span>
+        <strong class="info-value text-navy">{{ batch || '-' }}</strong>
       </div>
     </div>
   </div>
@@ -59,48 +65,71 @@
       </thead>
       <tbody>
         @for (mod of modules; track mod.sNo) {
-          <tr>
+          <tr [class.row-pending]="!mod.scored">
             <td>{{ mod.sNo }}</td>
             <td class="text-start fw-medium">{{ mod.moduleName }}</td>
-            <td>{{ mod.mcqMaxMarks }}</td>
-            <td>{{ mod.mcqObtainedMarks }}</td>
-            <td>{{ mod.theoryMaxMarks }}</td>
-            <td>{{ mod.theoryObtainedMarks }}</td>
-            <td>{{ mod.labMaxMarks }}</td>
-            <td>{{ mod.labObtainedMarks }}</td>
-            <td>{{ mod.assignmentMaxMarks }}</td>
-            <td>{{ mod.assignmentObtainedMarks }}</td>
-            <td>{{ mod.projectMaxMarks }}</td>
-            <td>{{ mod.projectObtainedMarks }}</td>
-            <td class="fw-bold">{{ mod.totalMaxMarks }}</td>
-            <td class="fw-bold">{{ mod.totalObtainedMarks }}</td>
+
+            <td>{{ cellMax(mod.mcq) }}</td>
+            <td [class.awaiting]="awaitingMark(mod.mcq)">{{ cell(mod.mcq) }}</td>
+
+            <td>{{ cellMax(mod.theory) }}</td>
+            <td [class.awaiting]="awaitingMark(mod.theory)">{{ cell(mod.theory) }}</td>
+
+            <td>{{ cellMax(mod.lab) }}</td>
+            <td [class.awaiting]="awaitingMark(mod.lab)">{{ cell(mod.lab) }}</td>
+
+            <td>{{ cellMax(mod.assignment) }}</td>
+            <td [class.awaiting]="awaitingMark(mod.assignment)">{{ cell(mod.assignment) }}</td>
+
+            <td>{{ cellMax(mod.project) }}</td>
+            <td [class.awaiting]="awaitingMark(mod.project)">{{ cell(mod.project) }}</td>
+
+            @if (mod.scored) {
+              <td class="fw-bold">{{ show(mod.totalMax) }}</td>
+              <td class="fw-bold">{{ show(mod.totalObtained) }}</td>
+            } @else {
+              <td colspan="2" class="text-muted fst-italic small">Not yet conducted</td>
+            }
           </tr>
         }
       </tbody>
       <tfoot>
+        @if (totals) {
         <tr class="fw-bold bg-light">
           <td colspan="2" class="text-end">Total</td>
-          <td>{{ totalMcqMaxMarks }}</td>
-          <td>{{ totalMcqObtainedMarks }}</td>
-          <td>{{ totalTheoryMaxMarks }}</td>
-          <td>{{ totalTheoryObtainedMarks }}</td>
-          <td>{{ totalLabMaxMarks }}</td>
-          <td>{{ totalLabObtainedMarks }}</td>
-          <td>{{ totalAssignmentMaxMarks }}</td>
-          <td>{{ totalAssignmentObtainedMarks }}</td>
-          <td>{{ totalProjectMaxMarks }}</td>
-          <td>{{ totalProjectObtainedMarks }}</td>
-          <td class="text-primary">{{ grandTotalMaxMarks }}</td>
-          <td class="text-primary">{{ grandTotalObtainedMarks }}</td>
+          <td>{{ show(totals.mcqMax) }}</td>
+          <td>{{ show(totals.mcqObtained) }}</td>
+          <td>{{ show(totals.theoryMax) }}</td>
+          <td>{{ show(totals.theoryObtained) }}</td>
+          <td>{{ show(totals.labMax) }}</td>
+          <td>{{ show(totals.labObtained) }}</td>
+          <td>{{ show(totals.assignmentMax) }}</td>
+          <td>{{ show(totals.assignmentObtained) }}</td>
+          <td>{{ show(totals.projectMax) }}</td>
+          <td>{{ show(totals.projectObtained) }}</td>
+          <td class="text-primary">{{ show(totals.totalMax) }}</td>
+          <td class="text-primary">{{ show(totals.totalObtained) }}</td>
         </tr>
+        }
       </tfoot>
     </table>
   </div>
+
+  <p class="text-muted fs-8 mb-3">
+    A dash means the batch has not conducted that test yet, so it counts towards neither
+    the marks obtained nor the maximum. A highlighted zero means the test was conducted
+    but no mark has been recorded for you yet.
+  </p>
   }
 
   <!-- FINAL GRADE -->
   <div class="text-center my-3">
-    <h6 class="fw-bold text-dark">FINAL GRADE : <span class="text-navy">{{ finalGrade }}</span></h6>
+    <h6 class="fw-bold text-dark">
+      FINAL GRADE : <span class="text-navy">{{ finalGrade }}</span>
+      @if (totals?.percentage !== null && totals?.percentage !== undefined) {
+        <span class="text-muted fw-normal fs-8 ms-2">({{ totals!.percentage }}%)</span>
+      }
+    </h6>
   </div>
 
   <!-- GRADING SYSTEM LEGEND -->
@@ -131,19 +160,19 @@
     <div class="signature-box text-center">
       <div class="signature-line mb-1"></div>
       <span class="fw-bold fs-8 text-navy d-block">Vice President</span>
-      <span class="text-muted fs-8">signature & stamp</span>
+      <span class="text-muted fs-8">signature &amp; stamp</span>
     </div>
 
     <div class="signature-box text-center">
       <div class="signature-line mb-1"></div>
       <span class="fw-bold fs-8 text-navy d-block">Program Manager</span>
-      <span class="text-muted fs-8">signature & stamp</span>
+      <span class="text-muted fs-8">signature &amp; stamp</span>
     </div>
   </div>
 
   <!-- COPYRIGHT FOOTER -->
   <div class="text-center mt-3 border-top pt-2">
-    <small class="text-muted fs-8">Copyright © Designed & Developed by Cranes Varsity - CRM Team 2026</small>
+    <small class="text-muted fs-8">Copyright &copy; Designed &amp; Developed by Cranes Varsity - CRM Team 2026</small>
   </div>
 
 </div>

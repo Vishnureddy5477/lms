@@ -62,3 +62,17 @@
   border-bottom: 1px solid #cbd5e1;
   height: 30px;
 }
+/* A module the batch has not examined yet — present so the student can see the
+   whole syllabus, but visibly not part of the total. */
+.mark-table tr.row-pending td {
+  background-color: #f8fafc;
+  color: #94a3b8;
+}
+
+/* The test ran but no mark has been entered for this student. It scores zero,
+   so it is marked rather than left looking like an ordinary result. */
+.mark-table td.awaiting {
+  background-color: #fef3c7;
+  color: #92400e;
+  font-weight: 600;
+}
