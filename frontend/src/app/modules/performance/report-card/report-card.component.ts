@@ -16,6 +16,12 @@ export interface StudentDetails {
 }
 
 const LOGO_URL = 'assets/images/cranes-varsity-logo.png';
+
+/** The same signatories, and signatures, as the certificate of accomplishment. */
+const SIGNATORIES = [
+  { name: 'Arpita Mitra', title: 'Vice President', image: 'assets/images/signature-vp.png', ratio: 387 / 208 },
+  { name: 'Harsha G H', title: 'Program Manager', image: 'assets/images/signature-manager.png', ratio: 430 / 267 },
+];
 const HEADER_BLUE: [number, number, number] = [68, 114, 196];
 const DASH = '—';
 
@@ -29,6 +35,7 @@ const DASH = '—';
 export class ReportCardComponent implements OnInit {
 
   readonly logoUrl = LOGO_URL;
+  readonly signatories = SIGNATORIES;
 
   student: StudentDetails = {
     studentRegistrationNo: '',
@@ -119,10 +126,11 @@ export class ReportCardComponent implements OnInit {
     this.downloadError = '';
     try {
       // Loaded on demand so the PDF library only reaches students who use it.
-      const [{ jsPDF }, { default: autoTable }, logo] = await Promise.all([
+      const [{ jsPDF }, { default: autoTable }, logo, ...signatures] = await Promise.all([
         import('jspdf'),
         import('jspdf-autotable'),
-        this.loadLogo(),
+        this.loadImage(LOGO_URL),
+        ...SIGNATORIES.map(s => this.loadImage(s.image)),
       ]);
 
       const doc = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
@@ -184,6 +192,25 @@ export class ReportCardComponent implements OnInit {
         columnStyles: { 0: { cellWidth: 47.4 }, 1: { cellWidth: 61.8 }, 2: { cellWidth: 65.8 } },
       });
 
+      let signY = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 12;
+      if (signY + 38 > 287) {
+        doc.addPage();
+        signY = 20;
+      }
+      const signHeight = 18;
+      SIGNATORIES.forEach((s, i) => {
+        const centre = i === 0 ? left + 35 : right - 35;
+        const signWidth = signHeight * s.ratio;
+        doc.addImage(signatures[i], 'PNG', centre - signWidth / 2, signY, signWidth, signHeight, `sign${i}`, 'FAST');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.text(s.name, centre, signY + signHeight + 5, { align: 'center' });
+        doc.setLineWidth(0.4);
+        doc.line(centre - 28, signY + signHeight + 7, centre + 28, signY + signHeight + 7);
+        doc.setFont('helvetica', 'normal');
+        doc.text(s.title, centre, signY + signHeight + 12, { align: 'center' });
+      });
+
       const name = this.student.studentRegistrationNo || 'student';
       doc.save(`Report-Card-${name}.pdf`);
     } catch {
@@ -193,10 +220,10 @@ export class ReportCardComponent implements OnInit {
     }
   }
 
-  private async loadLogo(): Promise<string> {
-    const blob = await fetch(LOGO_URL).then(r => {
+  private async loadImage(url: string): Promise<string> {
+    const blob = await fetch(url).then(r => {
       if (!r.ok) {
-        throw new Error(`Logo request failed: ${r.status}`);
+        throw new Error(`Image request failed for ${url}: ${r.status}`);
       }
       return r.blob();
     });

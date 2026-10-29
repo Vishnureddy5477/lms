@@ -89,6 +89,17 @@
           }
         </tbody>
       </table>
+
+      <div class="signatures">
+        @for (s of signatories; track s.name) {
+          <div class="signatory">
+            <img [src]="s.image" [alt]="'Signature of ' + s.name" class="signature-img">
+            <div class="fw-bold">{{ s.name }}</div>
+            <div class="signature-line"></div>
+            <div>{{ s.title }}</div>
+          </div>
+        }
+      </div>
     }
 
   </div>
